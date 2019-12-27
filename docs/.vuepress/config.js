@@ -1,5 +1,6 @@
 module.exports = {
     title: 'LightProxy',
+    base: '/lightproxy/',
     description: '基于 whistle 的代理调试软件',
 
     head: [

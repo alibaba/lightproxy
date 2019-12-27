@@ -9,7 +9,8 @@
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "lint": "npx eslint ./src/**/*.ts ./src/**/*.tsx --fix",
     "update:whistle": "rm -rf whistle && git clone https://github.com/avwo/whistle --depth=1 && patch -u -b whistle/lib/inspectors/res.js -i whistle.patch && yarn add ./whistle ./whistle-start",
-    "cleanbuild": "rm -rf node_modules && yarn install && npm run update:whistle && npm run dist"
+    "cleanbuild": "rm -rf node_modules && yarn install && npm run update:whistle && npm run dist",
+    "doc": "env SKIP_CACHE=1 bash scripts/depoly-doc.sh"
   },
   "electronWebpack": {
     "title": "LightProxy",

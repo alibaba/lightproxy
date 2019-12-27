@@ -6,4 +6,4 @@
 
 # 文档 & 下载
 
-[文档 & 下载](https://lightproxy.alibaba.github.io)
+https://alibaba.github.io/lightproxy/
