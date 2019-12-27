@@ -1,0 +1,89 @@
+--- /Users/xcodebuild/code/electron/lightproxy/whistle/lib/inspectors/res.js	2019-12-18 21:40:10.000000000 +0800
++++ /Users/xcodebuild/res.js	2019-12-18 21:40:23.000000000 +0800
+@@ -7,6 +7,7 @@
+ var util = require('../util');
+ var Transform = require('pipestream').Transform;
+ var h2 = require('../https/h2');
++var ws = require('ws');
+ 
+ var WhistleTransform = util.WhistleTransform;
+ var SpeedTransform = util.SpeedTransform;
+@@ -21,17 +22,33 @@
+ var getRawHeaderNames = hparser.getRawHeaderNames;
+ 
+ var LOCALHOST = '127.0.0.1';
+-var DOCTYPE = util.toBuffer('<!DOCTYPE html>\r\n');
+-var CRLF = util.toBuffer('\r\n');
++var DOCTYPE = util.toBuffer('<!DOCTYPE html>rn');
++var CRLF = util.toBuffer('rn');
+ var MAX_RES_SIZE = 512 * 1024;
+-var JSON_RE = /{[\w\W]*}|\[[\w\W]*\]/;
+-var LIKE_JSON_RE = /^\s*[\{\[]/;
++var JSON_RE = /{[wW]*}|[[wW]*]/;
++var LIKE_JSON_RE = /^s*[{[]/;
+ var X_RE = /^x/;
+ var BODY_PROTOCOLS = ['attachment', 'resReplace', 'resBody', 'resPrepend', 'resAppend',
+   'htmlBody', 'htmlPrepend', 'htmlAppend', 'jsBody', 'jsPrepend', 'jsAppend',
+   'cssBody', 'cssPrepend', 'cssAppend', 'resWrite', 'resWriteRaw', 'resMerge'];
+ var BODY_PROTOCOLS_LEN = BODY_PROTOCOLS.length;
+ 
++const boardcastPort = process.env.LIGHTPROXY_BOARDCASR_PORT;
++
++console.log('Whistle get boardcast port', boardcastPort);
++
++const wsClient = new ws(`ws://127.0.0.1:${boardcastPort}`);
++const clientReady = new Promise(resolve => {
++  wsClient.onopen = () => {
++        resolve();
++    };
++});
++
++wsClient.onerror = err => {
++    console.error(err);
++};
++
++
+ function notAllowCache(resRules) {
+   for (var i = 0; i < BODY_PROTOCOLS_LEN; i++) {
+     if (resRules[BODY_PROTOCOLS[i]]) {
+@@ -41,7 +58,7 @@
+ }
+ 
+ function showDnsError(res, err) {
+-  res.response(util.wrapGatewayError('DNS Lookup Failed\r\n' + util.getErrorStack(err)));
++  res.response(util.wrapGatewayError('DNS Lookup Failedrn' + util.getErrorStack(err)));
+ }
+ 
+ function setCookies(headers, data) {
+@@ -821,6 +838,24 @@
+                   if (req.filter.showHost || req.enable.showHost) {
+                     _res.headers['x-host-ip'] = req.hostIp || LOCALHOST;
+                   }
++                  const ruleRaw = req.rules && req.rules.rule && req.rules.rule.raw;
++                  _res.headers['__lightproxy-host-ip__'] = req.hostIp || LOCALHOST;
++                  _res.headers['__lightproxy-rules__'] = JSON.stringify(ruleRaw) || 'none';
++                  _res.headers['__lightproxy-real-url__'] = req.realUrl;
++                  
++                  _res.headers['__lightproxy-help__'] = 'See https://github.com/alibaba/lightproxy';
++                  clientReady.then(() => {
++                    wsClient.send(
++                      'whistle-hit'.padEnd(50, ' ') +
++                          JSON.stringify({
++                            method: 'match-rule',
++                            rule: ruleRaw,
++                            hostip: req.hostIp,
++                            host: req.get('host')
++                          })
++                    );
++                  })
++
+                   util.setResponseFor(resRules, _res.headers, req, req.hostIp);
+                   pluginMgr.postStats(req, res);
+                   try {
+@@ -861,4 +896,4 @@
+   if (!req.hasError) {
+     next();
+   }
+-};
++};
+\ No newline at end of file

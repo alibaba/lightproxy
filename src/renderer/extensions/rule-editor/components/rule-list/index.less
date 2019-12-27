@@ -1,0 +1,47 @@
+.lightproxy-rule-list {
+    background-color: @rule-list-bgcolor;
+    height: calc(100% - 37px);
+    padding-top: 5px;
+    overflow: scroll;
+}
+.lightproxy-rule-list-item {
+    padding: 10px 15px 10px 15px;
+    width: 160px;
+    font-size: @rule-item-font-size;
+    font-weight: bold;
+    background-color: @rule-item-bgcolor;
+    position: relative;
+    // border-bottom: solid 1px @rule-item-border-color;
+
+    color: @font-color;
+
+    &.enabled:before {
+        content: ' \25CF';
+        font-size: 10px;
+        vertical-align: middle;
+        position: absolute;
+        left: 140px;
+        color: #a7e1c4;
+    }
+
+    border-bottom: 1px thin @rule-item-border-color;
+
+    &.selected {
+        background-color: @rule-item-selected-bgcolor;
+        border-bottom: none;
+    }
+}
+
+.lightproxy-rule-actionbar {
+    text-align: right;
+    background-color: @rule-list-bgcolor;
+    width: 160px;
+
+    .lightproxy-add-rule-btn {
+        height: auto;
+        margin-top: 5px;
+        * {
+            cursor: pointer;
+        }
+    }
+}

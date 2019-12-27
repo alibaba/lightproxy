@@ -1,0 +1,100 @@
+@import "../status-bar/index.less";
+
+.lightproxy-panel-dock {
+    display: inline-block;
+    background-color: @dock-bgcolor;
+    height: 100%;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding-top: 30px;
+
+    .lightproxy-dock-item {
+        &:hover {
+            color: @dock-item-hover-color;
+        }
+        &.selected {
+            border-right: solid 3px @dock-item-hover-color;
+            color: @dock-item-hover-color;
+        }
+        color: @font-color;
+        padding: 15px;
+        cursor: pointer;
+        border-right: solid 3px @background-color;
+        text-align: center;
+        z-index: 99999;
+        span {
+            margin-top: 5px;
+        }
+    }
+
+    .lightproxy-dock-title {
+        font-size: @dock-item-title-font-size;
+        display: block;
+    }
+}
+
+.lightproxy-panel-container {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: calc(100% - 70px);
+}
+
+#app, body, html, .lightproxy-app-container {
+    height: 100%;
+    background-color: @background-color;
+}
+
+html, body {
+    overflow: hidden;
+
+    * {
+        -webkit-app-region: drag;
+        user-select: none;
+        -webkit-tap-highlight-color: none !important;
+        touch-action: none !important;
+    }
+
+    [draggable] {
+        -webkit-app-region: no-drag !important;
+    }
+
+    .no-drag *, .no-drag {
+        -webkit-app-region: no-drag;
+    }
+    
+    .drag *, .drag {
+        -webkit-app-region: drag;
+    }
+
+    [data-rbd-draggable-context-id]:focus {
+        outline: none;
+    }
+
+    button {
+        color: @font-color !important;
+        border-color: @button-border-color;
+        background-color: @button-bgcolor !important;
+    }
+
+    .titlebar-stoplight .titlebar-close, .titlebar-stoplight .titlebar-minimize, .titlebar-stoplight .titlebar-fullscreen {
+        width: 13px;
+        height: 13px;
+    }
+
+    // fix manoco hidden widget block drag of actionbar
+    .editor-widget[aria-hidden="true"] {
+        display: none;
+    }
+
+}
+
+.titlebar-stoplight {
+    z-index: 9999;
+    svg {
+        display: none;
+    }
+}
+

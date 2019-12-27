@@ -1,0 +1,15 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vuepress dev .",
+    "build": "vuepress build ."
+  },
+  "devDependencies": {
+    "@vuepress/plugin-google-analytics": "^1.2.0",
+    "vuepress": "^1.0.0-rc.1",
+    "vuepress-plugin-yuque": "^0.6.0"
+  }
+}

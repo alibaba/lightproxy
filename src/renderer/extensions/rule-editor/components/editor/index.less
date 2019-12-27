@@ -1,0 +1,40 @@
+.lightproxy-rule-editor-container {
+    position: absolute;
+    left: 160px;
+    top: 0px;
+    height: 100%;
+    width: calc(100% - 160px);
+
+    .lightproxy-code-editor-container {
+        height: 100%;
+        width: 100%;
+    }
+
+    .lightproxy-editor-actionbar {
+        text-align: right;
+        background-color: @rule-list-bgcolor;
+        padding-right: 5px;
+        height: 30px;
+        width: 100%;
+
+        .tip {
+            font-size: 10px;
+            color: gray;
+            margin-top: 10px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: -50px;
+        }
+        
+    }
+
+    .monaco-editor {
+        height: calc(100% - 80px);
+        -webkit-app-region: no-drag !important;
+
+        * {
+            -webkit-app-region: no-drag !important;
+        }
+    }
+}
+

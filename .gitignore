@@ -1,0 +1,10 @@
+.DS_Store
+dist/
+node_modules/
+thumbs.db
+.idea/
+private
+whistle
+!src/renderer/extensions/whistle
+yarn-error.log
+whistle.log
