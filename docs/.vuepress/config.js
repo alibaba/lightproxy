@@ -2,7 +2,10 @@ module.exports = {
     title: 'LightProxy',
     base: '/lightproxy/',
     description: '基于 whistle 的代理调试软件',
-    repo: 'alibaba/lightproxy',
+    themeConfig: {
+        repo: 'alibaba/lightproxy',
+        repoLabel: 'Github',
+    },
     head: [
         ['meta', { name: 'referrer', content: 'no-referrer' }]
     ],
