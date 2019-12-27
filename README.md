@@ -13,3 +13,4 @@ yarn run install-deps
 yarn run dev
 ```
 
+For new contributors you can try to fix a [good-first-issue](https://github.com/alibaba/lightproxy/labels/good%20first%20issue)
