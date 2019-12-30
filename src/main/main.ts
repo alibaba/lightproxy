@@ -28,7 +28,6 @@ if (process.argv.indexOf('--update') !== -1) {
     checkUpdater();
 }
 
-
 function createMainWindow() {
     const window = new BrowserWindow({
         height: 700,
