@@ -26,9 +26,8 @@ const toggleSystemProxy = async (onlineStatus: string, port: number, coreAPI: an
 };
 
 export class WhistleExntension extends Extension {
-    private mStartWhistle: null | (() => Promise<void>) = null;
-
     private mDevtoolPort: null | number = null;
+    private mPid: null | number = null;
 
     constructor() {
         super('whistle');
@@ -73,19 +72,18 @@ export class WhistleExntension extends Extension {
 
             await this.coreAPI.checkInstall();
 
-            const startWhistle = async () => {
-                // this.mDevtoolPort = await this.coreAPI.getPort();
-                const pid = await this.coreAPI.spawnModule('whistle-start', true, {
-                    // LIGHTPROXY_DEVTOOLS_PORT: '' + this.mDevtoolPort,
-                });
-                this.mStartWhistle = async () => {
-                    await this.coreAPI.treeKillProcess(pid);
-                    await startWhistle();
-                };
-            };
-
-            await startWhistle();
+            await this.startWhistle();
         })();
+    }
+
+    private async startWhistle() {
+        if (this.mPid) {
+            await this.coreAPI.treeKillProcess(this.mPid);
+            this.mPid = null;
+        }
+        this.mPid = await this.coreAPI.spawnModule('whistle-start', true, {
+            // LIGHTPROXY_DEVTOOLS_PORT: '' + this.mDevtoolPort,
+        });
     }
 
     statusbarRightComponent() {
@@ -126,9 +124,7 @@ export class WhistleExntension extends Extension {
                     <Menu.Item onClick={() => toggleSystemProxy(onlineState, port, this.coreAPI)}>
                         {onlineState === 'ready' ? t('disable system proxy') : t('enable system proxy')}
                     </Menu.Item>
-                    <Menu.Item onClick={() => this.mStartWhistle && this.mStartWhistle()}>
-                        {t('restart proxy')}
-                    </Menu.Item>
+                    <Menu.Item onClick={() => this.startWhistle()}>{t('restart proxy')}</Menu.Item>
                 </Menu>
             );
 

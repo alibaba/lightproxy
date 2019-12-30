@@ -9,8 +9,6 @@ import checkInstallStatus from './install';
 import treeKill from 'tree-kill';
 import ip from 'ip';
 
-import { throttle } from 'lodash';
-
 interface SwpanModuleProp {
     moduleId: string;
     env: any;
@@ -20,7 +18,7 @@ async function checkInstall() {
     await checkInstallStatus();
 }
 async function spawnModule(props: any) {
-    const { moduleId, env = {}, keepAlive = false } = props as SwpanModuleProp;
+    const { moduleId, env = {} } = props as SwpanModuleProp;
     logger.info('spawn module', moduleId);
     const boardcastPort = (await BoardcastManager.getInstance()).getPort();
 
@@ -38,25 +36,18 @@ async function spawnModule(props: any) {
                 LIGHTPROXY_BOARDCASR_PORT: boardcastPort,
             },
         });
+        logger.info('Spwaned process', process.execPath, child.pid);
 
         exitHook(() => {
             child.kill();
         });
 
         child?.stderr?.on('data', data => {
-            logger.error(`stderr: ${data.toString()}`);
-        });
-
-        const startProcessLimit = throttle(startProcess, 3000);
-
-        child?.on('exit', () => {
-            if (keepAlive) {
-                startProcessLimit();
-            }
+            logger.error(`[pid ${child.pid}]stderr: ${data.toString()}`);
         });
 
         child?.stdout?.on('data', data => {
-            logger.info(`stdout: ${data.toString()}`);
+            logger.info(`[pid ${child.pid}]stdout: ${data.toString()}`);
         });
 
         return child.pid;
