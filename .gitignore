@@ -9,3 +9,4 @@ whistle
 yarn-error.log
 whistle.log
 !license/whistle
+yarn.lock
