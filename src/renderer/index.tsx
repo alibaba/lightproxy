@@ -2,8 +2,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import '../../node_modules/antd/dist/antd.css';
-
 import * as monaco from '@timkendrick/monaco-editor/dist/external';
 
 // @ts-ignore

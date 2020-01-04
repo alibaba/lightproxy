@@ -31,7 +31,15 @@ module.exports = config => {
 
             rule.use.unshift('style-loader');
 
-            console.log(rule.use);
+            if (/less/.test(rule.test.toString())) {
+                rule.use[3] = {
+                    loader: 'less-loader',
+                    options: {
+                        javascriptEnabled: true
+                    }
+                }
+            }
+            // console.log(rule.use);
         }
     });
 
