@@ -21,7 +21,7 @@ import { remote } from 'electron';
 i18n.use(initReactI18next) // passes i18n down to react-i18next
     .init({
         resources: i18nResources,
-        lng: 'cn',
+        lng: navigator.language,
         fallbackLng: 'en',
 
         interpolation: {

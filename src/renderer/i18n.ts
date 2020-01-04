@@ -4,9 +4,11 @@ export const i18nResources = {
             Setting: 'Setting',
             Rule: 'Rule',
             'New Rule': 'New Rule',
+            'Network capture': 'Network',
+            'Phone proxy': 'Mobile',
         },
     },
-    cn: {
+    'zh-CN': {
         translation: {
             Setting: '设置',
             Rule: '规则',
