@@ -9,7 +9,7 @@ import { uuidv4 } from '../../../../utils';
 import { throttle } from 'lodash';
 
 import { remote } from 'electron';
-import * as monaco from '@timkendrick/monaco-editor/dist/external';
+import * as monaco from 'monaco-editor';
 
 const { Menu, MenuItem } = remote;
 

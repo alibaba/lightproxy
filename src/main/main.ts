@@ -22,7 +22,12 @@ let appReady = false;
 
 app.commandLine.appendSwitch('--no-proxy-server');
 
-setInterval(checkUpdater, 1000 * 60 * 60);
+const timer = setInterval(async () => {
+    const result = await checkUpdater();
+    if (result) {
+        clearInterval(timer);
+    }
+}, 1000 * 60 * 60);
 
 if (process.argv.indexOf('--update') !== -1) {
     checkUpdater();

@@ -1,4 +1,5 @@
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = config => {
     delete config.output.libraryTarget;
@@ -7,6 +8,8 @@ module.exports = config => {
         electron: 'require("electron")',
         'monaco-editor': 'window.monaco',
         'monaco-editor/esm/vs/editor/editor.api': 'window.monaco',
+        '@timkendrick/monaco-editor': 'window.monaco',
+        '@timkendrick/monaco-editor/dist/external': 'window.monaco'
     };
 
     config.plugins = config.plugins.filter(item => {
@@ -18,6 +21,17 @@ module.exports = config => {
         }
         return item.constructor.name !== 'MiniCssExtractPlugin';
     });
+
+    config.plugins.push(new CopyPlugin([
+        { from: './node_modules/@timkendrick/monaco-editor/dist/external/index.js', to: './monaco.js' },
+        { from: './node_modules/@timkendrick/monaco-editor/dist/external/monaco.css', to: './monaco.css' },
+    ]));
+
+    if (process.env.BUNDLE_ANALYZER) {
+        config.plugins.push(new BundleAnalyzerPlugin());
+    }
+
+    config.devServer.writeToDisk = true;
 
     config.module.rules.forEach(rule => {
         if (/css|less/.test(rule.test.toString())) {

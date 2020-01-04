@@ -1,9 +1,10 @@
-import { Form, Select, Button } from 'antd';
+import { Form, Select, Button, Popover } from 'antd';
 import React from 'react';
 import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
 import { version } from '../../../../../../package.json';
-import { app } from 'electron';
+import { app, shell } from 'electron';
+import './index.less';
 
 class InnerSettingForm extends React.Component {
     state = {
@@ -78,11 +79,27 @@ class InnerSettingForm extends React.Component {
                         </Select>,
                     )}
                 </Form.Item>
-                <Form.Item label={t('Copyright')}>Version {version} Made by IFE with love</Form.Item>
+                <Form.Item label={t('Copyright')}>Version {version} Made by IFE Team with love</Form.Item>
                 <Form.Item label={t('Actions')}>
-                    <Button loading={this.state.isUpdating} onClick={checkUpdate} type="primary">
+                    <Button className="action-btn" loading={this.state.isUpdating} onClick={checkUpdate} type="primary">
                         {t('Check Update')}
                     </Button>
+                    <Popover
+                        content={
+                            <img src="https://img.alicdn.com/tfs/TB1mK5Ks5_1gK0jSZFqXXcpaXXa-546-720.png_350x350" />
+                        }
+                        title={t('Use DingTalk scan to discuss')}
+                        trigger="hover"
+                    >
+                        <Button
+                            onClick={() => {
+                                shell.openExternal('https://github.com/alibaba/lightproxy');
+                            }}
+                            className="action-btn"
+                        >
+                            {t('Get Help')}
+                        </Button>
+                    </Popover>
                 </Form.Item>
             </Form>
         );

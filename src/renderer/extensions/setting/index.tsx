@@ -3,6 +3,8 @@ import React from 'react';
 import { SettingForm } from './components/setting-form';
 import { useTranslation } from 'react-i18next';
 
+const SettingFormComponent = SettingForm as any;
+
 export class Setting extends Extension {
     constructor() {
         super('setinng');
@@ -21,7 +23,7 @@ export class Setting extends Extension {
                     {/* <p>LightProxy poweredby Whistle & Electron</p>
                     <p>Made with love by IFE</p>
                     <p>Version {version}</p> */}
-                    <SettingForm t={t} />
+                    <SettingFormComponent t={t} />
                 </div>
             );
         };
