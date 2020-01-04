@@ -9,7 +9,7 @@ import { uuidv4 } from '../../../../utils';
 import { throttle } from 'lodash';
 
 import { remote } from 'electron';
-import monaco from '@timkendrick/monaco-editor/dist/external';
+import * as monaco from '@timkendrick/monaco-editor/dist/external';
 
 const { Menu, MenuItem } = remote;
 
@@ -41,6 +41,19 @@ interface Props {
     saveRules: (rules: Rule[]) => void;
 }
 
+// to fix https://github.com/alibaba/lightproxy/issues/14
+// save tab status here
+const editorStatus = {} as {
+    [index: number]:
+        | {
+              model: any;
+              viewState: any;
+          }
+        | undefined;
+};
+
+let initalEditorViewState = null as any;
+
 export const RuleList = (props: Props) => {
     const { readRules, saveRules } = props;
 
@@ -51,26 +64,27 @@ export const RuleList = (props: Props) => {
             name: 'Default',
             enabled: true,
             uuid: 'Default',
-            content: `# LightProxy Default Rules, 输入 / 插入规则
+            content: `# LightProxy Default Rules, Input / to insert
 # ${t('Default rule to keep some daily-software works behind proxy')}
-# 在此输入规则
-# command+s 保存
-# 双击启用或者禁用规则
+# command+s to save
+# Double click to enable/disable rule
 
-# hosts 绑定
+# hosts bindings
 # 10.101.73.189  g.alicdn.com
 # 140.205.215.168  i.alicdn.com b.alicdn.com  u.alicdn.com
 
-# 直接转发网页
+# mapping web page
 # https://www.google.com https://www.alibaba.com
 
-# 转发到文件
+# mapping to file
 # https://www.google.com file:///User/xxx/xxx.html
 
-# 匹配通配符
+# mapping by wildcard
 # ^https://*.xxx.com file:///User/xxx/xxx.html
 
-# 更多使用方案参照文档
+# More usage follow document: https://alibaba.github.io/lightproxy/quick-start.html
+
+# Some default rule to bypass some daily-used software
 
 disable://intercept alilang-desktop-client.cn-hangzhou.log.aliyuncs.com s-api.alibaba-inc.com alilang.alibaba-inc.com auth-alilang.alibaba-inc.com mdm-alilang.alibaba-inc.com
 
@@ -92,6 +106,35 @@ disable://intercept *.apple.com *.*.apple.com *.mzstatic.com *.live.com
     const rule = ruleList[selected];
 
     const switchRule = (index: number) => {
+        const editor = editorRef.current;
+        if (editor) {
+            try {
+                editorStatus[selected] = {
+                    model: editor.getModel(),
+                    viewState: editor.saveViewState(),
+                };
+            } catch (e) {}
+
+            if (!editorStatus[index]) {
+                editorStatus[index] = {
+                    model: monaco.editor.createModel('rule', 'rule'),
+                    viewState: initalEditorViewState,
+                };
+            }
+
+            try {
+                editor.setModel(editorStatus[index]?.model);
+            } catch (e) {
+                // Model is disposed
+                editorStatus[index] = {
+                    model: monaco.editor.createModel('rule', 'rule'),
+                    viewState: initalEditorViewState,
+                };
+                editor.setModel(editorStatus[index]?.model);
+            }
+            editor.restoreViewState(editorStatus[index]?.viewState);
+        }
+
         setSelected(index);
         editorRef.current?.setScrollPosition({ scrollTop: 0 });
         editorRef.current?.setPosition({ column: 1, lineNumber: 1 });
@@ -133,6 +176,12 @@ disable://intercept *.apple.com *.*.apple.com *.mzstatic.com *.live.com
 
         saveWithLimit(ruleList);
     }, [ruleList]);
+
+    useEffect(() => {
+        if (!initalEditorViewState && editorRef.current) {
+            initalEditorViewState = editorRef.current.saveViewState();
+        }
+    }, []);
 
     const handleEditorOnChange = (val: string) => {
         const newRuleList = ruleList.map((item, index) => {
