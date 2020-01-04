@@ -4,7 +4,6 @@ import logger from 'electron-log';
 import { version } from '../../package.json';
 import { LIGHTPROXY_UPDATE_DIR, LIGHTPROXY_UPDATE_CONFIG, SYSTEM_IS_MACOS } from './const';
 import fs from 'fs-extra-promise';
-import { app } from 'electron';
 
 export async function checkUpdater() {
     try {
@@ -40,10 +39,6 @@ export async function checkUpdater() {
                         path: asarPath,
                     }),
                 );
-
-                // complete, restart
-                app.relaunch();
-                app.exit();
             });
 
             dl.on('error', e => {
