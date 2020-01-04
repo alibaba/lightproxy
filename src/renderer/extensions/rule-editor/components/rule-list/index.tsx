@@ -203,7 +203,11 @@ disable://intercept *.apple.com *.*.apple.com *.mzstatic.com *.live.com
     const handleOnSave = () => {
         saveRules(ruleList);
         message.destroy();
-        message.success(t('Saved'));
+        if (new Date().getHours() >= 21) {
+            message.success(t('Saved, good night'));
+        } else {
+            message.success(t('Saved'));
+        }
     };
 
     const onEditorMount = (editor: monaco.editor.IStandaloneCodeEditor) => {

@@ -13,7 +13,7 @@ export class Setting extends Extension {
     }
 
     panelComponent() {
-        return function SettingPanelComponent() {
+        const SettingPanelComponent = () => {
             const { t } = useTranslation();
 
             return (
@@ -25,6 +25,7 @@ export class Setting extends Extension {
                 </div>
             );
         };
+        return SettingPanelComponent;
     }
 
     panelTitle() {

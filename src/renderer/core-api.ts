@@ -50,6 +50,10 @@ export class CoreAPIClass {
     async treeKillProcess(pid: number) {
         return await ipcRenderer.callMain('treeKillProcess', pid);
     }
+
+    async update() {
+        return await ipcRenderer.callMain('update');
+    }
 }
 
 export const CoreAPI = new CoreAPIClass();

@@ -8,6 +8,7 @@ import { setSystemProxy } from './platform';
 import checkInstallStatus from './install';
 import treeKill from 'tree-kill';
 import ip from 'ip';
+import { checkUpdater } from './updater';
 
 interface SwpanModuleProp {
     moduleId: string;
@@ -69,6 +70,10 @@ async function getIp() {
     return ip.address();
 }
 
+async function update() {
+    return checkUpdater();
+}
+
 export async function initIPC() {
     // ipcMain
     ipcMain.answerRenderer('spawnModule', spawnModule);
@@ -81,6 +86,7 @@ export async function initIPC() {
     ipcMain.answerRenderer('treeKillProcess', treeKillProcess);
 
     ipcMain.answerRenderer('getIp', getIp);
+    ipcMain.answerRenderer('update', update);
 
     // start a socketIO server for extension background process
     await BoardcastManager.getInstance();
