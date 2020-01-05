@@ -19,7 +19,7 @@ export class Setting extends Extension {
             const { t } = useTranslation();
 
             return (
-                <div className="lightproxy-setting">
+                <div className="lightproxy-setting no-drag">
                     {/* <p>LightProxy poweredby Whistle & Electron</p>
                     <p>Made with love by IFE</p>
                     <p>Version {version}</p> */}
