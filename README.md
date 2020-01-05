@@ -1,4 +1,5 @@
 ![Stable version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/release.json&label=Stable%20Version&query=$.version)
+![Beta version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/beta-release.json&label=Beta%20Version&query=$.version)
 ![GitHub issues](https://img.shields.io/github/issues/alibaba/lightproxy)
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/alibaba/lightproxy)
 [![Dingtalk](https://img.shields.io/badge/chatting-DingTalk-blue)](https://alibaba.github.io/lightproxy/quick-start.html#%E5%8F%8D%E9%A6%88)
