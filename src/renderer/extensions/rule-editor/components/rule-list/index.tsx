@@ -139,7 +139,10 @@ disable://intercept *.apple.com *.*.apple.com *.mzstatic.com *.live.com
         editorRef.current?.setScrollPosition({ scrollTop: 0 });
         editorRef.current?.setPosition({ column: 1, lineNumber: 1 });
         requestAnimationFrame(() => {
-            editorRef.current?.setPosition({ column: 1, lineNumber: editorRef.current?.getModel().getLineCount() });
+            editorRef.current?.setPosition({
+                column: 1,
+                lineNumber: editorRef.current?.getModel()?.getLineCount() || 0,
+            });
         });
     };
 

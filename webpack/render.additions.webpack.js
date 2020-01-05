@@ -31,7 +31,9 @@ module.exports = config => {
         config.plugins.push(new BundleAnalyzerPlugin());
     }
 
-    config.devServer.writeToDisk = true;
+    if (config.devServer) {
+        config.devServer.writeToDisk = true;
+    }
 
     config.module.rules.forEach(rule => {
         if (/css|less/.test(rule.test.toString())) {
