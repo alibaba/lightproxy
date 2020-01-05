@@ -3,7 +3,7 @@ import React from 'react';
 import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
 import { version } from '../../../../../../package.json';
-import { app, shell } from 'electron';
+import { shell, remote } from 'electron';
 import './index.less';
 
 class InnerSettingForm extends React.Component {
@@ -43,8 +43,8 @@ class InnerSettingForm extends React.Component {
                 } else {
                     message.success(t('Update success, app will restart'));
                     setTimeout(() => {
-                        app.relaunch();
-                        app.quit();
+                        remote.app.relaunch();
+                        remote.app.quit();
                     }, 800);
                 }
             } catch (e) {

@@ -5,6 +5,8 @@ import { version } from '../../package.json';
 import { LIGHTPROXY_UPDATE_DIR, LIGHTPROXY_UPDATE_CONFIG, SYSTEM_IS_MACOS } from './const';
 import fs from 'fs-extra-promise';
 import Store from 'electron-store';
+// @ts-ignore
+import { ungzip } from 'node-gzip';
 
 export async function checkUpdater() {
     const store = new Store();
@@ -26,30 +28,44 @@ export async function checkUpdater() {
             } catch (e) {}
             fs.mkdirpSync(LIGHTPROXY_UPDATE_DIR);
 
-            const dl = new DownloaderHelper(SYSTEM_IS_MACOS ? data['asar'] : data['win_asar'], LIGHTPROXY_UPDATE_DIR);
+            const dl = new DownloaderHelper(
+                SYSTEM_IS_MACOS ? data['asar_gzip'] : data['win_asar_gzip'],
+                LIGHTPROXY_UPDATE_DIR,
+            );
 
             const dlPromise = new Promise((resolve, reject) => {
                 // @ts-ignore
-                dl.on('end', downloadInfo => {
-                    logger.info('Download complete');
+                dl.on('end', async downloadInfo => {
+                    const complete = async () => {
+                        logger.info('Download complete');
+                        const asarPath = downloadInfo.filePath.replace(/\.asar__gzip$/, '.asar');
 
-                    const asarPath = downloadInfo.filePath.replace(/\.asar_$/, '.asar');
+                        if (fs.existsSync(asarPath)) {
+                            try {
+                                fs.removeSync(asarPath);
+                            } catch (e) {}
+                        }
+                        const afterCompress = await ungzip(fs.readFileSync(downloadInfo.filePath));
 
-                    if (fs.existsSync(asarPath)) {
-                        try {
-                            fs.removeSync(asarPath);
-                        } catch (e) {}
+                        process.noAsar = true;
+                        fs.writeFileSync(asarPath, afterCompress);
+                        process.noAsar = false;
+
+                        fs.writeFileSync(
+                            LIGHTPROXY_UPDATE_CONFIG,
+                            JSON.stringify({
+                                md5: SYSTEM_IS_MACOS ? data['md5'] : data['win_md5'],
+                                path: asarPath,
+                            }),
+                        );
+                    };
+
+                    try {
+                        await complete();
+                        resolve(true);
+                    } catch (e) {
+                        reject(e);
                     }
-                    fs.moveSync(downloadInfo.filePath, asarPath);
-
-                    fs.writeFileSync(
-                        LIGHTPROXY_UPDATE_CONFIG,
-                        JSON.stringify({
-                            md5: SYSTEM_IS_MACOS ? data['md5'] : data['win_md5'],
-                            path: asarPath,
-                        }),
-                    );
-                    resolve(true);
                 });
 
                 dl.on('error', e => {

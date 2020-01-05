@@ -1,6 +1,6 @@
 {
   "name": "LightProxy",
-  "version": "1.1.0-beta",
+  "version": "1.1.0",
   "license": "MIT",
   "scripts": {
     "dev": "electron-webpack dev",
@@ -95,6 +95,7 @@
     "monaco": "^1.201704190613.0+9ac64297a3b2ace5240299ba54b03f5029378397",
     "monaco-editor": "^0.18.1",
     "monaco-editor-webpack-plugin": "^1.7.0",
+    "node-gzip": "^1.1.2",
     "prettier": "^1.19.1",
     "raw-loader": "^4.0.0",
     "react": "^16.12.0",
