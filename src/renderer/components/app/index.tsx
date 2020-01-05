@@ -99,7 +99,7 @@ export const App = () => {
                     );
                 })}
             </div>
-            <div className="lightproxy-panel-container no-drag">{Panel ? <Panel /> : null}</div>
+            <div className="lightproxy-panel-container drag">{Panel ? <Panel /> : null}</div>
             <StatusBar rightItems={statusRightItems} />
         </div>
     );

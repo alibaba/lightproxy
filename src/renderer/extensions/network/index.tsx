@@ -26,7 +26,7 @@ export class Network extends Extension {
             }, []);
 
             return (
-                <div className="lightproxy-network-panel">
+                <div className="lightproxy-network-panel no-drag">
                     {port ? (
                         <iframe
                             src={`http://127.0.0.1:${port}/#network`}

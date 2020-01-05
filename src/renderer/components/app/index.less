@@ -53,7 +53,6 @@ html, body {
     font-family: Noto Sans,Arial,sans-serif;
 
     * {
-        -webkit-app-region: drag;
         user-select: none;
         -webkit-tap-highlight-color: none !important;
         touch-action: none !important;
@@ -64,7 +63,7 @@ html, body {
     }
 
     .no-drag *, .no-drag {
-        -webkit-app-region: no-drag;
+        -webkit-app-region: no-drag !important;
     }
     
     .drag *, .drag {
