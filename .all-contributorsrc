@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "xcodebuild",
+      "name": "xcodebuild",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/5436704?v=4",
+      "profile": "https://www.xcodebuild.com/",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "lightproxy",
+  "projectOwner": "alibaba",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
