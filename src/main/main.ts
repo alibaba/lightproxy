@@ -1,17 +1,17 @@
 'use strict';
 
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, shell } from 'electron';
 import * as path from 'path';
 import { format as formatUrl } from 'url';
 import { initIPC } from './api';
 import { checkUpdater } from './updater';
 import { hideOrQuit } from './platform';
+import { SYSTEM_IS_MACOS, NEW_ISSUE_PAGE, GITHUB_PROJECT_PAGE } from './const';
 import { version } from '../../package.json';
 import ua from 'universal-analytics';
 import { CoreAPI } from '../renderer/core-api';
 import { uuidv4 } from '../renderer/utils';
 import os from 'os';
-import { SYSTEM_IS_MACOS } from './const';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -42,7 +42,9 @@ function createMainWindow() {
         webPreferences: {
             nodeIntegration: true,
         },
-        frame: false,
+        // https://github.com/alibaba/lightproxy/issues/22
+        // disable frameless in Windows
+        frame: SYSTEM_IS_MACOS ? false : true,
     });
 
     if (isDevelopment) {
@@ -75,6 +77,62 @@ function createMainWindow() {
     return window;
 }
 
+function setApplicationMenu() {
+    const defaultMenu = Menu.getApplicationMenu();
+    const applicationMenu = new Menu();
+
+    (defaultMenu?.items ?? [])
+        .filter(menu => {
+            // remove the original help menu
+            return menu.role !== 'help';
+        })
+        .forEach(menu => {
+            if (menu.role === 'viewMenu') {
+                const subMenu = new Menu();
+                (menu.submenu?.items ?? []).forEach(item => subMenu.append(item));
+                menu.submenu = subMenu;
+                applicationMenu.append(
+                    new MenuItem({
+                        type: menu.type,
+                        label: menu.label,
+                        submenu: subMenu,
+                    }),
+                );
+            } else {
+                applicationMenu.append(menu);
+            }
+        });
+
+    // append custom help menu
+    const helpSubMenu = new Menu();
+    const helpSubMenuConfig: MenuItemConstructorOptions[] = [
+        {
+            label: 'Project Homepage',
+            click: function() {
+                shell.openExternal(GITHUB_PROJECT_PAGE);
+            },
+        },
+        {
+            label: 'Report Issue',
+            click: function() {
+                shell.openExternal(NEW_ISSUE_PAGE);
+            },
+        },
+    ];
+    helpSubMenuConfig.forEach(option => {
+        helpSubMenu.append(new MenuItem(option));
+    });
+    applicationMenu.append(
+        new MenuItem({
+            label: 'Help',
+            type: 'submenu',
+            submenu: helpSubMenu,
+        }),
+    );
+
+    Menu.setApplicationMenu(applicationMenu);
+}
+
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
     // on macOS it is common for applications to stay open until the user explicitly quits
@@ -99,6 +157,7 @@ app.on('activate', () => {
 app.on('ready', () => {
     appReady = true;
     mainWindow = createMainWindow();
+    setApplicationMenu();
     initIPC();
 
     if (!CoreAPI.store.get('userid')) {

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 // @ts-ignore
 import { Titlebar } from 'react-titlebar-osx';
 import { remote } from 'electron';
+import { SYSTEM_IS_MACOS } from '../../const';
 
 export const App = () => {
     const [statusRightItems, setStatusRightItems] = useState([] as Function[]);
@@ -74,16 +75,19 @@ export const App = () => {
 
     return (
         <div className="lightproxy-app-container">
-            <Titlebar
-                text="LightProxy"
-                onClose={() => handleClose()}
-                onMaximize={() => handleMaximize()}
-                onFullscreen={() => handleFullscreen()}
-                onMinimize={() => handleMinimize()}
-                padding={5}
-                transparent={true}
-                draggable={true}
-            />
+            {SYSTEM_IS_MACOS ? (
+                <Titlebar
+                    text="LightProxy"
+                    onClose={() => handleClose()}
+                    onMaximize={() => handleMaximize()}
+                    onFullscreen={() => handleFullscreen()}
+                    onMinimize={() => handleMinimize()}
+                    padding={5}
+                    transparent={true}
+                    draggable={true}
+                />
+            ) : null}
+
             <div className="lightproxy-panel-dock no-drag">
                 {panelIcons.map((item, index) => {
                     const className = classnames({
