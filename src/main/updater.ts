@@ -9,9 +9,13 @@ import Store from 'electron-store';
 import { ungzip } from 'node-gzip';
 
 export async function checkUpdater() {
-    const store = new Store();
-    const settings = store.get('settings');
-    const updateChannel = settings.updateChannel || 'stable';
+    let updateChannel = 'stable';
+
+    try {
+        const store = new Store();
+        const settings = store.get('settings') || {};
+        updateChannel = settings.updateChannel || 'stable';
+    } catch (e) {}
 
     try {
         const url =
