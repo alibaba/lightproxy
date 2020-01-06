@@ -1,6 +1,6 @@
 'use strict';
 
-import { app, BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions } from 'electron';
+import { app, BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, shell } from 'electron';
 import * as path from 'path';
 import { format as formatUrl } from 'url';
 import { initIPC } from './api';
@@ -109,13 +109,13 @@ function setApplicationMenu() {
         {
             label: 'Project Homepage',
             click: function() {
-                window.open(GITHUB_PROJECT_PAGE);
+                shell.openExternal(GITHUB_PROJECT_PAGE);
             },
         },
         {
             label: 'Report Issue',
             click: function() {
-                window.open(NEW_ISSUE_PAGE);
+                shell.openExternal(NEW_ISSUE_PAGE);
             },
         },
     ];
