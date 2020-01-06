@@ -15,6 +15,8 @@
 |
 <b><a href="CONTRIBUTING.org">Contribute</a></b>
 |
+<b><a href="https://github.com/alibaba/lightproxy/issues/19">介绍文章</a></b>
+|
 <b><a href="https://alibaba.github.io/lightproxy/start-proxy-only.html">FAQ</a></b>
 
 </p>
