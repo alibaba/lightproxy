@@ -42,7 +42,9 @@ function createMainWindow() {
         webPreferences: {
             nodeIntegration: true,
         },
-        frame: false,
+        // https://github.com/alibaba/lightproxy/issues/22
+        // disable frameless in Windows
+        frame: SYSTEM_IS_MACOS ? false : true,
     });
 
     if (isDevelopment) {
