@@ -326,7 +326,7 @@ disable://intercept *.apple.com *.*.apple.com *.mzstatic.com *.live.com
                                                         if (index === _index) {
                                                             return {
                                                                 ..._item,
-                                                                name: renameText,
+                                                                name: renameText || 'New Rule',
                                                                 rename: false,
                                                             };
                                                         } else {
@@ -353,6 +353,10 @@ disable://intercept *.apple.com *.*.apple.com *.mzstatic.com *.live.com
                                                             value={renameText}
                                                             onChange={e => setRenameText(e.target.value)}
                                                             autoFocus
+                                                            onFocus={e => {
+                                                                e.persist();
+                                                                setTimeout(() => e.target.select());
+                                                            }}
                                                         ></Input>
                                                     ) : (
                                                         <span>{item.name}</span>
