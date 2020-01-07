@@ -3,7 +3,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/alibaba/lightproxy)
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/alibaba/lightproxy)
 [![Dingtalk](https://img.shields.io/badge/chatting-DingTalk-blue)](https://alibaba.github.io/lightproxy/quick-start.html#%E5%8F%8D%E9%A6%88)<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <p align="center">
@@ -69,6 +69,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://www.xcodebuild.com/"><img src="https://avatars3.githubusercontent.com/u/5436704?v=4" width="100px;" alt=""/><br /><sub><b>xcodebuild</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=xcodebuild" title="Code">💻</a> <a href="#ideas-xcodebuild" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/avwo"><img src="https://avatars2.githubusercontent.com/u/11450939?v=4" width="100px;" alt=""/><br /><sub><b>avenwu</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=avwo" title="Code">💻</a></td>
     <td align="center"><a href="https://usememo.dev"><img src="https://avatars0.githubusercontent.com/u/10394160?v=4" width="100px;" alt=""/><br /><sub><b>Mashiro Wang</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=MashiroWang" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Runly"><img src="https://avatars3.githubusercontent.com/u/18432577?v=4" width="100px;" alt=""/><br /><sub><b>Ranly</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=Runly" title="Code">💻</a></td>
   </tr>
 </table>
 
