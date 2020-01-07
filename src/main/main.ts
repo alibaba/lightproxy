@@ -168,10 +168,13 @@ app.on('ready', () => {
 
     const visitor = ua('UA-154996514-1', userid);
 
-    visitor.set('app-version', version);
-    visitor.set('os', os.type());
+    // app-version
+    visitor.set('dimension1', version);
+    // os
+    visitor.set('dimension2', os.type());
     visitor.set('os-version', os.release());
-    visitor.set('electron-version', process.versions.electron);
+    // electron-version
+    visitor.set('dimension3', process.versions.electron);
     visitor
         .pageview('/', err => {
             console.error(err);
