@@ -84,13 +84,6 @@ export const RuleList = (props: Props) => {
 
 # More usage follow document: https://alibaba.github.io/lightproxy/quick-start.html
 
-# Some default rule to bypass some daily-used software
-
-disable://intercept alilang-desktop-client.cn-hangzhou.log.aliyuncs.com s-api.alibaba-inc.com alilang.alibaba-inc.com auth-alilang.alibaba-inc.com mdm-alilang.alibaba-inc.com
-
-# Apple
-disable://intercept *.apple.com *.*.apple.com *.mzstatic.com *.live.com
-
 `,
         },
     ];

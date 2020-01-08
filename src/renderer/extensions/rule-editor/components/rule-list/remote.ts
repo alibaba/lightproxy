@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { remote } from 'electron';
+import { CoreAPI } from '../../../../core-api';
 
 // some custom extend of whistle
 function extendRule(index: number, content: string) {
@@ -52,19 +53,31 @@ function disableHttp2(port: number) {
 }
 
 export function syncRuleToWhistle(rules: Rule[], port: number) {
+    const settings = CoreAPI.store.get('settings') || {};
+    const softwareWhiteList = settings['softwareWhiteList'] === false ? false : true;
     setHttps(port);
     disableHttp2(port);
     const RULE_SPLIT = "\n# ======== Generate by LightProxy, don't modify ========\n";
-    const genRuleContent = rules
-        .filter(item => {
-            return item.enabled;
-        })
-        .map((item, index) => {
-            return `# rule name: ${item.name}
+    const genRuleContent = softwareWhiteList
+        ? `
+# Daily software white list, can disable in setting
+# Alilang
+disable://intercept alilang-desktop-client.cn-hangzhou.log.aliyuncs.com s-api.alibaba-inc.com alilang.alibaba-inc.com auth-alilang.alibaba-inc.com mdm-alilang.alibaba-inc.com
+
+# Apple
+disable://intercept *.apple.com *.*.apple.com 
+    `
+        : '' +
+          rules
+              .filter(item => {
+                  return item.enabled;
+              })
+              .map((item, index) => {
+                  return `# rule name: ${item.name}
         ${extendRule(index, item.content)}
         `;
-        })
-        .join('\n');
+              })
+              .join('\n');
 
     const searchParams = new URLSearchParams();
     searchParams.set('clientId', 'xxxx');

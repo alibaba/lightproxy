@@ -1,4 +1,4 @@
-import { Form, Select, Button, Popover } from 'antd';
+import { Form, Select, Button, Popover, Switch } from 'antd';
 import React from 'react';
 import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
@@ -59,7 +59,7 @@ class InnerSettingForm extends React.Component {
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
-                sm: { span: 3 },
+                sm: { span: 5 },
             },
             wrapperCol: {
                 xs: { span: 24 },
@@ -78,6 +78,12 @@ class InnerSettingForm extends React.Component {
                             <Select.Option value="beta">{t('Beta')}</Select.Option>
                         </Select>,
                     )}
+                </Form.Item>
+                <Form.Item label={t('Daily software white-list')}>
+                    {getFieldDecorator('softwareWhiteList', {
+                        valuePropName: 'checked',
+                        initalValue: true,
+                    })(<Switch />)}
                 </Form.Item>
                 <Form.Item label={t('Copyright')}>Version {version} Made by IFE Team with love</Form.Item>
                 <Form.Item label={t('Actions')}>

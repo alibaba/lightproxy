@@ -49,6 +49,7 @@ export const i18nResources = {
             'Update success, app will restart': '更新成功，应用即将重启',
             'Get Help': '获取帮助',
             'Use DingTalk scan to discuss': '使用钉钉扫码加入讨论',
+            'Daily software white-list': '常用软件域名白名单',
         },
     },
 };
