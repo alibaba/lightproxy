@@ -16,6 +16,16 @@
       ]
     },
     {
+      "login": "Runly",
+      "name": "Ranly",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/18432577?v=4",
+      "profile": "https://github.com/Runly",
+      "contributions": [
+        "code",
+        "question"
+      ]
+    },
+    {
       "login": "avwo",
       "name": "avenwu",
       "avatar_url": "https://avatars2.githubusercontent.com/u/11450939?v=4",
@@ -31,16 +41,6 @@
       "profile": "https://usememo.dev",
       "contributions": [
         "code"
-      ]
-    },
-    {
-      "login": "Runly",
-      "name": "Ranly",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/18432577?v=4",
-      "profile": "https://github.com/Runly",
-      "contributions": [
-        "code",
-        "question"
       ]
     }
   ],
