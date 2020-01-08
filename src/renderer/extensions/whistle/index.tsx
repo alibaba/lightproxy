@@ -23,6 +23,8 @@ const toggleSystemProxy = async (onlineStatus: string, port: number, coreAPI: an
             status: 'online',
         });
     }
+
+    coreAPI.store.set('onlineStatus', onlineStatus);
 };
 
 export class WhistleExntension extends Extension {
@@ -61,7 +63,8 @@ export class WhistleExntension extends Extension {
                     this.coreAPI.eventEmmitter.emit('whistle-get-devtool-port-response', this.mDevtoolPort);
 
                     // ... ready to set system proxy
-                    toggleSystemProxy('online', port, this.coreAPI);
+                    const onlineStatus = this.coreAPI.store.get('onlineStatus');
+                    toggleSystemProxy(onlineStatus || 'online', port, this.coreAPI);
                 }
             };
 
