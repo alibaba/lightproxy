@@ -50,6 +50,11 @@ export const i18nResources = {
             'Get Help': '获取帮助',
             'Use DingTalk scan to discuss': '使用钉钉扫码加入讨论',
             'Daily software white-list': '常用软件域名白名单',
+            'System Proxy': '系统代理',
+            'Show Window': '显示窗口',
+            Document: '帮助文档',
+            Homepage: '项目首页',
+            'Exit App': '退出应用',
         },
     },
 };

@@ -10,6 +10,7 @@ import { throttle } from 'lodash';
 
 import { remote } from 'electron';
 import * as monaco from 'monaco-editor';
+import { CoreAPI } from '../../../../core-api';
 
 const { Menu, MenuItem } = remote;
 
@@ -173,10 +174,44 @@ export const RuleList = (props: Props) => {
         saveWithLimit(ruleList);
     }, [ruleList]);
 
+    const toggleRuleEnabled = useCallback(
+        (index: number) => {
+            const newRules = ruleList.map((_item, _index) => {
+                if (_index === index) {
+                    return {
+                        ..._item,
+                        enabled: !_item.enabled,
+                    };
+                } else {
+                    return _item;
+                }
+            });
+            setRuleList(newRules);
+
+            requestAnimationFrame(() => {
+                saveRules(newRules);
+                message.success(t('Switched'));
+            });
+        },
+        [ruleList],
+    );
+
+    const toggleRuleEnabledRef = useRef(toggleRuleEnabled);
+    toggleRuleEnabledRef.current = toggleRuleEnabled;
+
     useEffect(() => {
         if (!initalEditorViewState && editorRef.current) {
             initalEditorViewState = editorRef.current.saveViewState();
         }
+
+        const handler = (index: number) => {
+            toggleRuleEnabledRef.current(index);
+        };
+        CoreAPI.eventEmmitter.on('lightproxy-toggle-rule', handler);
+
+        return () => {
+            CoreAPI.eventEmmitter.off('lightproxy-toggle-rule', handler);
+        };
     }, []);
 
     const handleEditorOnChange = (val: string) => {
@@ -257,22 +292,7 @@ export const RuleList = (props: Props) => {
                                             };
 
                                             const handleDoubleClick = () => {
-                                                const newRules = ruleList.map((_item, _index) => {
-                                                    if (_index === index) {
-                                                        return {
-                                                            ..._item,
-                                                            enabled: !_item.enabled,
-                                                        };
-                                                    } else {
-                                                        return _item;
-                                                    }
-                                                });
-                                                setRuleList(newRules);
-
-                                                requestAnimationFrame(() => {
-                                                    saveRules(newRules);
-                                                    message.success(t('Switched'));
-                                                });
+                                                toggleRuleEnabledRef.current(index);
                                             };
 
                                             const handleContextMenu = () => {

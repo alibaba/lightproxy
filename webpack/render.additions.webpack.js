@@ -25,6 +25,9 @@ module.exports = config => {
     config.plugins.push(new CopyPlugin([
         { from: './node_modules/@timkendrick/monaco-editor/dist/external/index.js', to: './monaco.js' },
         { from: './node_modules/@timkendrick/monaco-editor/dist/external/monaco.css', to: './monaco.css' },
+        { from: './static/iconTemplate.png', to: './iconTemplate.png' },
+        { from: './static/iconTemplate@2x.png', to: './iconTemplate@2x.png' },
+
     ]));
 
     if (process.env.BUNDLE_ANALYZER) {

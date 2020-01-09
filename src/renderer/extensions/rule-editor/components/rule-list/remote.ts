@@ -58,8 +58,9 @@ export function syncRuleToWhistle(rules: Rule[], port: number) {
     setHttps(port);
     disableHttp2(port);
     const RULE_SPLIT = "\n# ======== Generate by LightProxy, don't modify ========\n";
-    const genRuleContent = softwareWhiteList
-        ? `
+    const genRuleContent =
+        (softwareWhiteList
+            ? `
 # Daily software white list, can disable in setting
 # Alilang
 disable://intercept alilang-desktop-client.cn-hangzhou.log.aliyuncs.com s-api.alibaba-inc.com alilang.alibaba-inc.com auth-alilang.alibaba-inc.com mdm-alilang.alibaba-inc.com
@@ -67,17 +68,17 @@ disable://intercept alilang-desktop-client.cn-hangzhou.log.aliyuncs.com s-api.al
 # Apple
 disable://intercept *.apple.com *.*.apple.com 
     `
-        : '' +
-          rules
-              .filter(item => {
-                  return item.enabled;
-              })
-              .map((item, index) => {
-                  return `# rule name: ${item.name}
+            : '') +
+        rules
+            .filter(item => {
+                return item.enabled;
+            })
+            .map((item, index) => {
+                return `# rule name: ${item.name}
         ${extendRule(index, item.content)}
         `;
-              })
-              .join('\n');
+            })
+            .join('\n');
 
     const searchParams = new URLSearchParams();
     searchParams.set('clientId', 'xxxx');

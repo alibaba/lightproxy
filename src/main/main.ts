@@ -22,6 +22,10 @@ let appReady = false;
 
 app.commandLine.appendSwitch('--no-proxy-server');
 
+// @ts-ignore
+// will be used in renderer
+global.__static = __static;
+
 const timer = setInterval(async () => {
     const result = await checkUpdater();
     if (result) {

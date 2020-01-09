@@ -20,9 +20,9 @@ const start = options => {
     });
 };
 
-const pluginPaths = globalPaths().concat('/usr/local/lib/node_modules/');
+// const pluginPaths = globalPaths().concat('/usr/local/lib/node_modules/');
 
-console.log('pluginPaths', pluginPaths);
+// console.log('pluginPaths', pluginPaths);
 
 const boardcastPort = process.env.LIGHTPROXY_BOARDCASR_PORT;
 
@@ -60,7 +60,7 @@ logger.info('use custom cert:', options.certDir);
             port,
             storage: whistleStoragePath,
             certDir: options.certDir,
-            pluginPaths,
+            // pluginPaths: pluginPaths.filter(item => typeof item === 'string' && item !== 'undefined'),
         })
             .then(() => {
                 logger.info('Whistle for LightProxy start: http://127.0.0.1:' + port);

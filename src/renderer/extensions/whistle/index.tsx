@@ -2,7 +2,7 @@ import { Extension } from '../../extension';
 import logger from 'electron-log';
 import React, { useEffect, useState } from 'react';
 import { Icon, Dropdown, Menu } from 'antd';
-import { lazyParseData } from '../../utils';
+import { lazyParseData, getWhistlePort } from '../../utils';
 
 import { throttle } from 'lodash';
 
@@ -33,6 +33,7 @@ export class WhistleExntension extends Extension {
 
     constructor() {
         super('whistle');
+
         (async () => {
             logger.info('init');
             const client = await this.coreAPI.joinBoardcast();
@@ -65,6 +66,14 @@ export class WhistleExntension extends Extension {
                     // ... ready to set system proxy
                     const onlineStatus = this.coreAPI.store.get('onlineStatus');
                     toggleSystemProxy(onlineStatus || 'online', port, this.coreAPI);
+
+                    this.coreAPI.eventEmmitter.on('lightproxy-toggle-system-proxy', async () => {
+                        const onlineStatus = this.coreAPI.store.get('onlineStatus');
+                        const port = await getWhistlePort(this.coreAPI);
+
+                        // onlineStatus in store is not really current status, just resverse it
+                        toggleSystemProxy(onlineStatus === 'online' ? 'ready' : 'online', port, this.coreAPI);
+                    });
                 }
             };
 
@@ -117,8 +126,14 @@ export class WhistleExntension extends Extension {
                     };
                 })();
 
-                return function cleanup() {
+                const handler = () => {
+                    setOnlineState(this.coreAPI.store.get('onlineStatus'));
+                };
+                this.coreAPI.eventEmmitter.on('lightproxy-toggle-system-proxy', handler);
+
+                return () => {
                     client?.close();
+                    this.coreAPI.eventEmmitter.off('lightproxy-toggle-system-proxy', handler);
                 };
             }, []);
 
