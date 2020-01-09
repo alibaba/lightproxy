@@ -7037,10 +7037,10 @@ vuepress-plugin-yuque@^0.6.0:
     node-fetch "^2.3.0"
     ora "^3.0.0"
 
-vuepress@^1.0.0-rc.1:
+vuepress@1.0.0-rc.1:
   version "1.0.0-rc.1"
-  resolved "https://registry.npm.alibaba-inc.com/vuepress/download/vuepress-1.0.0-rc.1.tgz#f57fb35c4bac3e1b1438a53335acce0890a3f5f4"
-  integrity sha1-9X+zXEusPhsUOKUzNazOCJCj9fQ=
+  resolved "https://registry.npmjs.org/vuepress/-/vuepress-1.0.0-rc.1.tgz#f57fb35c4bac3e1b1438a53335acce0890a3f5f4"
+  integrity sha512-Qx8wuvROVMBNR1yQa038VGVyf09udNsn8DXsDQkFc2bYvNRV/0cHWt/N/V1r6WyUl+LsdFLn2QN3K79CUtwsCw==
   dependencies:
     "@vuepress/core" "^1.0.0-rc.1"
     "@vuepress/theme-default" "^1.0.0-rc.1"

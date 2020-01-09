@@ -16,6 +16,14 @@ class InnerSettingForm extends React.Component {
         const { setFieldsValue } = this.props.form;
         const settings = CoreAPI.store.get('settings');
 
+        if (!settings.updateChannel) {
+            settings.updateChannel = 'stable';
+        }
+
+        if (!(settings.softwareWhiteList === false)) {
+            settings.softwareWhiteList = true;
+        }
+
         if (settings) {
             setFieldsValue(settings);
         }
