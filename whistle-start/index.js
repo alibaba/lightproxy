@@ -7,8 +7,8 @@ const ws = require('ws');
 
 const startWhistle = require('whistle/index');
 
-const globalPaths = require('npm-paths');
 const logger = require('electron-log');
+const glob = require('glob');
 
 if (!process.argv || process.argv.length < 2) {
     process.argv = ['mock', 'mock'];
@@ -20,9 +20,15 @@ const start = options => {
     });
 };
 
-// const pluginPaths = globalPaths().concat('/usr/local/lib/node_modules/');
+const pluginPaths = glob.sync("/usr/local/lib/node_modules/").concat(
+    glob.sync(process.env.HOME + '/.nvm/versions/node/*/lib/node_modules/')
+).concat(
+    glob.sync(`${process.env.AppData}\npm\node_modules/`)
+).concat(
+    glob.sync(`${process.env.AppData}\npm\node_modules/`)
+)
 
-// console.log('pluginPaths', pluginPaths);
+console.log('pluginPaths', pluginPaths);
 
 const boardcastPort = process.env.LIGHTPROXY_BOARDCASR_PORT;
 
@@ -60,7 +66,7 @@ logger.info('use custom cert:', options.certDir);
             port,
             storage: whistleStoragePath,
             certDir: options.certDir,
-            // pluginPaths: pluginPaths.filter(item => typeof item === 'string' && item !== 'undefined'),
+            pluginPaths: pluginPaths.filter(item => typeof item === 'string' && item !== 'undefined'),
         })
             .then(() => {
                 logger.info('Whistle for LightProxy start: http://127.0.0.1:' + port);

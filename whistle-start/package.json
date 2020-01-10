@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "npm-paths": "^2.0.0"
+    "glob": "^7.1.6"
   }
 }
