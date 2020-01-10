@@ -14,7 +14,7 @@ class InnerSettingForm extends React.Component {
         // @ts-ignore
         // eslint-disable-next-line
         const { setFieldsValue } = this.props.form;
-        const settings = CoreAPI.store.get('settings');
+        const settings = CoreAPI.store.get('settings') || {};
 
         if (!settings.updateChannel) {
             settings.updateChannel = 'stable';
