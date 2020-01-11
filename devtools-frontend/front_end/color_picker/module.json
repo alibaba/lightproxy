@@ -1,0 +1,17 @@
+{
+    "dependencies": [
+        "ui",
+        "sdk"
+    ],
+    "scripts": [],
+    "modules": [
+        "color_picker.js",
+        "ContrastInfo.js",
+        "ContrastOverlay.js",
+        "ContrastDetails.js",
+        "Spectrum.js"
+    ],
+    "resources": [
+        "spectrum.css"
+    ]
+}

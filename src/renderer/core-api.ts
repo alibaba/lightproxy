@@ -54,6 +54,10 @@ export class CoreAPIClass {
     async update() {
         return await ipcRenderer.callMain('update');
     }
+
+    async getStaticServePath() {
+        return (await ipcRenderer.callMain('getStaticServePath')) as string;
+    }
 }
 
 export const CoreAPI = new CoreAPIClass();

@@ -1,0 +1,11 @@
+{
+    "dependencies": [
+        "common",
+        "host"
+    ],
+    "scripts": [],
+    "modules": [
+        "services.js",
+        "ServiceManager.js"
+    ]
+}

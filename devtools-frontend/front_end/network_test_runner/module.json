@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "test_runner",
+    "console_test_runner"
+  ],
+  "scripts": [
+    "NetworkTestRunner.js"
+  ],
+  "skip_compilation": [
+    "NetworkTestRunner.js"
+  ]
+}

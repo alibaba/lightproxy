@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2014 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+::slotted(input.dt-radio-button) {
+  --gradient-start: #FCFCFC;
+  --gradient-end: #DFDFDF;
+  --radio-dot: url(Images/radioDot.png);
+  height: 17px;
+  width: 17px;
+  min-width: 17px;
+  border: 1px solid #A5A5A5;
+  background-image: linear-gradient(to bottom, var(--gradient-start), var(--gradient-end));
+  border-radius: 8px;
+  -webkit-appearance: none;
+  vertical-align: middle;
+  margin: 0 5px 5px 0;
+}
+
+::slotted(input.dt-radio-button:checked) {
+  background: var(--radio-dot) center no-repeat,
+              linear-gradient(to bottom, var(--gradient-start), var(--gradient-end));
+}
+
+:host-context(.-theme-with-dark-background) ::slotted(input.dt-radio-button) {
+  --gradient-start: #030303;
+  --gradient-end: #202020;
+  --radio-dot: url(Images/radioDot-dark-theme.png);
+}
+
+::slotted(input.dt-radio-button:checked:active),
+::slotted(input.dt-radio-button:active:not(:disabled)) {
+  --gradient-start: #C2C2C2;
+  --gradient-end: #EFEFEF;
+}
+
+:host-context(.-theme-with-dark-background) ::slotted(input.dt-radio-button:checked:active),
+:host-context(.-theme-with-dark-background) ::slotted(input.dt-radio-button:active:not(:disabled)) {
+  --gradient-start: #3D3D3D;
+  --gradient-end: #101010;
+}

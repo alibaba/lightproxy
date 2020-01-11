@@ -9,6 +9,10 @@ import checkInstallStatus from './install';
 import treeKill from 'tree-kill';
 import ip from 'ip';
 import { checkUpdater } from './updater';
+import Koa from 'koa';
+import KoaStatic from 'koa-static';
+import electronIsDev from 'electron-is-dev';
+import path from 'path';
 
 interface SwpanModuleProp {
     moduleId: string;
@@ -74,6 +78,19 @@ async function update() {
     return checkUpdater();
 }
 
+let server: any;
+
+async function getStaticServePath() {
+    if (!server) {
+        const app = new Koa();
+        app.use(KoaStatic(electronIsDev ? path.join(__dirname, '../../') : path.join(__dirname, './')));
+        server = app.listen();
+    }
+    // @ts-ignore
+    const port = server.address()?.port;
+    return `http://127.0.0.1:${port}`;
+}
+
 export async function initIPC() {
     // ipcMain
     ipcMain.answerRenderer('spawnModule', spawnModule);
@@ -87,6 +104,7 @@ export async function initIPC() {
 
     ipcMain.answerRenderer('getIp', getIp);
     ipcMain.answerRenderer('update', update);
+    ipcMain.answerRenderer('getStaticServePath', getStaticServePath);
 
     // start a socketIO server for extension background process
     await BoardcastManager.getInstance();

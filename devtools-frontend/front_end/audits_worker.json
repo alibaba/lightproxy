@@ -1,0 +1,6 @@
+{
+    "modules": [
+        { "name": "worker_service", "type": "autostart" },
+        { "name": "audits_worker", "type": "remote" }
+    ]
+}

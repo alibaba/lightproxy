@@ -1,0 +1,20 @@
+<!--
+ * Copyright 2014 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="object-src 'none'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://chrome-devtools-frontend.appspot.com">
+    <meta name="referrer" content="no-referrer">
+    <script>
+        localStorage['panel-selectedTab'] = JSON.stringify("network");
+        localStorage.networkLogColumns = {"name":{"visible":true,"title":"Name"},"path":{"visible":false,"title":"Path"},"url":{"visible":false,"title":"Url"},"method":{"visible":false,"title":"Method"},"status":{"visible":true,"title":"Status"},"protocol":{"visible":false,"title":"Protocol"},"scheme":{"visible":false,"title":"Scheme"},"domain":{"visible":false,"title":"Domain"},"remoteaddress":{"visible":false,"title":"Remote Address"},"type":{"visible":true,"title":"Type"},"initiator":{"visible":true,"title":"Initiator"},"cookies":{"visible":false,"title":"Cookies"},"setcookies":{"visible":false,"title":"Set Cookies"},"size":{"visible":true,"title":"Size"},"time":{"visible":false,"title":"Time"},"priority":{"visible":false,"title":"Priority"},"connectionid":{"visible":false,"title":"Connection ID"},"cache-control":{"visible":false,"title":"Cache-Control"},"connection":{"visible":false,"title":"Connection"},"content-encoding":{"visible":false,"title":"Content-Encoding"},"content-length":{"visible":false,"title":"Content-Length"},"etag":{"visible":false,"title":"ETag"},"keep-alive":{"visible":false,"title":"Keep-Alive"},"last-modified":{"visible":false,"title":"Last-Modified"},"server":{"visible":false,"title":"Server"},"vary":{"visible":false,"title":"Vary"},"waterfall":{"visible":false,"title":"Waterfall"}};
+    </script>
+    <script type="module" src="root.js"></script>
+    <script defer src="inspector.js"></script>
+</head>
+<body class="undocked" id="-blink-dev-tools"></body>
+</html>

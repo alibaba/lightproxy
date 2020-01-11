@@ -1,0 +1,16 @@
+{
+    "dependencies": [
+        "sdk"
+    ],
+    "scripts": [],
+    "modules": [
+        "timeline_model.js",
+        "TimelineModelFilter.js",
+        "TracingLayerTree.js",
+        "TimelineModel.js",
+        "TimelineIRModel.js",
+        "TimelineJSProfile.js",
+        "TimelineFrameModel.js",
+        "TimelineProfileTree.js"
+    ]
+}

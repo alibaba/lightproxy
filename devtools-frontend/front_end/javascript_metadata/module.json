@@ -1,0 +1,17 @@
+{
+  "extensions": [
+    {
+      "type": "@Common.JavaScriptMetadata",
+      "className": "JavaScriptMetadata.JavaScriptMetadata"
+    }
+  ],
+  "dependencies": [
+      "common"
+  ],
+  "scripts": [],
+  "modules": [
+    "javascript_metadata.js",
+    "NativeFunctions.js",
+    "JavaScriptMetadata.js"
+  ]
+}

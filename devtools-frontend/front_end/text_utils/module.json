@@ -1,0 +1,12 @@
+{
+    "dependencies": [
+        "platform"
+    ],
+    "scripts": [],
+    "modules": [
+        "text_utils.js",
+        "Text.js",
+        "TextUtils.js",
+        "TextRange.js"
+    ]
+}

@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2014 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+.request-cookies-view {
+    overflow: auto;
+    padding: 12px;
+    height: 100%;
+}
+
+.request-cookies-view .request-cookies-title {
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 30px;
+    color: rgb(97, 97, 97);
+}
+
+.request-cookies-view .cookie-line {
+    margin-top: 6px;
+    display: inline-block;
+}
+
+.request-cookies-view .cookies-panel-item {
+    margin-top: 6px;
+    margin-bottom: 16px;
+    flex: none;
+}

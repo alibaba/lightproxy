@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Extension } from '../../extension';
 import { getWhistlePort } from '../../utils';
+import { CoreAPI } from '../../core-api';
+
 export class Network extends Extension {
     constructor() {
         super('network');
     }
 
     panelIcon() {
-        return 'global';
+        return 'experiment';
     }
 
     panelTitle() {
@@ -16,22 +18,19 @@ export class Network extends Extension {
 
     panelComponent() {
         const NetworkPanel = () => {
-            const [port, setPort] = useState(null as null | number);
-
+            const [inspectorUrl, setInspectorUrl] = useState(null as null | string);
             useEffect(() => {
                 (async () => {
-                    const port = await getWhistlePort(this.coreAPI);
-                    setPort(port);
+                    const url = await this.coreAPI.getStaticServePath();
+                    const port = await getWhistlePort(CoreAPI);
+                    setInspectorUrl(`${url}/devtools-frontend/front_end/inspector.html?whistlePort=${port}`);
                 })();
             }, []);
 
             return (
                 <div className="lightproxy-network-panel no-drag">
-                    {port ? (
-                        <iframe
-                            src={`http://127.0.0.1:${port}/#network`}
-                            className="lightproxy-network-iframe"
-                        ></iframe>
+                    {inspectorUrl ? (
+                        <iframe src={inspectorUrl} className="lightproxy-network-iframe"></iframe>
                     ) : (
                         <div className="lightproxy-tip">代理未启动</div>
                     )}
