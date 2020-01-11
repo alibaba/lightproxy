@@ -1,4 +1,4 @@
-import { Form, Select, Button, Popover, Switch } from 'antd';
+import { Form, Select, Button, Popover, Switch, InputNumber } from 'antd';
 import React from 'react';
 import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
@@ -22,6 +22,10 @@ class InnerSettingForm extends React.Component {
 
         if (!(settings.softwareWhiteList === false)) {
             settings.softwareWhiteList = true;
+        }
+
+        if (!settings.defaultPort) {
+            settings.defaultPort = 12888;
         }
 
         if (settings) {
@@ -92,6 +96,10 @@ class InnerSettingForm extends React.Component {
                         valuePropName: 'checked',
                         initalValue: true,
                     })(<Switch />)}
+                </Form.Item>
+
+                <Form.Item label={t('Default Port')}>
+                    {getFieldDecorator('defaultPort')(<InputNumber min={1024} max={65534} />)}
                 </Form.Item>
                 <Form.Item label={t('Copyright')}>Version {version} Made by IFE Team with love</Form.Item>
                 <Form.Item label={t('Actions')}>

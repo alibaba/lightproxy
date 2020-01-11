@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Icon, Dropdown, Menu } from 'antd';
 import { lazyParseData, getWhistlePort } from '../../utils';
 
-import { throttle } from 'lodash';
+import { throttle, get } from 'lodash';
 
 import { useTranslation } from 'react-i18next';
 import { syncRuleToWhistle } from '../rule-editor/components/rule-list/remote';
@@ -69,6 +69,7 @@ export class WhistleExntension extends Extension {
 
                     this.coreAPI.eventEmmitter.on('lightproxy-toggle-system-proxy', async () => {
                         const onlineStatus = this.coreAPI.store.get('onlineStatus');
+
                         const port = await getWhistlePort(this.coreAPI);
 
                         // onlineStatus in store is not really current status, just resverse it
@@ -93,8 +94,11 @@ export class WhistleExntension extends Extension {
             await this.coreAPI.treeKillProcess(this.mPid);
             this.mPid = null;
         }
+        const settings = this.coreAPI.store.get('settings') || {};
+        const defaultPort = get(settings, 'defaultPort', 12888);
         this.mPid = await this.coreAPI.spawnModule('whistle-start', true, {
             // LIGHTPROXY_DEVTOOLS_PORT: '' + this.mDevtoolPort,
+            DEFAULT_PORT: defaultPort,
         });
     }
 

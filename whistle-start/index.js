@@ -47,7 +47,7 @@ client.onerror = err => {
 
 const options = {
     name: 'LightProxyWhistle',
-    port: 12888,
+    // port: 12888,
     certDir: path.join(userData, './cert'),
 };
 
@@ -56,7 +56,7 @@ const whistleStoragePath = path.join(userData, './whistle');
 logger.info('use custom cert:', options.certDir);
 (async () => {
     try {
-        const port = await getPort({ port: 12888 });
+        const port = await getPort({ port: Number.parseInt(process.env.DEFAULT_PORT) });
 
         console.log('Use port:', port);
         // @ts-ignore

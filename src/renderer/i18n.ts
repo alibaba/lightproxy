@@ -55,6 +55,7 @@ export const i18nResources = {
             Document: '帮助文档',
             Homepage: '项目首页',
             'Exit App': '退出应用',
+            'Default Port': '默认端口号',
         },
     },
 };
