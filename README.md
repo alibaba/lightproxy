@@ -1,8 +1,8 @@
+[![Gitter](https://badges.gitter.im/lightproxy-im/community.svg)](https://gitter.im/lightproxy-im/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 ![Stable version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/release.json&label=Stable%20Version&query=$.version)
 ![Beta version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/beta-release.json&label=Beta%20Version&query=$.version)
 ![GitHub issues](https://img.shields.io/github/issues/alibaba/lightproxy)
-![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/alibaba/lightproxy)
-[![Gitter](https://badges.gitter.im/lightproxy-im/community.svg)](https://gitter.im/lightproxy-im/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/alibaba/lightproxy)<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
