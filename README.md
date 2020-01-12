@@ -34,6 +34,9 @@
 
 ![preview](https://img.alicdn.com/tfs/TB1EQtHsuH2gK0jSZJnXXaT1FXa-1500-1005.png)
 
+![devtools](https://img.alicdn.com/tfs/TB1bRCKtQL0gK0jSZFAXXcA9pXa-1320-884.png)
+> Devtools feature is still in beta, you could update to beta version to use it
+
 ## Download
 
 [macOS Version Download](https://gw.alipayobjects.com/os/LightProxy/LightProxy.dmg)
