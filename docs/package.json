@@ -10,6 +10,6 @@
   "devDependencies": {
     "@vuepress/plugin-google-analytics": "^1.2.0",
     "vuepress": "1.0.0-rc.1",
-    "@xcodebuild/vuepress-plugin-yuque": "^0.6.0"
+    "@xcodebuild/vuepress-plugin-yuque": "^0.6.2"
   }
 }
