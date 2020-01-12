@@ -224,13 +224,13 @@ export default class NetworkPanel extends UI.Panel {
         this._preserveLogSetting, Common.UIString('Do not clear log on page reload / navigation'),
         Common.UIString('Preserve log')));
 
-    const disableCacheCheckbox = new UI.ToolbarSettingCheckbox(
-        Common.moduleSetting('cacheDisabled'), Common.UIString('Disable cache (while DevTools is open)'),
-        Common.UIString('Disable cache'));
-    this._panelToolbar.appendToolbarItem(disableCacheCheckbox);
+    // const disableCacheCheckbox = new UI.ToolbarSettingCheckbox(
+    //     Common.moduleSetting('cacheDisabled'), Common.UIString('Disable cache (while DevTools is open)'),
+    //     Common.UIString('Disable cache'));
+    // this._panelToolbar.appendToolbarItem(disableCacheCheckbox);
 
-    this._panelToolbar.appendSeparator();
-    this._panelToolbar.appendToolbarItem(this._throttlingSelect);
+    // this._panelToolbar.appendSeparator();
+    // this._panelToolbar.appendToolbarItem(this._throttlingSelect);
 
     this._rightToolbar.appendToolbarItem(new UI.ToolbarItem(this._progressBarContainer));
     this._rightToolbar.appendSeparator();
