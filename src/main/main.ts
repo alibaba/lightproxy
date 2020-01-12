@@ -21,6 +21,7 @@ let mainWindow: BrowserWindow | null;
 let appReady = false;
 
 app.commandLine.appendSwitch('--no-proxy-server');
+app.commandLine.appendSwitch('disable-site-isolation-trials');
 
 // @ts-ignore
 // will be used in renderer
@@ -45,6 +46,7 @@ function createMainWindow() {
         minWidth: 1100,
         webPreferences: {
             nodeIntegration: true,
+            webSecurity: false,
         },
         // https://github.com/alibaba/lightproxy/issues/22
         // disable frameless in Windows

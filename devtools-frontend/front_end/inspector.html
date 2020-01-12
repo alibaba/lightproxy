@@ -12,6 +12,8 @@
     <script>
         localStorage['panel-selectedTab'] = JSON.stringify("network");
         localStorage.networkLogColumns = {"name":{"visible":true,"title":"Name"},"path":{"visible":false,"title":"Path"},"url":{"visible":false,"title":"Url"},"method":{"visible":false,"title":"Method"},"status":{"visible":true,"title":"Status"},"protocol":{"visible":false,"title":"Protocol"},"scheme":{"visible":false,"title":"Scheme"},"domain":{"visible":false,"title":"Domain"},"remoteaddress":{"visible":false,"title":"Remote Address"},"type":{"visible":true,"title":"Type"},"initiator":{"visible":true,"title":"Initiator"},"cookies":{"visible":false,"title":"Cookies"},"setcookies":{"visible":false,"title":"Set Cookies"},"size":{"visible":true,"title":"Size"},"time":{"visible":false,"title":"Time"},"priority":{"visible":false,"title":"Priority"},"connectionid":{"visible":false,"title":"Connection ID"},"cache-control":{"visible":false,"title":"Cache-Control"},"connection":{"visible":false,"title":"Connection"},"content-encoding":{"visible":false,"title":"Content-Encoding"},"content-length":{"visible":false,"title":"Content-Length"},"etag":{"visible":false,"title":"ETag"},"keep-alive":{"visible":false,"title":"Keep-Alive"},"last-modified":{"visible":false,"title":"Last-Modified"},"server":{"visible":false,"title":"Server"},"vary":{"visible":false,"title":"Vary"},"waterfall":{"visible":false,"title":"Waterfall"}};
+        const remote = window.parent.window.require('electron').remote;
+        window.open = remote.shell.openExternal;
     </script>
     <script type="module" src="root.js"></script>
     <script defer src="inspector.js"></script>
