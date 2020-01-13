@@ -36,7 +36,8 @@ module.exports = {
           },
           multipleLanguage: {
             '/en': 'https://www.yuque.com/lp/doc-en/',
-          }
+          },
+          yuqueLink: true,
         }
       ],
       // [

@@ -24,7 +24,7 @@ export async function setSystemProxy(port: number) {
             execSync(`'${PROXY_CONF_HELPER_PATH}' -m off`);
         } else {
             globalProxy
-                .enable('127.0.0.1', 9000, 'http')
+                .disable()
                 .then(stdout => {
                     console.log(stdout);
                 })
