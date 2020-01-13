@@ -11,6 +11,7 @@ import { version } from '../../package.json';
 import ua from 'universal-analytics';
 import { CoreAPI } from '../renderer/core-api';
 import { uuidv4 } from '../renderer/utils';
+import windowStateKeeper from 'electron-window-state';
 import os from 'os';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -39,9 +40,13 @@ if (process.argv.indexOf('--update') !== -1) {
 }
 
 function createMainWindow() {
+    const mainWindowState = windowStateKeeper({
+        defaultWidth: 1100,
+        defaultHeight: 700,
+    });
     const window = new BrowserWindow({
-        height: 700,
-        width: 1100,
+        height: mainWindowState.height,
+        width: mainWindowState.width,
         minHeight: 700,
         minWidth: 1100,
         webPreferences: {
@@ -51,7 +56,11 @@ function createMainWindow() {
         // https://github.com/alibaba/lightproxy/issues/22
         // disable frameless in Windows
         frame: SYSTEM_IS_MACOS ? false : true,
+        x: mainWindowState.x,
+        y: mainWindowState.y,
     });
+
+    mainWindowState.manage(window);
 
     if (isDevelopment) {
         window.webContents.openDevTools();

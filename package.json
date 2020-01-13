@@ -1,6 +1,6 @@
 {
   "name": "LightProxy",
-  "version": "1.1.8-beta-9",
+  "version": "1.1.7",
   "license": "MIT",
   "scripts": {
     "dev": "electron-webpack dev",
@@ -33,6 +33,7 @@
     "electron-log": "^4.0.0",
     "electron-promise-ipc": "^2.0.1",
     "electron-store": "^5.1.0",
+    "electron-window-state": "^5.0.3",
     "exit-hook": "^2.2.0",
     "fs-extra-promise": "^1.0.1",
     "get-port": "^5.0.0",
@@ -44,6 +45,7 @@
     "node-downloader-helper": "^1.0.11",
     "node-fetch": "^2.6.0",
     "qrcode.react": "^1.0.0",
+    "sha256-file": "^1.0.0",
     "source-map-support": "^0.5.12",
     "sudo-prompt": "^9.1.1",
     "tempdir": "^2.0.0",
