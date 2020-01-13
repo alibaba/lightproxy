@@ -195,7 +195,6 @@ export class WebSocketConnection {
   }
 }
 
-const startTime = new Date().getTime();
 let lastRowId;
 
 const completeIds = {};
@@ -223,7 +222,7 @@ export class StubConnection {
 
     const getData = async () => {
       const port = getQueryVariable('whistlePort');
-      const api = `http://127.0.0.1:${port}/cgi-bin/get-data?clientId=lightproxy&startLogTime=-2&startSvrLogTime=-2&ids=&startTime=${startTime}&dumpCount=0&lastRowId=${lastRowId ||
+      const api = `http://127.0.0.1:${port}/cgi-bin/get-data?clientId=lightproxy&startLogTime=-2&startSvrLogTime=-2&ids=&startTime=${lastRowId || ''}&dumpCount=0&lastRowId=${lastRowId ||
           ''}&logId=&count=20`;
       const res = await fetch(api);
       const data = await res.json();
