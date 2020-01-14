@@ -232,11 +232,11 @@ export class StubConnection {
 
         const dataItem = data.data.data[key];
 
-        if (completeIds[dataItem.id]) {
-          continue;
-        }
+        // if (completeIds[dataItem.id]) {
+        //   continue;
+        // }
 
-      if (!reqeustIds[dataItem.id]) {
+      // if (!reqeustIds[dataItem.id]) {
         reqeustIds[dataItem.id] = true;
         this._onMessage({
             method: 'Network.requestWillBeSent',
@@ -259,7 +259,7 @@ export class StubConnection {
               },
             }
         });
-      }
+      // }
 
       if (dataItem.res.headers && dataItem.res.statusCode) {
           completeIds[dataItem.id] = dataItem;
