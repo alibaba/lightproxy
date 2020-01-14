@@ -1,6 +1,6 @@
 {
   "name": "LightProxy",
-  "version": "1.1.8-beta-10",
+  "version": "1.1.8-beta-17",
   "license": "MIT",
   "scripts": {
     "dev": "electron-webpack dev",
@@ -11,8 +11,9 @@
     "update:whistle": "rm -rf whistle && git clone https://github.com/avwo/whistle --depth=1 && patch -u -b whistle/lib/inspectors/res.js -i whistle.patch && yarn add ./whistle ./whistle-start",
     "cleanbuild": "rm -rf node_modules && yarn install && npm run update:whistle && npm run dist",
     "doc": "env SKIP_CACHE=1 bash scripts/depoly-doc.sh",
-    "install-deps": "yarn run update:whistle && yarn install",
-    "prune": "yarn install --production --ignore-scripts --prefer-offline"
+    "install-deps": "yarn run update:nodejs && yarn run update:whistle && yarn install",
+    "prune": "yarn install --production --ignore-scripts --prefer-offline",
+    "update:nodejs": "mkdir -p files/node && (curl -s https://nodejs.org/dist/v13.6.0/node-v13.6.0-darwin-x64.tar.gz | tar xvz -C ./files/node) && mv ./files/node/node-v13.6.0-darwin-x64/bin/node ./files/node/lightproxy-node-macos && (curl https://nodejs.org/dist/v13.6.0/win-x64/node.exe > ./files/node/lightproxy-node-win.exe) && rm -rf ./files/node/node-v13.6.0-darwin-x64/ && cd files/node && echo {} > package.json && yarn add asar-node && mv node_modules modules"
   },
   "electronWebpack": {
     "title": "LightProxy",
@@ -97,6 +98,7 @@
     "monaco": "^1.201704190613.0+9ac64297a3b2ace5240299ba54b03f5029378397",
     "monaco-editor": "^0.18.1",
     "monaco-editor-webpack-plugin": "^1.7.0",
+    "node-binary": "^1.1.0",
     "node-gzip": "^1.1.2",
     "prettier": "^1.19.1",
     "raw-loader": "^4.0.0",

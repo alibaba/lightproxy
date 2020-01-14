@@ -1,13 +1,12 @@
 import path from 'path';
 import { remote } from 'electron';
-import electronIsDev from 'electron-is-dev';
 
 export const SYSTEM_IS_MACOS = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 
+export const FILES_DIR = remote.getGlobal('__filesDir');
+
 // @ts-ignore
-export const ICON_TEMPLATE_PATH = electronIsDev
-    ? path.join(remote.getGlobal('__static'), 'iconTemplate.png')
-    : path.join(__dirname, 'iconTemplate.png');
+export const ICON_TEMPLATE_PATH = path.join(FILES_DIR, 'iconTemplate.png');
 
 export const RULE_STORE_KEY = 'lightproxy-rule';
 

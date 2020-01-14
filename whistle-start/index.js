@@ -1,13 +1,11 @@
 const path = require('path');
 const getPort = require('get-port');
-const { app } = require('electron');
 
-const userData = path.join(app.getPath('appData'), '/LightProxy');
+const userData = path.join(process.env.USER_DATA, '/LightProxy');
 const ws = require('ws');
 
 const startWhistle = require('whistle/index');
 
-const logger = require('electron-log');
 const glob = require('glob');
 
 if (!process.argv || process.argv.length < 2) {
@@ -36,7 +34,7 @@ console.log('pluginPaths', pluginPaths);
 
 const boardcastPort = process.env.LIGHTPROXY_BOARDCASR_PORT;
 
-logger.info('Whistle get boardcast port', boardcastPort);
+console.info('Whistle get boardcast port', boardcastPort);
 
 const client = new ws(`ws://127.0.0.1:${boardcastPort}`);
 const clientReady = new Promise(resolve => {
@@ -46,7 +44,7 @@ const clientReady = new Promise(resolve => {
 });
 
 client.onerror = err => {
-    logger.error(err);
+    console.error(err);
 };
 
 const options = {
@@ -57,7 +55,7 @@ const options = {
 
 const whistleStoragePath = path.join(userData, './whistle');
 
-logger.info('use custom cert:', options.certDir);
+console.info('use custom cert:', options.certDir);
 (async () => {
     try {
         const port = await getPort({ port: Number.parseInt(process.env.DEFAULT_PORT) });
@@ -73,7 +71,7 @@ logger.info('use custom cert:', options.certDir);
             pluginPaths: pluginPaths.filter(item => typeof item === 'string' && item !== 'undefined'),
         })
             .then(() => {
-                logger.info('Whistle for LightProxy start: http://127.0.0.1:' + port);
+                console.info('Whistle for LightProxy start: http://127.0.0.1:' + port);
                 return clientReady;
             })
             .then(() => {
@@ -85,9 +83,9 @@ logger.info('use custom cert:', options.certDir);
                 );
             })
             .catch(e => {
-                logger.error(e);
+                console.error(e);
             });
     } catch (e) {
-        logger.error(e);
+        console.error(e);
     }
 })();

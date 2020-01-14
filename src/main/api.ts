@@ -13,6 +13,8 @@ import Koa from 'koa';
 import KoaStatic from 'koa-static';
 import electronIsDev from 'electron-is-dev';
 import path from 'path';
+import { LIGHTPROXY_NODEJS_PATH, LIGHTPROXY_FILES_DIR, SYSTEM_IS_MACOS } from './const';
+import { app } from 'electron';
 
 interface SwpanModuleProp {
     moduleId: string;
@@ -29,18 +31,29 @@ async function spawnModule(props: any) {
 
     logger.info('boardcast port', boardcastPort);
 
-    // fix electron crash with --inspect
-    const argv = process.argv.slice(1).filter(item => !item.startsWith('--inspect'));
+    const asarNode = encodeURIComponent(path.join(LIGHTPROXY_FILES_DIR, '/node/modules/asar-node'));
+    const startPath = encodeURIComponent(path.join(__dirname, `/node_modules/${moduleId}/index.js`));
 
+    const nodeScript = `require(decodeURIComponent('${asarNode}')).register();
+    const nodeRequire=global.require;
+    global.require = function(id) {
+        return nodeRequire(id.replace(/\//g, "${SYSTEM_IS_MACOS ? '/' : '\\'}"));
+    };
+    require(decodeURIComponent('${startPath}'));`;
     const startProcess = () => {
-        const child = spwan(process.execPath, argv, {
-            env: {
-                ...process.env,
-                ...env,
-                ELECTRON_RUN_MODULE: moduleId,
-                LIGHTPROXY_BOARDCASR_PORT: boardcastPort,
+        const child = spwan(
+            LIGHTPROXY_NODEJS_PATH,
+            ['-e', `eval(decodeURIComponent("${encodeURIComponent(nodeScript)}"))`, '--tls-min-v1.0'],
+            {
+                env: {
+                    ...process.env,
+                    ...env,
+                    ELECTRON_RUN_MODULE: moduleId,
+                    LIGHTPROXY_BOARDCASR_PORT: boardcastPort,
+                    USER_DATA: app.getPath('appData'),
+                },
             },
-        });
+        );
         logger.info('Spwaned process', process.execPath, child.pid);
 
         exitHook(() => {

@@ -26,6 +26,12 @@ export const SYSTEM_IS_MACOS = systemType === 'Darwin';
 
 export const LIGHTPROXY_UPDATE_DIR = path.join(LIGHTPROXY_HOME_PATH, './update');
 export const LIGHTPROXY_UPDATE_CONFIG = path.join(LIGHTPROXY_UPDATE_DIR, './config.json');
+export const LIGHTPROXY_FILES_DIR = path.join(LIGHTPROXY_HOME_PATH, './files');
+
+export const LIGHTPROXY_NODEJS_PATH = path.join(
+    LIGHTPROXY_FILES_DIR,
+    '/node/' + (SYSTEM_IS_MACOS ? 'lightproxy-node-macos' : 'lightproxy-node-win.exe'),
+);
 
 export const GITHUB_PROJECT_PAGE = 'https://github.com/alibaba/lightproxy';
 export const NEW_ISSUE_PAGE = 'https://github.com/alibaba/lightproxy/issues/new';

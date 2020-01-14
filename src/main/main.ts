@@ -6,13 +6,22 @@ import { format as formatUrl } from 'url';
 import { initIPC } from './api';
 import { checkUpdater } from './updater';
 import { hideOrQuit } from './platform';
-import { SYSTEM_IS_MACOS, NEW_ISSUE_PAGE, GITHUB_PROJECT_PAGE } from './const';
+import {
+    SYSTEM_IS_MACOS,
+    NEW_ISSUE_PAGE,
+    GITHUB_PROJECT_PAGE,
+    LIGHTPROXY_HOME_PATH,
+    LIGHTPROXY_FILES_DIR,
+    LIGHTPROXY_NODEJS_PATH,
+} from './const';
 import { version } from '../../package.json';
 import ua from 'universal-analytics';
 import { CoreAPI } from '../renderer/core-api';
 import { uuidv4 } from '../renderer/utils';
 import windowStateKeeper from 'electron-window-state';
 import os from 'os';
+import fs from 'fs-extra';
+import electronIsDev from 'electron-is-dev';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -24,9 +33,64 @@ let appReady = false;
 app.commandLine.appendSwitch('--no-proxy-server');
 app.commandLine.appendSwitch('disable-site-isolation-trials');
 
+function copyFileSync(source: string, target: string) {
+    let targetFile = target;
+
+    //if target is a directory a new file with the same name will be created
+    if (fs.existsSync(target)) {
+        if (fs.lstatSync(target).isDirectory()) {
+            targetFile = path.join(target, path.basename(source));
+        }
+    }
+
+    fs.writeFileSync(targetFile, fs.readFileSync(source));
+}
+
+function copyFolderRecursiveSync(source: string, target: string) {
+    let files = [];
+
+    //check if folder needs to be created or integrated
+    const targetFolder = path.join(target, path.basename(source));
+    if (!fs.existsSync(targetFolder)) {
+        fs.mkdirSync(targetFolder);
+    }
+
+    //copy
+    if (fs.lstatSync(source).isDirectory()) {
+        files = fs.readdirSync(source);
+        files.forEach(function(file) {
+            const curSource = path.join(source, file);
+            if (fs.lstatSync(curSource).isDirectory()) {
+                copyFolderRecursiveSync(curSource, targetFolder);
+            } else {
+                copyFileSync(curSource, targetFolder);
+            }
+        });
+    }
+}
+
 // @ts-ignore
 // will be used in renderer
 global.__static = __static;
+
+// @ts-ignore
+global.__filesDir = LIGHTPROXY_FILES_DIR;
+
+try {
+    if (!fs.existsSync(LIGHTPROXY_FILES_DIR)) {
+        fs.mkdirpSync(LIGHTPROXY_FILES_DIR);
+    } else {
+        fs.removeSync(LIGHTPROXY_FILES_DIR);
+    }
+
+    copyFolderRecursiveSync(
+        electronIsDev ? path.join(__dirname, '../../files/') : path.join(__dirname, './files/'),
+        LIGHTPROXY_HOME_PATH,
+    );
+    fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
+} catch (e) {
+    console.error(e);
+}
 
 const timer = setInterval(async () => {
     const result = await checkUpdater();
