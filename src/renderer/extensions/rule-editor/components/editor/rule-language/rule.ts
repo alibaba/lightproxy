@@ -1,9 +1,7 @@
-import monaco from 'monaco-editor';
-
-import IRichLanguageConfiguration = monaco.languages.LanguageConfiguration;
+import monaco, { languages } from 'monaco-editor';
 import { PROTOCOLS } from './protocols';
 
-const conf: IRichLanguageConfiguration = {
+const conf: languages.LanguageConfiguration = {
     comments: {
         lineComment: '#',
     },
