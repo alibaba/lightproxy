@@ -52,7 +52,7 @@ Take a quick start at: https://alibaba.github.io/lightproxy/quick-start.html
 ### env
 
 - nodejs > 12 (**important**)
-- `npm install -g electron-builder electron-webpack` if you need bundle application
+- `npm install -g electron-builder` if you need bundle application
 
 ### dev
 
