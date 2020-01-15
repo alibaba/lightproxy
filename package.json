@@ -17,7 +17,7 @@
         "doc": "env SKIP_CACHE=1 bash scripts/depoly-doc.sh",
         "install-deps": "yarn run update:nodejs && yarn run update:whistle && update:node_modules && yarn install",
         "prune": "yarn install --production --ignore-scripts --prefer-offline",
-        "update:nodejs": "rm -rf files/node && mkdir -p files/node && (curl -s https://nodejs.org/dist/v13.6.0/node-v13.6.0-darwin-x64.tar.gz | tar xvz -C ./files/node) && mv ./files/node/node-v13.6.0-darwin-x64/bin/node ./files/node/lightproxy-node-macos && (curl https://nodejs.org/dist/v13.6.0/win-x64/node.exe > ./files/node/lightproxy-node-win.exe) && rm -rf ./files/node/node-v13.6.0-darwin-x64/",
+        "update:nodejs": "rm -rf files/node && mkdir -p files/node && (curl -s https://cdn.npm.taobao.org/dist/node/v13.6.0/node-v13.6.0-darwin-x64.tar.gz | tar xvz -C ./files/node) && mv ./files/node/node-v13.6.0-darwin-x64/bin/node ./files/node/lightproxy-node-macos && (curl https://cdn.npm.taobao.org/dist/node/v13.6.0/win-x64/node.exe > ./files/node/lightproxy-node-win.exe) && rm -rf ./files/node/node-v13.6.0-darwin-x64/",
         "update:node_modules": "cd files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle && mv node_modules modules",
         "ci": "npm install -g yarn && npm run install-deps && npm install -g electron-builder && npm run dist",
         "test": "echo 'no test here yet'"
