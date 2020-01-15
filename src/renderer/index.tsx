@@ -1,20 +1,19 @@
 // Initial welcome page. Delete the following line to remove it.
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import { AppContainer } from 'react-hot-loader';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import { remote } from 'electron';
 import * as monaco from '@timkendrick/monaco-editor/dist/external';
+import '@timkendrick/monaco-editor/dist/external/monaco.css';
+import 'reset-css';
+
+import { App } from './components/app';
+import { i18nResources } from './i18n';
 
 // @ts-ignore
 window.monaco = monaco;
-
-import { App } from './components/app';
-
-import 'reset-css';
-import '@timkendrick/monaco-editor/dist/external/monaco.css';
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import { i18nResources } from './i18n';
-import { remote } from 'electron';
 
 i18n.use(initReactI18next) // passes i18n down to react-i18next
     .init({
@@ -33,4 +32,9 @@ if (remote.nativeTheme.shouldUseDarkColors) {
     require('./style/theme/default.less');
 }
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(
+    <AppContainer>
+        <App />
+    </AppContainer>,
+    document.getElementById('app'),
+);

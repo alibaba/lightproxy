@@ -87,7 +87,7 @@ try {
     } else {
         fs.removeSync(LIGHTPROXY_FILES_DIR);
         copyFolderRecursiveSync(
-            electronIsDev ? path.join(__dirname, '../../files/') : path.join(__dirname, './files/'),
+            electronIsDev ? path.join(__dirname, '../files/') : path.join(__dirname, './files/'),
             LIGHTPROXY_HOME_PATH,
         );
         fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
@@ -140,7 +140,7 @@ function createMainWindow() {
     }
 
     if (isDevelopment) {
-        window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
+        window.loadURL(`http://localhost:2333`);
     } else {
         window.loadURL(
             formatUrl({
