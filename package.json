@@ -1,6 +1,6 @@
 {
     "name": "LightProxy",
-    "version": "1.0.0",
+    "version": "use version in /app/package.json",
     "license": "MIT",
     "scripts": {
         "renderer-dev": "webpack-dev-server --config ./webpack/webpack.renderer.dev.config.js",
@@ -44,6 +44,8 @@
         "global-proxy": "^0.0.4",
         "i18next": "^19.0.2",
         "ip": "^1.1.5",
+        "koa": "^2.11.0",
+        "koa-static": "^5.0.0",
         "lodash": "^4.17.15",
         "md5-file": "^4.0.0",
         "mini-event-emitter": "^0.9.1",
@@ -67,10 +69,6 @@
         "tempdir": "^2.0.0",
         "tree-kill": "^1.2.2",
         "universal-analytics": "^0.4.20",
-        "whistle": "./whistle",
-        "whistle-start": "./whistle-start",
-        "whistle.scriptfile": "0.3.3",
-        "whistle.vase": "^1.2.1",
         "ws": "^7.2.1"
     },
     "devDependencies": {
@@ -100,6 +98,7 @@
         "@types/ws": "^6.0.4",
         "@typescript-eslint/eslint-plugin": "^2.12.0",
         "@typescript-eslint/parser": "^2.12.0",
+        "add-asset-webpack-plugin": "^1.0.0",
         "babel-loader": "^8.0.6",
         "babel-plugin-import": "^1.13.0",
         "copy-webpack-plugin": "^5.1.1",
@@ -139,7 +138,8 @@
         },
         "files": [
             "dist/**/*",
-            "package.json"
+            "package.json",
+            "main.js"
         ],
         "directories": {
             "output": "release"

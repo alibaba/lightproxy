@@ -13,3 +13,4 @@ files/node
 app/dist/
 app/node_modules/
 release/
+docs/.vuepress/dist
