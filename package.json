@@ -1,11 +1,10 @@
 {
     "name": "LightProxy",
-    "version": "1.1.8-beta-22",
+    "version": "1.0.0",
     "license": "MIT",
-    "main": "./app/dist/main.js",
     "scripts": {
         "renderer-dev": "webpack-dev-server --config ./webpack/webpack.renderer.dev.config.js",
-        "main-dev": "webpack --config ./webpack/webpack.main.config.js && electron ./app/dist/main.js",
+        "main-dev": "webpack --config ./webpack/webpack.main.config.js && electron ./app",
         "dev": "cross-env START_HOT=1 yarn run renderer-dev",
         "compile-main": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.main.prod.config.js",
         "compile-renderer": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.renderer.prod.config.js",
