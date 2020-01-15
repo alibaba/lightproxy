@@ -15,6 +15,28 @@ import { i18nResources } from './i18n';
 // @ts-ignore
 window.monaco = monaco;
 
+// make links open in external browser, for example monaco
+// @ts-ignore
+window.open = function(url: string) {
+    if (url) {
+        remote.shell.openExternal(url);
+    } else {
+        // tab = window.open()
+        // tab.location.href = '';
+        // hack for this
+        return {
+            location: {
+                set href(url: string) {
+                    remote.shell.openExternal(url);
+                },
+                get href() {
+                    return '';
+                },
+            },
+        };
+    }
+};
+
 i18n.use(initReactI18next) // passes i18n down to react-i18next
     .init({
         resources: i18nResources,
