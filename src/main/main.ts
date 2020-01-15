@@ -79,15 +79,24 @@ global.__filesDir = LIGHTPROXY_FILES_DIR;
 try {
     if (!fs.existsSync(LIGHTPROXY_FILES_DIR)) {
         fs.mkdirpSync(LIGHTPROXY_FILES_DIR);
-    } else {
-        fs.removeSync(LIGHTPROXY_FILES_DIR);
     }
 
-    copyFolderRecursiveSync(
-        electronIsDev ? path.join(__dirname, '../../files/') : path.join(__dirname, './files/'),
-        LIGHTPROXY_HOME_PATH,
-    );
-    fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
+    const versionFile = path.join(LIGHTPROXY_FILES_DIR, 'version');
+    if (fs.existsSync(versionFile) && fs.readFileSync(versionFile, 'utf-8') === version && !electronIsDev) {
+        // pass
+    } else {
+        fs.removeSync(LIGHTPROXY_FILES_DIR);
+        copyFolderRecursiveSync(
+            electronIsDev ? path.join(__dirname, '../../files/') : path.join(__dirname, './files/'),
+            LIGHTPROXY_HOME_PATH,
+        );
+        fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
+        fs.moveSync(
+            path.join(LIGHTPROXY_FILES_DIR, '/node/modules'),
+            path.join(LIGHTPROXY_FILES_DIR, '/node/node_modules'),
+        );
+        fs.writeFileSync(versionFile, version, 'utf-8');
+    }
 } catch (e) {
     console.error(e);
 }
