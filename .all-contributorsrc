@@ -42,6 +42,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "ahonn",
+      "name": "Yuexun Jiang",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/9718515?v=4",
+      "profile": "https://www.ahonn.me",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,
