@@ -76,6 +76,7 @@
     "dist/",
     "webpack/",
     "whistle/",
-    "devtools-frontend"
+    "devtools-frontend",
+    "files"
   ]
 }
