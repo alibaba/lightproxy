@@ -32,18 +32,26 @@ async function spawnModule(props: any) {
     logger.info('boardcast port', boardcastPort);
 
     const asarNode = encodeURIComponent(path.join(LIGHTPROXY_FILES_DIR, '/node/modules/asar-node'));
-    const startPath = encodeURIComponent(path.join(__dirname, `/node_modules/${moduleId}/index.js`));
+    const startDir = electronIsDev ? path.resolve(path.join(__dirname, '../../')) : __dirname;
+    const startPath = encodeURIComponent(path.join(startDir, `/node_modules/${moduleId}/index.js`));
+
+    const split = SYSTEM_IS_MACOS ? '/' : '\\\\';
 
     const nodeScript = `require(decodeURIComponent('${asarNode}')).register();
     const nodeRequire=global.require;
-    global.require = function(id) {
-        return nodeRequire(id.replace(/\//g, "${SYSTEM_IS_MACOS ? '/' : '\\'}"));
+    global.require = function customreq(id) {
+        console.log('req', id);
+        return nodeRequire(id.replace(/\\//g, "${split}"));
     };
     require(decodeURIComponent('${startPath}'));`;
     const startProcess = () => {
         const child = spwan(
             LIGHTPROXY_NODEJS_PATH,
-            ['-e', `eval(decodeURIComponent("${encodeURIComponent(nodeScript)}"))`, '--tls-min-v1.0'],
+            [
+                '-e',
+                `const code = decodeURIComponent("${encodeURIComponent(nodeScript)}");console.log(code);eval(code);`,
+                '--tls-min-v1.0',
+            ],
             {
                 env: {
                     ...process.env,
