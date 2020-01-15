@@ -2,27 +2,27 @@
     "name": "LightProxy",
     "version": "1.1.8-beta-22",
     "license": "MIT",
-    "main": "./dist/main.js",
+    "main": "./app/dist/main.js",
     "scripts": {
         "renderer-dev": "webpack-dev-server --config ./webpack/webpack.renderer.dev.config.js",
-        "main-dev": "webpack --config ./webpack/webpack.main.config.js && electron ./dist/main.js",
+        "main-dev": "webpack --config ./webpack/webpack.main.config.js && electron ./app/dist/main.js",
         "dev": "cross-env START_HOT=1 yarn run renderer-dev",
         "compile-main": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.main.prod.config.js",
         "compile-renderer": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.renderer.prod.config.js",
         "compile": "yarn run lint && yarn run compile-main && yarn run compile-renderer",
-        "dist": "yarn compile && yarn run prune && CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder --mac --win --x64 && yarn install",
-        "dist:mac": "yarn compile && yarn run prune && CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder --mac --x64 && yarn install",
-        "dist:win": "yarn compile && yarn run prune && CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder --win --x64 && yarn install",
-        "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
-        "lint": "npx eslint ./src/**/*.ts ./src/**/*.tsx --fix",
+        "dist": "yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --win --x64",
+        "dist:mac": "yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --x64",
+        "dist:win": "yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win --x64",
+        "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+        "lint": "eslint ./src/**/*.ts ./src/**/*.tsx --fix",
         "update:whistle": "rm -rf whistle && git clone https://github.com/avwo/whistle --depth=1 && patch -u -b whistle/lib/inspectors/res.js -i whistle.patch && yarn add ./whistle ./whistle-start",
+        "update:nodejs": "rm -rf files/node && mkdir -p files/node && (curl -s https://cdn.npm.taobao.org/dist/node/v13.6.0/node-v13.6.0-darwin-x64.tar.gz | tar xvz -C ./files/node) && mv ./files/node/node-v13.6.0-darwin-x64/bin/node ./files/node/lightproxy-node-macos && (curl https://cdn.npm.taobao.org/dist/node/v13.6.0/win-x64/node.exe > ./files/node/lightproxy-node-win.exe) && rm -rf ./files/node/node-v13.6.0-darwin-x64/",
+        "update:node_modules": "cd files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle && mv node_modules modules",
         "cleanbuild": "rm -rf node_modules && yarn install && yarn run update:whistle && yarn run dist",
         "doc": "env SKIP_CACHE=1 bash scripts/depoly-doc.sh",
         "install-deps": "yarn run update:nodejs && yarn run update:whistle && yarn run update:node_modules && yarn install",
-        "prune": "yarn install --production --ignore-scripts --prefer-offline",
-        "update:nodejs": "rm -rf files/node && mkdir -p files/node && (curl -s https://cdn.npm.taobao.org/dist/node/v13.6.0/node-v13.6.0-darwin-x64.tar.gz | tar xvz -C ./files/node) && mv ./files/node/node-v13.6.0-darwin-x64/bin/node ./files/node/lightproxy-node-macos && (curl https://cdn.npm.taobao.org/dist/node/v13.6.0/win-x64/node.exe > ./files/node/lightproxy-node-win.exe) && rm -rf ./files/node/node-v13.6.0-darwin-x64/",
-        "update:node_modules": "cd files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle && mv node_modules modules",
         "ci": "npm install -g yarn && yarn run install-deps && yarn run dist",
+        "postinstall": "electron-builder install-app-deps",
         "test": "echo 'no test here yet'"
     },
     "dependencies": {
@@ -141,6 +141,9 @@
         "files": [
             "dist/**/*",
             "package.json"
-        ]
+        ],
+        "directories": {
+            "output": "release"
+        }
     }
 }

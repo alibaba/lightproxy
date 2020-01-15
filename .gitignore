@@ -1,5 +1,4 @@
 .DS_Store
-dist/
 node_modules/
 thumbs.db
 .idea/
@@ -11,3 +10,6 @@ whistle.log
 !license_third_party/whistle
 yarn.lock
 files/node
+app/dist/
+app/node_modules/
+release/
