@@ -87,7 +87,7 @@ try {
     } else {
         fs.removeSync(LIGHTPROXY_FILES_DIR);
         copyFolderRecursiveSync(
-            electronIsDev ? path.join(__dirname, '../files/') : path.join(__dirname, './files/'),
+            electronIsDev ? path.join(__dirname, '../../files/') : path.join(__dirname, './files/'),
             LIGHTPROXY_HOME_PATH,
         );
         fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
@@ -144,7 +144,7 @@ function createMainWindow() {
     } else {
         window.loadURL(
             formatUrl({
-                pathname: path.join(__dirname, 'index.html'),
+                pathname: path.join(__dirname, './index.html'),
                 protocol: 'file',
                 slashes: true,
             }),
