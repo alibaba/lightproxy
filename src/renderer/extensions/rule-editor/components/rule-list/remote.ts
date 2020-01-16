@@ -66,7 +66,7 @@ export function syncRuleToWhistle(rules: Rule[], port: number) {
 disable://intercept alilang-desktop-client.cn-hangzhou.log.aliyuncs.com s-api.alibaba-inc.com alilang.alibaba-inc.com auth-alilang.alibaba-inc.com mdm-alilang.alibaba-inc.com
 
 # Apple
-disable://intercept *.apple.com *.*.apple.com 
+disable://intercept *.apple.com *.*.apple.com *.mzstatic.com
     `
             : '') +
         rules
