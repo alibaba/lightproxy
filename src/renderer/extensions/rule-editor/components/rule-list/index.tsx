@@ -291,7 +291,9 @@ export const RuleList = (props: Props) => {
                                                 switchRule(index);
                                             };
 
-                                            const handleDoubleClick = () => {
+                                            const handleDoubleClick = (rename: boolean | undefined) => {
+                                                if (rename) return;
+
                                                 toggleRuleEnabledRef.current(index);
                                             };
 
@@ -357,7 +359,7 @@ export const RuleList = (props: Props) => {
                                                     className={className}
                                                     onClick={handleClick}
                                                     onContextMenu={handleContextMenu}
-                                                    onDoubleClick={handleDoubleClick}
+                                                    onDoubleClick={() => handleDoubleClick(item.rename)}
                                                 >
                                                     {item.rename ? (
                                                         <Input
