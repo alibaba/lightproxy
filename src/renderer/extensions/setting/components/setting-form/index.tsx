@@ -4,34 +4,13 @@ import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
 import { version } from '../../../../../../package.json';
 import { shell, remote } from 'electron';
+import { debounce } from 'lodash';
 import './index.less';
 
 class InnerSettingForm extends React.Component {
     state = {
         isUpdating: false,
     };
-    componentDidMount() {
-        // @ts-ignore
-        // eslint-disable-next-line
-        const { setFieldsValue } = this.props.form;
-        const settings = CoreAPI.store.get('settings') || {};
-
-        if (!settings.updateChannel) {
-            settings.updateChannel = 'stable';
-        }
-
-        if (!(settings.softwareWhiteList === false)) {
-            settings.softwareWhiteList = true;
-        }
-
-        if (!settings.defaultPort) {
-            settings.defaultPort = 12888;
-        }
-
-        if (settings) {
-            setFieldsValue(settings);
-        }
-    }
     render() {
         const {
             // @ts-ignore
@@ -128,12 +107,32 @@ class InnerSettingForm extends React.Component {
     }
 }
 
+// debounce input
+const saveSettings = debounce((props, changedValues, allValues) => {
+    const { t } = props;
+    CoreAPI.store.set('settings', allValues);
+    message.destroy();
+    message.success(t('Saved'));
+}, 500);
+
 export const SettingForm = Form.create({
-    onValuesChange(props, changedValues, allValues) {
+    mapPropsToFields(props) {
         // @ts-ignore
-        const { t } = props;
-        CoreAPI.store.set('settings', allValues);
-        message.destroy();
-        message.success(t('Saved'));
+        const { settings } = props;
+
+        return {
+            updateChannel: Form.createFormField({
+                value: settings.updateChannel,
+            }),
+            softwareWhiteList: Form.createFormField({
+                value: settings.softwareWhiteList,
+            }),
+            defaultPort: Form.createFormField({
+                value: settings.defaultPort,
+            }),
+        };
+    },
+    onValuesChange(props, changedValues, allValues) {
+        saveSettings(props, changedValues, allValues);
     },
 })(InnerSettingForm);
