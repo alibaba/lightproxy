@@ -1,6 +1,6 @@
 {
     "name": "LightProxy",
-    "version": "use version in /app/package.json",
+    "version": "1.1.8-beta-23",
     "license": "MIT",
     "scripts": {
         "renderer-dev": "webpack-dev-server --config ./webpack/webpack.renderer.dev.config.js",
@@ -130,14 +130,24 @@
     "build": {
         "appId": "io.github.alibaba.lightproxy",
         "mac": {
-            "category": ""
+            "category": "",
+            "files": [
+                "dist/files/node/lightproxy-node-macos"
+            ]
         },
         "win": {
             "target": "nsis",
-            "icon": "./static/icon.png"
+            "icon": "./static/icon.png",
+            "files": [
+                "dist/files/node/lightproxy-node-win.exe"
+            ]
         },
         "files": [
-            "dist/**/*",
+            "dist/*.js",
+            "dist/*.html",
+            "dist/devtools-frontend/**/*",
+            "dist/files/*.png",
+            "dist/files/node/modules",
             "package.json",
             "main.js"
         ],
