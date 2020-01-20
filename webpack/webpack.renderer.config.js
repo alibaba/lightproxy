@@ -60,6 +60,7 @@ module.exports = merge.smart(baseConfig, {
             title: pkg.title,
             template: path.resolve(__dirname, '../src/index.ejs'),
         }),
+
         new CopyPlugin([
             { from: './node_modules/@timkendrick/monaco-editor/dist/external/index.js', to: './monaco.js' },
             { from: './node_modules/@timkendrick/monaco-editor/dist/external/monaco.css', to: './monaco.css' },
