@@ -22,7 +22,6 @@ import windowStateKeeper from 'electron-window-state';
 import os from 'os';
 import fs from 'fs-extra';
 import electronIsDev from 'electron-is-dev';
-import treeKill from 'tree-kill';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
