@@ -22,6 +22,7 @@ import windowStateKeeper from 'electron-window-state';
 import os from 'os';
 import fs from 'fs-extra';
 import electronIsDev from 'electron-is-dev';
+import treeKill from 'tree-kill';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -112,6 +113,8 @@ if (process.argv.indexOf('--update') !== -1) {
     checkUpdater();
 }
 
+let forceQuit = false;
+
 function createMainWindow() {
     const mainWindowState = windowStateKeeper({
         defaultWidth: 1100,
@@ -151,8 +154,11 @@ function createMainWindow() {
         );
     }
 
-    window.on('closed', () => {
-        hideOrQuit();
+    window.on('close', event => {
+        if (!forceQuit) {
+            hideOrQuit();
+            event?.preventDefault();
+        }
     });
 
     window.webContents.on('devtools-opened', () => {
@@ -220,6 +226,10 @@ function setApplicationMenu() {
 
     Menu.setApplicationMenu(applicationMenu);
 }
+
+app.on('before-quit', function() {
+    forceQuit = true;
+});
 
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
