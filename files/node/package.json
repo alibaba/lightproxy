@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "whistle": "../../whistle",
+    "whistle-start": "../../whistle-start"
+  }
+}
