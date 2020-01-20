@@ -1,7 +1,8 @@
 {
     "name": "LightProxy",
-    "version": "1.1.8-beta-23",
+    "version": "1.1.8-beta-27",
     "license": "MIT",
+    "main": "./dist/main.js",
     "scripts": {
         "renderer-dev": "webpack-dev-server --config ./webpack/webpack.renderer.dev.config.js",
         "main-dev": "webpack --config ./webpack/webpack.main.config.js && electron ./app",
@@ -9,12 +10,12 @@
         "compile-main": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.main.prod.config.js",
         "compile-renderer": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.renderer.prod.config.js",
         "compile": "yarn run lint && yarn run compile-main && yarn run compile-renderer",
-        "dist": "yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --win --x64",
-        "dist:mac": "yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --x64",
-        "dist:win": "yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win --x64",
+        "dist": "yarn syncversion && yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --win --x64",
+        "dist:mac": "yarn syncversion && yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --x64",
+        "dist:win": "yarn syncversion && yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win --x64",
         "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
         "lint": "eslint ./src/**/*.ts ./src/**/*.tsx --fix",
-        "update:whistle": "rm -rf whistle && git clone https://github.com/avwo/whistle --depth=1 && patch -u -b whistle/lib/inspectors/res.js -i whistle.patch && yarn add ./whistle ./whistle-start",
+        "update:whistle": "rm -rf whistle && git clone https://github.com/avwo/whistle --depth=1 && patch -u -b whistle/lib/inspectors/res.js -i whistle.patch",
         "update:nodejs": "rm -rf files/node && mkdir -p files/node && (curl -s https://cdn.npm.taobao.org/dist/node/v13.6.0/node-v13.6.0-darwin-x64.tar.gz | tar xvz -C ./files/node) && mv ./files/node/node-v13.6.0-darwin-x64/bin/node ./files/node/lightproxy-node-macos && (curl https://cdn.npm.taobao.org/dist/node/v13.6.0/win-x64/node.exe > ./files/node/lightproxy-node-win.exe) && rm -rf ./files/node/node-v13.6.0-darwin-x64/",
         "update:node_modules": "cd files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle && mv node_modules modules",
         "cleanbuild": "rm -rf node_modules && yarn install && yarn run update:whistle && yarn run dist",
@@ -22,7 +23,8 @@
         "install-deps": "yarn run update:nodejs && yarn run update:whistle && yarn run update:node_modules && yarn install",
         "ci": "npm install -g yarn && yarn run install-deps && yarn run dist",
         "postinstall": "electron-builder install-app-deps",
-        "test": "echo 'no test here yet'"
+        "test": "echo 'no test here yet'",
+        "syncversion": "node scripts/sync-version.js"
     },
     "dependencies": {
         "@sentry/electron": "1.1.0",
