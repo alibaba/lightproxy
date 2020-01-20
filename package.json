@@ -1,6 +1,6 @@
 {
     "name": "LightProxy",
-    "version": "1.1.8-beta-31",
+    "version": "1.1.8-beta-32",
     "license": "MIT",
     "main": "./dist/main.js",
     "scripts": {
@@ -10,21 +10,22 @@
         "compile-main": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.main.prod.config.js",
         "compile-renderer": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.renderer.prod.config.js",
         "compile": "yarn run lint && yarn run compile-main && yarn run compile-renderer",
-        "dist": "yarn syncversion && yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --win --x64",
-        "dist:mac": "yarn syncversion && yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --x64",
-        "dist:win": "yarn syncversion && yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win --x64",
+        "dist": "yarn clean:dist && yarn syncversion && yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --win --x64",
+        "dist:mac": "yarn clean:dist && yarn syncversion && yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --x64",
+        "dist:win": "yarn clean:dist && yarn syncversion && yarn compile && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win --x64",
         "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
         "lint": "eslint ./src/**/*.ts ./src/**/*.tsx --fix",
         "update:whistle": "rm -rf whistle && git clone https://github.com/avwo/whistle --depth=1 && patch -u -b whistle/lib/inspectors/res.js -i whistle.patch",
         "update:nodejs": "rm -rf files/node && mkdir -p files/node && (curl -s https://cdn.npm.taobao.org/dist/node/v13.6.0/node-v13.6.0-darwin-x64.tar.gz | tar xvz -C ./files/node) && mv ./files/node/node-v13.6.0-darwin-x64/bin/node ./files/node/lightproxy-node-macos && (curl https://cdn.npm.taobao.org/dist/node/v13.6.0/win-x64/node.exe > ./files/node/lightproxy-node-win.exe) && rm -rf ./files/node/node-v13.6.0-darwin-x64/",
-        "update:node_modules": "cd files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle && mv node_modules modules",
+        "update:node_modules": "npx rimraf files/node/modules && cd files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle && mv node_modules modules",
         "cleanbuild": "rm -rf node_modules && yarn install && yarn run update:whistle && yarn run dist",
         "doc": "env SKIP_CACHE=1 bash scripts/depoly-doc.sh",
         "install-deps": "yarn run update:nodejs && yarn run update:whistle && yarn run update:node_modules && yarn install",
         "ci": "npm install -g yarn && yarn run install-deps && yarn run dist",
         "postinstall": "electron-builder install-app-deps",
         "test": "echo 'no test here yet'",
-        "syncversion": "node scripts/sync-version.js"
+        "syncversion": "node scripts/sync-version.js",
+        "clean:dist": "npx rimraf app/dist"
     },
     "dependencies": {
         "@sentry/electron": "1.1.0",
@@ -120,6 +121,7 @@
         "prettier": "^1.19.1",
         "raw-loader": "^4.0.0",
         "react-hot-loader": "^4.12.18",
+        "rimraf": "^3.0.0",
         "style-loader": "^1.0.2",
         "typescript": "^3.7.3",
         "webpack": "^4.41.5",
