@@ -7,6 +7,31 @@ import fs from 'fs-extra-promise';
 import Store from 'electron-store';
 // @ts-ignore
 import { ungzip } from 'node-gzip';
+import path from 'path';
+import { app } from 'electron';
+
+// Application will write own version into /update folder
+// So when user update Application(Launcher) itself, we can just remove /update to using right version
+const LAUNCHER_VERSION_FILE = path.join(LIGHTPROXY_UPDATE_DIR, 'launcher_version');
+
+/**
+ * Check if /update still freash
+ * If user update Application we will drop /update
+ */
+export function checkUpdateFreash() {
+    console.log('Check update freash');
+    if (fs.existsSync(LAUNCHER_VERSION_FILE) && fs.readFileSync(LAUNCHER_VERSION_FILE, 'utf-8') === app.getVersion()) {
+        console.log('freash');
+        return true;
+    } else {
+        console.log('Not fresh');
+        return false;
+    }
+}
+
+function writeUpdateFreashInfo() {
+    fs.writeFileSync(LAUNCHER_VERSION_FILE, app.getVersion(), 'utf-8');
+}
 
 export async function checkUpdater() {
     let updateChannel = 'stable';
@@ -62,6 +87,8 @@ export async function checkUpdater() {
                                 path: asarPath,
                             }),
                         );
+
+                        writeUpdateFreashInfo();
                     };
 
                     try {
