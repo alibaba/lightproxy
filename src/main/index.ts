@@ -1,5 +1,5 @@
 import logger from 'electron-log';
-import { LIGHTPROXY_UPDATE_CONFIG } from './const';
+import { LIGHTPROXY_UPDATE_CONFIG, LIGHTPROXY_UPDATE_DIR } from './const';
 import fs from 'fs-extra-promise';
 import md5file from 'md5-file';
 import isDev from 'electron-is-dev';
@@ -7,6 +7,8 @@ import cp from 'child_process';
 import * as Sentry from '@sentry/node';
 import os from 'os';
 import { version } from '../../package.json';
+import { checkUpdateFreash } from './updater';
+import { app } from 'electron';
 // electron multiple process
 
 process.on('unhandledRejection', error => {
@@ -54,7 +56,7 @@ if (fs.existsSync(LIGHTPROXY_UPDATE_CONFIG) && !global.isInUpdateAsar && !isDev)
     if (fs.existsSync(path)) {
         // to check asar md5, https://github.com/electron/electron/issues/1658
         process.noAsar = true;
-        if (md5file.sync(path) === md5) {
+        if (md5file.sync(path) === md5 && checkUpdateFreash()) {
             logger.info('md5 pass', info);
             process.noAsar = false;
             // @ts-ignore
@@ -67,9 +69,11 @@ if (fs.existsSync(LIGHTPROXY_UPDATE_CONFIG) && !global.isInUpdateAsar && !isDev)
             const realRequire = eval('require');
             realRequire(`${path}/main`);
         } else {
-            // md5 check-failed, remove
-            fs.removeSync(LIGHTPROXY_UPDATE_CONFIG);
-            require('./switch-entry');
+            // check-failed, remove
+            fs.removeSync(LIGHTPROXY_UPDATE_DIR);
+            // restart app
+            app.relaunch();
+            app.quit();
         }
     }
 } else {
