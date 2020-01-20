@@ -13,7 +13,7 @@ import Koa from 'koa';
 import KoaStatic from 'koa-static';
 import electronIsDev from 'electron-is-dev';
 import path from 'path';
-import { LIGHTPROXY_NODEJS_PATH, LIGHTPROXY_FILES_DIR } from './const';
+import { LIGHTPROXY_FILES_DIR } from './const';
 import { app } from 'electron';
 
 interface SwpanModuleProp {
@@ -37,7 +37,7 @@ async function spawnModule(props: any) {
     const nodeScript = `require(decodeURIComponent('${modulePath}'));`;
     const startProcess = () => {
         const child = spwan(
-            LIGHTPROXY_NODEJS_PATH,
+            process.execPath,
             [
                 '-e',
                 `const code = decodeURIComponent("${encodeURIComponent(nodeScript)}");console.log(code);eval(code);`,
@@ -51,6 +51,7 @@ async function spawnModule(props: any) {
                     LIGHTPROXY_BOARDCASR_PORT: boardcastPort,
                     USER_DATA: app.getPath('appData'),
                     NODE_PATH: nodeModulePath,
+                    ELECTRON_RUN_AS_NODE: 1,
                 },
             },
         );

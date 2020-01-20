@@ -16,11 +16,10 @@
         "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
         "lint": "eslint ./src/**/*.ts ./src/**/*.tsx --fix",
         "update:whistle": "rm -rf whistle && git clone https://github.com/avwo/whistle --depth=1 && patch -u -b whistle/lib/inspectors/res.js -i whistle.patch",
-        "update:nodejs": "rm -rf files/node && mkdir -p files/node && (curl -s https://cdn.npm.taobao.org/dist/node/v13.6.0/node-v13.6.0-darwin-x64.tar.gz | tar xvz -C ./files/node) && mv ./files/node/node-v13.6.0-darwin-x64/bin/node ./files/node/lightproxy-node-macos && (curl https://cdn.npm.taobao.org/dist/node/v13.6.0/win-x64/node.exe > ./files/node/lightproxy-node-win.exe) && rm -rf ./files/node/node-v13.6.0-darwin-x64/",
-        "update:node_modules": "npx rimraf files/node/modules && cd files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle && mv node_modules modules",
+        "update:node_modules": "npx rimraf files/node/modules && cd files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle whistle.vase whistle.scriptfile && mv node_modules modules",
         "cleanbuild": "rm -rf node_modules && yarn install && yarn run update:whistle && yarn run dist",
         "doc": "env SKIP_CACHE=1 bash scripts/depoly-doc.sh",
-        "install-deps": "yarn run update:nodejs && yarn run update:whistle && yarn run update:node_modules && yarn install",
+        "install-deps": "yarn run update:whistle && yarn run update:node_modules && yarn install",
         "ci": "npm install -g yarn && yarn run install-deps && yarn run dist",
         "postinstall": "electron-builder install-app-deps",
         "test": "echo 'no test here yet'",
@@ -134,17 +133,11 @@
     "build": {
         "appId": "io.github.alibaba.lightproxy",
         "mac": {
-            "category": "",
-            "files": [
-                "dist/files/node/lightproxy-node-macos"
-            ]
+            "category": ""
         },
         "win": {
             "target": "nsis",
-            "icon": "./static/icon.png",
-            "files": [
-                "dist/files/node/lightproxy-node-win.exe"
-            ]
+            "icon": "./static/icon.png"
         },
         "files": [
             "dist/*.js",
