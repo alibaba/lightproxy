@@ -14,3 +14,4 @@ app/dist/
 app/node_modules/
 release/
 docs/.vuepress/dist
+app/package.json
