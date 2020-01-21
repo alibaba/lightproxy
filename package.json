@@ -1,6 +1,6 @@
 {
     "name": "LightProxy",
-    "version": "1.1.8-beta-32",
+    "version": "1.1.8-beta-33",
     "license": "MIT",
     "main": "./dist/main.js",
     "scripts": {
@@ -145,6 +145,7 @@
             "dist/devtools-frontend/**/*",
             "dist/files/*.png",
             "dist/files/node/modules",
+            "dist/files/proxy_conf_helper",
             "package.json",
             "main.js"
         ],

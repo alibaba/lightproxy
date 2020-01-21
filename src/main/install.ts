@@ -19,8 +19,9 @@ import {
     LIGHTPROXY_CERT_KEY_PATH,
     SYSTEM_IS_MACOS,
     PROXY_CONF_HELPER_PATH,
-    PROXY_CONF_ORIGIN_HELPER_PATH,
 } from './const';
+import { dialog, app } from 'electron';
+import treeKill from 'tree-kill';
 
 const pki = forge.pki;
 
@@ -94,7 +95,24 @@ async function generateCert() {
     });
 }
 
-async function installCert() {
+function alertAndQuit() {
+    dialog.showErrorBox(
+        'Grant Authorization Failed 授权失败',
+        `Grant Authorization Failed for install certificate and helper
+macOS user Please input your user password when dialog
+Windows user Please try to enable Property => Compatibility => Run program as Administrator
+安装证书或者 helper 过程中授权失败
+macOS 用户请尝试在弹出的对话框中输入用户密码
+Windows 用户请尝试打开在 属性 => 兼容性 => 以管理员身份运营该应用
+
+Application will quit
+应用程序即将退出
+    `,
+    );
+    treeKill(process.pid);
+}
+
+async function installCertAndHelper() {
     console.log('Install cert');
     const certs = (await generateCert()) as {
         key: string;
@@ -108,14 +126,14 @@ async function installCert() {
     await fs.writeFileAsync(path.join(dir, CERT_KEY_FILE_NAME), certs.key, 'utf-8');
     await fs.writeFileAsync(path.join(dir, CERT_FILE_NAME), certs.cert, 'utf-8');
 
-    // 信任证书
+    // 信任证书 & 安装 helper
     const installPromise = new Promise((resolve, reject) => {
         if (SYSTEM_IS_MACOS) {
             sudo.exec(
                 `security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(
                     dir,
                     CERT_FILE_NAME,
-                )}"`,
+                )}" && chown root:admin "${PROXY_CONF_HELPER_PATH}" && chmod a+rx+s "${PROXY_CONF_HELPER_PATH}"`,
                 sudoOptions,
                 (error, stdout) => {
                     if (error) {
@@ -131,12 +149,18 @@ async function installCert() {
                 windowsHide: true,
             });
             console.log('certutil result', output.toString());
+
+            // windows dose not need install helper
             resolve();
         }
     });
 
     console.log('before install');
-    await installPromise;
+    try {
+        await installPromise;
+    } catch (e) {
+        alertAndQuit();
+    }
 
     console.log('after install');
     // 信任完成，把证书目录拷贝过去
@@ -167,33 +191,11 @@ async function checkHelperInstall() {
     return false;
 }
 
-async function installHelper() {
-    const installPromise = new Promise((resolve, reject) => {
-        if (SYSTEM_IS_MACOS) {
-            fs.copySync(PROXY_CONF_ORIGIN_HELPER_PATH, PROXY_CONF_HELPER_PATH);
-            sudo.exec(
-                `chown root:admin "${PROXY_CONF_HELPER_PATH}" && chmod a+rx+s "${PROXY_CONF_HELPER_PATH}"`,
-                sudoOptions,
-                (error, stdout) => {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve(stdout);
-                },
-            );
-        }
-    });
-
-    await installPromise;
-}
-
 // 检查安装状态，如果没安装就安装一下
 export default async function checkInstallStatus() {
-    if (!(await checkCertInstall())) {
-        await installCert();
-    }
-
-    if (!(await checkHelperInstall())) {
-        await installHelper();
+    if ((await checkCertInstall()) && (await checkHelperInstall())) {
+        // pass
+    } else {
+        await installCertAndHelper();
     }
 }

@@ -15,8 +15,7 @@ export const CERT_KEY_FILE_NAME = 'root.key';
 
 export const LIGHTPROXY_CERT_KEY_PATH = path.join(LIGHTPROXY_CERT_DIR_PATH, CERT_KEY_FILE_NAME);
 
-export const PROXY_CONF_ORIGIN_HELPER_PATH = path.join(__static, './proxy_conf_helper');
-export const PROXY_CONF_HELPER_PATH = path.join(LIGHTPROXY_HOME_PATH, './proxy_conf_helper');
+// export const PROXY_CONF_ORIGIN_HELPER_PATH = path.join(__static, './proxy_conf_helper');
 
 export const LIGHTPROXY_ICON_TEMPLATE_PATH = path.join(__static, 'iconTemplate.png');
 
@@ -27,6 +26,7 @@ export const SYSTEM_IS_MACOS = systemType === 'Darwin';
 export const LIGHTPROXY_UPDATE_DIR = path.join(LIGHTPROXY_HOME_PATH, './update');
 export const LIGHTPROXY_UPDATE_CONFIG = path.join(LIGHTPROXY_UPDATE_DIR, './config.json');
 export const LIGHTPROXY_FILES_DIR = path.join(LIGHTPROXY_HOME_PATH, './files');
+export const PROXY_CONF_HELPER_PATH = path.join(LIGHTPROXY_FILES_DIR, './proxy_conf_helper');
 
 export const LIGHTPROXY_NODEJS_PATH = path.join(
     LIGHTPROXY_FILES_DIR,
