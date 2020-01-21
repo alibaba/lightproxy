@@ -34,7 +34,22 @@ async function spawnModule(props: any) {
     const nodeModulePath = path.join(LIGHTPROXY_FILES_DIR, `/node/node_modules/`);
     const modulePath = encodeURIComponent(path.join(nodeModulePath, `${moduleId}/index.js`));
 
-    const nodeScript = `require(decodeURIComponent('${modulePath}'));`;
+    const nodeScript = `
+const cp = require('child_process');
+const originSpwan = cp.spawn;
+
+// @ts-ignore
+cp.spawn = function(cmd, argv, options) {
+    if (cmd === 'node' || cmd === 'node.exe') {
+        cmd = process.execPath;
+        options = options || {};
+        options.env = options.env || {};
+        options.env.ELECTRON_RUN_AS_NODE = '1';
+    }
+
+    return originSpwan.call(this, cmd, argv, options);
+};
+require(decodeURIComponent('${modulePath}'));`;
     const startProcess = () => {
         const child = spwan(
             process.execPath,
