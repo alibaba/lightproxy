@@ -12,7 +12,6 @@ import {
     GITHUB_PROJECT_PAGE,
     LIGHTPROXY_HOME_PATH,
     LIGHTPROXY_FILES_DIR,
-    LIGHTPROXY_NODEJS_PATH,
 } from './const';
 import { version } from '../../package.json';
 import ua from 'universal-analytics';
@@ -85,12 +84,13 @@ try {
     if (fs.existsSync(versionFile) && fs.readFileSync(versionFile, 'utf-8') === version && !electronIsDev) {
         // pass
     } else {
+        console.log('copy files');
         fs.removeSync(LIGHTPROXY_FILES_DIR);
         copyFolderRecursiveSync(
             electronIsDev ? path.join(__dirname, '../../files/') : path.join(__dirname, './files/'),
             LIGHTPROXY_HOME_PATH,
         );
-        fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
+        // fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
         fs.moveSync(
             path.join(LIGHTPROXY_FILES_DIR, '/node/modules'),
             path.join(LIGHTPROXY_FILES_DIR, '/node/node_modules'),

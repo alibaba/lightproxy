@@ -13,7 +13,7 @@ import Koa from 'koa';
 import KoaStatic from 'koa-static';
 import electronIsDev from 'electron-is-dev';
 import path from 'path';
-import { LIGHTPROXY_NODEJS_PATH, LIGHTPROXY_FILES_DIR } from './const';
+import { LIGHTPROXY_FILES_DIR } from './const';
 import { app } from 'electron';
 
 interface SwpanModuleProp {
@@ -34,10 +34,25 @@ async function spawnModule(props: any) {
     const nodeModulePath = path.join(LIGHTPROXY_FILES_DIR, `/node/node_modules/`);
     const modulePath = encodeURIComponent(path.join(nodeModulePath, `${moduleId}/index.js`));
 
-    const nodeScript = `require(decodeURIComponent('${modulePath}'));`;
+    const nodeScript = `
+const cp = require('child_process');
+const originSpwan = cp.spawn;
+
+// @ts-ignore
+cp.spawn = function(cmd, argv, options) {
+    if (cmd === 'node' || cmd === 'node.exe') {
+        cmd = process.execPath;
+        options = options || {};
+        options.env = options.env || {};
+        options.env.ELECTRON_RUN_AS_NODE = '1';
+    }
+
+    return originSpwan.call(this, cmd, argv, options);
+};
+require(decodeURIComponent('${modulePath}'));`;
     const startProcess = () => {
         const child = spwan(
-            LIGHTPROXY_NODEJS_PATH,
+            process.execPath,
             [
                 '-e',
                 `const code = decodeURIComponent("${encodeURIComponent(nodeScript)}");console.log(code);eval(code);`,
@@ -51,6 +66,7 @@ async function spawnModule(props: any) {
                     LIGHTPROXY_BOARDCASR_PORT: boardcastPort,
                     USER_DATA: app.getPath('appData'),
                     NODE_PATH: nodeModulePath,
+                    ELECTRON_RUN_AS_NODE: 1,
                 },
             },
         );
