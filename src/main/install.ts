@@ -19,6 +19,7 @@ import {
     LIGHTPROXY_CERT_KEY_PATH,
     SYSTEM_IS_MACOS,
     PROXY_CONF_HELPER_PATH,
+    PROXY_CONF_HELPER_FILE_PATH,
 } from './const';
 import { dialog, app } from 'electron';
 import treeKill from 'tree-kill';
@@ -128,6 +129,7 @@ async function installCertAndHelper() {
 
     // 信任证书 & 安装 helper
     const installPromise = new Promise((resolve, reject) => {
+        fs.copyFileSync(PROXY_CONF_HELPER_FILE_PATH, PROXY_CONF_HELPER_PATH);
         if (SYSTEM_IS_MACOS) {
             sudo.exec(
                 `security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(

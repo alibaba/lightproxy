@@ -26,7 +26,8 @@ export const SYSTEM_IS_MACOS = systemType === 'Darwin';
 export const LIGHTPROXY_UPDATE_DIR = path.join(LIGHTPROXY_HOME_PATH, './update');
 export const LIGHTPROXY_UPDATE_CONFIG = path.join(LIGHTPROXY_UPDATE_DIR, './config.json');
 export const LIGHTPROXY_FILES_DIR = path.join(LIGHTPROXY_HOME_PATH, './files');
-export const PROXY_CONF_HELPER_PATH = path.join(LIGHTPROXY_FILES_DIR, './proxy_conf_helper');
+export const PROXY_CONF_HELPER_FILE_PATH = path.join(LIGHTPROXY_FILES_DIR, './proxy_conf_helper');
+export const PROXY_CONF_HELPER_PATH = path.join(LIGHTPROXY_HOME_PATH, './proxy_conf_helper');
 
 export const LIGHTPROXY_NODEJS_PATH = path.join(
     LIGHTPROXY_FILES_DIR,
