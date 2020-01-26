@@ -112,7 +112,9 @@ let server: any;
 async function getStaticServePath() {
     if (!server) {
         const app = new Koa();
-        app.use(KoaStatic(electronIsDev ? path.join(__dirname, '../') : path.join(__dirname, './')));
+        const staticPath = electronIsDev ? path.join(__dirname, '../../') : path.join(__dirname, './');
+        logger.info('static path', staticPath);
+        app.use(KoaStatic(staticPath));
         server = app.listen();
     }
     // @ts-ignore

@@ -21,7 +21,7 @@ import {
     PROXY_CONF_HELPER_PATH,
     PROXY_CONF_HELPER_FILE_PATH,
 } from './const';
-import { dialog, app } from 'electron';
+import { dialog } from 'electron';
 import treeKill from 'tree-kill';
 
 const pki = forge.pki;

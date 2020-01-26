@@ -195,7 +195,7 @@ export class WebSocketConnection {
   }
 }
 
-let lastRowId;
+let lastRowId = new Date().getTime();
 
 const completeIds = {};
 const reqeustIds = {};
@@ -282,7 +282,7 @@ export class StubConnection {
                 status: dataItem.res.statusCode,
                 statusText: dataItem.res.statusText || '',
                 headers: devtoolsHeaders,
-                remoteIPAddress: dataItem.res.ip + ':' + dataItem.res.port,
+                remoteIPAddress: dataItem.res.ip,
                 encodedDataLength: dataItem.res.size,
                 mimeType: res.headers['content-type'] || ''
               },
