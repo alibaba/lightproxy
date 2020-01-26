@@ -350,14 +350,21 @@ export class StubConnection {
           this._onMessage({
             id: message.id,
             result: {
-              body: res.body || res.base64,
+              body: res.base64 || res.body,
               base64Encoded: res.base64 ? true : false,
             }
           });
           clearInterval(timer);
         }
       }, 300);
-     
+    } else if (message.method === 'Network.searchInResponseBody') {
+      // search in response bodys
+      // mock
+      // TODO: complete search logic
+      this._onMessage({
+        id: message.id,
+        result: [],
+      });
     }
   }
 
