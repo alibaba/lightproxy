@@ -195,7 +195,7 @@ export class WebSocketConnection {
   }
 }
 
-let lastRowId;
+let lastRowId = new Date().getTime();
 
 const completeIds = {};
 const reqeustIds = {};
@@ -282,7 +282,7 @@ export class StubConnection {
                 status: dataItem.res.statusCode,
                 statusText: dataItem.res.statusText || '',
                 headers: devtoolsHeaders,
-                remoteIPAddress: dataItem.res.ip + ':' + dataItem.res.port,
+                remoteIPAddress: dataItem.res.ip,
                 encodedDataLength: dataItem.res.size,
                 mimeType: res.headers['content-type'] || ''
               },
@@ -350,14 +350,21 @@ export class StubConnection {
           this._onMessage({
             id: message.id,
             result: {
-              body: res.body || res.base64,
+              body: res.base64 || res.body,
               base64Encoded: res.base64 ? true : false,
             }
           });
           clearInterval(timer);
         }
       }, 300);
-     
+    } else if (message.method === 'Network.searchInResponseBody') {
+      // search in response bodys
+      // mock
+      // TODO: complete search logic
+      this._onMessage({
+        id: message.id,
+        result: [],
+      });
     }
   }
 
