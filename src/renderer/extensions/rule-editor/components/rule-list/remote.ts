@@ -67,6 +67,9 @@ disable://intercept alilang-desktop-client.cn-hangzhou.log.aliyuncs.com s-api.al
 
 # Apple
 disable://intercept *.apple.com *.*.apple.com *.mzstatic.com
+
+# bilibili
+disable://intercept txy.live-play.acgvideo.com
     `
             : '') +
         rules
