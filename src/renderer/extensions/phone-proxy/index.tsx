@@ -46,7 +46,10 @@ export class PhoneProxy extends Extension {
                     <div className="lightproxy-phoneproxy-qrcode">
                         <QrCode size={256} value={`http://${address}:${port}/cgi-bin/rootca`}></QrCode>
                     </div>
-                    <div className="title">{t('Scan to install cert')}</div>
+                    <div className="title">
+                        {t('Scan to install cert')}
+                        <a href={`http://${address}:${port}/cgi-bin/rootca`}>{t('Click to download cert')}</a>
+                    </div>
                     <div className="title">
                         <span>{t('Setting WIFI proxy to')}</span>
                         <span>{` ${address}:${port}`}</span>
