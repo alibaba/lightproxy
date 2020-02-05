@@ -9,6 +9,7 @@ import Store from 'electron-store';
 import { ungzip } from 'node-gzip';
 import path from 'path';
 import { app } from 'electron';
+import compareVersions from 'compare-versions';
 
 // Application will write own version into /update folder
 // So when user update Application(Launcher) itself, we can just remove /update to using right version
@@ -50,7 +51,8 @@ export async function checkUpdater() {
         const res = await fetch(url);
         const data = await res.json();
         logger.info('get update info', data);
-        if (data.version !== version) {
+
+        if (compareVersions(data.version, version) === 1) {
             logger.info(`Version update: ${version} => ${data.version}`);
             try {
                 fs.removeSync(LIGHTPROXY_UPDATE_DIR);

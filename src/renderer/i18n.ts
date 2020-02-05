@@ -56,6 +56,7 @@ export const i18nResources = {
             Homepage: '项目首页',
             'Exit App': '退出应用',
             'Default Port': '默认端口号',
+            'Click to download cert': '点击下载证书',
         },
     },
 };

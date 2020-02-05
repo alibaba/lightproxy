@@ -1,11 +1,12 @@
 'use strict';
 
-import { app, BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, shell } from 'electron';
+import { app, BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, shell, Notification, dialog } from 'electron';
 import * as path from 'path';
 import { format as formatUrl } from 'url';
 import { initIPC } from './api';
 import { checkUpdater } from './updater';
 import { hideOrQuit } from './platform';
+import { installCertAndHelper } from './install';
 import {
     SYSTEM_IS_MACOS,
     NEW_ISSUE_PAGE,
@@ -209,6 +210,18 @@ function setApplicationMenu() {
             label: 'Report Issue',
             click: function() {
                 shell.openExternal(NEW_ISSUE_PAGE);
+            },
+        },
+        {
+            label: 'Install Certificate & Helper',
+            click: async () => {
+                await installCertAndHelper();
+                dialog.showMessageBox({
+                    type: 'info',
+                    message: 'Install Done, LightProxy will restart',
+                });
+                app.relaunch();
+                app.quit();
             },
         },
     ];

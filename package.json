@@ -1,6 +1,6 @@
 {
     "name": "LightProxy",
-    "version": "1.1.8-beta-33",
+    "version": "1.1.8",
     "license": "MIT",
     "main": "./dist/main.js",
     "scripts": {
@@ -33,6 +33,7 @@
         "antd": "^3.26.6",
         "bufferutil": "^4.0.1",
         "classnames": "^2.2.6",
+        "compare-versions": "^3.5.1",
         "cross-spawn": "^7.0.1",
         "electron-better-ipc": "^0.7.0",
         "electron-is-dev": "^1.1.0",

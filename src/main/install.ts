@@ -113,7 +113,7 @@ Application will quit
     treeKill(process.pid);
 }
 
-async function installCertAndHelper() {
+export async function installCertAndHelper() {
     console.log('Install cert');
     const certs = (await generateCert()) as {
         key: string;
@@ -129,13 +129,12 @@ async function installCertAndHelper() {
 
     // 信任证书 & 安装 helper
     const installPromise = new Promise((resolve, reject) => {
-        fs.copyFileSync(PROXY_CONF_HELPER_FILE_PATH, PROXY_CONF_HELPER_PATH);
         if (SYSTEM_IS_MACOS) {
             sudo.exec(
                 `security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(
                     dir,
                     CERT_FILE_NAME,
-                )}" && chown root:admin "${PROXY_CONF_HELPER_PATH}" && chmod a+rx+s "${PROXY_CONF_HELPER_PATH}"`,
+                )}" && cp "${PROXY_CONF_HELPER_FILE_PATH}" "${PROXY_CONF_HELPER_PATH}" && chown root:admin "${PROXY_CONF_HELPER_PATH}" && chmod a+rx+s "${PROXY_CONF_HELPER_PATH}"`,
                 sudoOptions,
                 (error, stdout) => {
                     if (error) {
@@ -145,6 +144,7 @@ async function installCertAndHelper() {
                 },
             );
         } else {
+            fs.copyFileSync(PROXY_CONF_HELPER_FILE_PATH, PROXY_CONF_HELPER_PATH);
             const command = `certutil -enterprise -f -v -AddStore "Root" "${path.join(dir, CERT_FILE_NAME)}"`;
             console.log('run command', command);
             const output = execSync(command, {
@@ -161,7 +161,10 @@ async function installCertAndHelper() {
     try {
         await installPromise;
     } catch (e) {
+        console.error(e);
         alertAndQuit();
+        // prevent copy cert after failed
+        return;
     }
 
     console.log('after install');
