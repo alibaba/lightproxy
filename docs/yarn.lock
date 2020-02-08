@@ -1100,10 +1100,10 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
-"@xcodebuild/vuepress-plugin-yuque@^0.6.8":
-  version "0.6.8"
-  resolved "https://registry.npmjs.org/@xcodebuild/vuepress-plugin-yuque/-/vuepress-plugin-yuque-0.6.8.tgz#cbfc600702119a5c24ab6acdd34862c15aa1e17c"
-  integrity sha512-HGmjEBMswbxhqNhWavBrMo8CGnPRmm/2qhIEZ+85wndLdhBOX+jBnhYDXxryAO35wcg5DNIO1c3vPbzvpUI4lA==
+"@xcodebuild/vuepress-plugin-yuque@^0.6.9":
+  version "0.6.9"
+  resolved "https://registry.npmjs.org/@xcodebuild/vuepress-plugin-yuque/-/vuepress-plugin-yuque-0.6.9.tgz#0f1c1c5bf066b65b71fcf36028de90c5a715e66e"
+  integrity sha512-Ib1NrcQz3EvpKTnVhDIud7/cFtm4WBCOiGhy/AtWCskWaboQqTFzIILA+osJcsPOHPSuoxoZE57D/erkD3KMXw==
   dependencies:
     "@vuepress/plugin-medium-zoom" "^1.0.0-alpha.44"
     cheerio "^1.0.0-rc.2"
