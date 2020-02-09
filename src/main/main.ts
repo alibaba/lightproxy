@@ -24,6 +24,8 @@ import { uuidv4 } from '../renderer/utils';
 import windowStateKeeper from 'electron-window-state';
 import os from 'os';
 import fs from 'fs-extra';
+// @ts-ignore
+import logoIcon from '../../files/iconTemplate@2x.png';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -78,6 +80,10 @@ global.__static = __static;
 // @ts-ignore
 global.__filesDir = LIGHTPROXY_FILES_DIR;
 
+const LIGHTPROXY_FILES_IN_ASAR_PATH = electronIsDev
+    ? path.join(__dirname, '../../files/')
+    : path.join(__dirname, './files/');
+
 let splashWindow: BrowserWindow | null;
 
 async function initSplashScreen() {
@@ -91,9 +97,7 @@ async function initSplashScreen() {
                     productName: 'LightProxy',
                     text: 'Loading ...',
                     website: 'https://github.com/alibaba/lightproxy',
-                    logo: electronIsDev
-                        ? path.join(__dirname, '../../files/splash.png')
-                        : path.join(__dirname, './files/splash.png'),
+                    logo: logoIcon,
                     color: '#0c60aa',
                 }),
             );
@@ -132,10 +136,7 @@ function initCopyFiles() {
         } else {
             console.log('copy files');
             fs.removeSync(LIGHTPROXY_FILES_DIR);
-            copyFolderRecursiveSync(
-                electronIsDev ? path.join(__dirname, '../../files/') : path.join(__dirname, './files/'),
-                LIGHTPROXY_HOME_PATH,
-            );
+            copyFolderRecursiveSync(LIGHTPROXY_FILES_IN_ASAR_PATH, LIGHTPROXY_HOME_PATH);
             // fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
             fs.moveSync(
                 path.join(LIGHTPROXY_FILES_DIR, '/node/modules'),
