@@ -1,5 +1,4 @@
 .lightproxy-status-bar {
-    background-color: @status-bar-background-color;
     font-size: @font-size-small;
     position: fixed;
     bottom: 0px;
@@ -18,5 +17,13 @@
         display: inline-block;
         vertical-align: middle;
         margin-left: 20px;
+    }
+
+    &.color-normal {
+        background-color: @status-bar-background-color;
+    }
+
+    &.color-warn {
+        background-color: @status-bar-background-color-loading;
     }
 }
