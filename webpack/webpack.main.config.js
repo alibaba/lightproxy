@@ -26,6 +26,17 @@ module.exports = merge.smart(baseConfig, {
                     plugins: [['@babel/plugin-proposal-class-properties', { loose: true }]],
                 },
             },
+            {
+                test: /\.(png|jpg|gif)$/i,
+                use: [
+                  {
+                    loader: 'url-loader',
+                    options: {
+                      limit: 8192,
+                    },
+                  },
+                ],
+            }
         ],
     },
     plugins: [

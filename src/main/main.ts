@@ -1,7 +1,10 @@
 'use strict';
 
-import { app, BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, shell, Notification, dialog } from 'electron';
+import { app, BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, shell, dialog } from 'electron';
 import * as path from 'path';
+import { splash } from './splash';
+import electronIsDev from 'electron-is-dev';
+
 import { format as formatUrl } from 'url';
 import { initIPC } from './api';
 import { checkUpdater } from './updater';
@@ -21,7 +24,8 @@ import { uuidv4 } from '../renderer/utils';
 import windowStateKeeper from 'electron-window-state';
 import os from 'os';
 import fs from 'fs-extra';
-import electronIsDev from 'electron-is-dev';
+// @ts-ignore
+import logoIcon from '../../files/iconTemplate@2x.png';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -76,41 +80,86 @@ global.__static = __static;
 // @ts-ignore
 global.__filesDir = LIGHTPROXY_FILES_DIR;
 
-try {
-    if (!fs.existsSync(LIGHTPROXY_FILES_DIR)) {
-        fs.mkdirpSync(LIGHTPROXY_FILES_DIR);
-    }
+const LIGHTPROXY_FILES_IN_ASAR_PATH = electronIsDev
+    ? path.join(__dirname, '../../files/')
+    : path.join(__dirname, './files/');
 
-    const versionFile = path.join(LIGHTPROXY_FILES_DIR, 'version');
-    if (fs.existsSync(versionFile) && fs.readFileSync(versionFile, 'utf-8') === version && !electronIsDev) {
-        // pass
-    } else {
-        console.log('copy files');
-        fs.removeSync(LIGHTPROXY_FILES_DIR);
-        copyFolderRecursiveSync(
-            electronIsDev ? path.join(__dirname, '../../files/') : path.join(__dirname, './files/'),
-            LIGHTPROXY_HOME_PATH,
-        );
-        // fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
-        fs.moveSync(
-            path.join(LIGHTPROXY_FILES_DIR, '/node/modules'),
-            path.join(LIGHTPROXY_FILES_DIR, '/node/node_modules'),
-        );
-        fs.writeFileSync(versionFile, version, 'utf-8');
-    }
-} catch (e) {
-    console.error(e);
+let splashWindow: BrowserWindow | null;
+
+async function initSplashScreen() {
+    // start a splash window
+    return new Promise(resolve => {
+        const splashContent =
+            'data:text/html;charset=UTF-8,' +
+            encodeURIComponent(
+                splash({
+                    brand: 'IFE Team with ♥',
+                    productName: 'LightProxy',
+                    text: 'Loading ...',
+                    website: 'https://github.com/alibaba/lightproxy',
+                    logo: logoIcon,
+                    color: '#0c60aa',
+                }),
+            );
+
+        splashWindow = new BrowserWindow({
+            width: 600,
+            height: 400,
+            frame: false,
+            backgroundColor: '#0c60aa',
+            // modal: true,
+            // transparent: true,
+            autoHideMenuBar: true,
+            alwaysOnTop: true,
+            resizable: false,
+            movable: false,
+        });
+
+        splashWindow.loadURL(splashContent);
+
+        splashWindow.webContents.on('did-finish-load', () => {
+            resolve();
+        });
+        splashWindow.show();
+    });
 }
 
-const timer = setInterval(async () => {
-    const result = await checkUpdater();
-    if (result) {
-        clearInterval(timer);
-    }
-}, 1000 * 60 * 60);
+function initCopyFiles() {
+    try {
+        if (!fs.existsSync(LIGHTPROXY_FILES_DIR)) {
+            fs.mkdirpSync(LIGHTPROXY_FILES_DIR);
+        }
 
-if (process.argv.indexOf('--update') !== -1) {
-    checkUpdater();
+        const versionFile = path.join(LIGHTPROXY_FILES_DIR, 'version');
+        if (fs.existsSync(versionFile) && fs.readFileSync(versionFile, 'utf-8') === version && !electronIsDev) {
+            // pass
+        } else {
+            console.log('copy files');
+            fs.removeSync(LIGHTPROXY_FILES_DIR);
+            copyFolderRecursiveSync(LIGHTPROXY_FILES_IN_ASAR_PATH, LIGHTPROXY_HOME_PATH);
+            // fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
+            fs.moveSync(
+                path.join(LIGHTPROXY_FILES_DIR, '/node/modules'),
+                path.join(LIGHTPROXY_FILES_DIR, '/node/node_modules'),
+            );
+            fs.writeFileSync(versionFile, version, 'utf-8');
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+function initUpdate() {
+    const timer = setInterval(async () => {
+        const result = await checkUpdater();
+        if (result) {
+            clearInterval(timer);
+        }
+    }, 1000 * 60 * 60);
+
+    if (process.argv.indexOf('--update') !== -1) {
+        checkUpdater();
+    }
 }
 
 let forceQuit = false;
@@ -135,6 +184,7 @@ function createMainWindow() {
         x: mainWindowState.x,
         y: mainWindowState.y,
     });
+    window.hide();
 
     mainWindowState.manage(window);
 
@@ -159,6 +209,12 @@ function createMainWindow() {
             hideOrQuit();
             event?.preventDefault();
         }
+    });
+
+    window.webContents.on('did-finish-load', () => {
+        splashWindow?.destroy();
+        splashWindow = null;
+        window.show();
     });
 
     window.webContents.on('devtools-opened', () => {
@@ -264,8 +320,11 @@ app.on('activate', () => {
 });
 
 // create main BrowserWindow when electron is ready
-app.on('ready', () => {
+app.on('ready', async () => {
     appReady = true;
+    await initSplashScreen();
+    initUpdate();
+    initCopyFiles();
     mainWindow = createMainWindow();
     setApplicationMenu();
     initIPC();

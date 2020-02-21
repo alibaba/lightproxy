@@ -50,6 +50,7 @@ module.exports = merge.smart(baseConfig, {
                     },
                 ],
             },
+
         ],
     },
     plugins: [
