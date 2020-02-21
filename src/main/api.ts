@@ -4,7 +4,7 @@ import { ipcMain } from 'electron-better-ipc';
 import logger from 'electron-log';
 
 import { BoardcastManager } from './boradcast-manager';
-import { setSystemProxy } from './platform';
+import { checkSystemProxyWork, setSystemProxy } from './platform';
 import checkInstallStatus from './install';
 import treeKill from 'tree-kill';
 import ip from 'ip';
@@ -122,6 +122,11 @@ async function getStaticServePath() {
     return `http://127.0.0.1:${port}`;
 }
 
+async function checkSystemProxy(props: any) {
+    const { port, address } = props;
+    return checkSystemProxyWork(address, port);
+}
+
 export async function initIPC() {
     // ipcMain
     ipcMain.answerRenderer('spawnModule', spawnModule);
@@ -136,6 +141,8 @@ export async function initIPC() {
     ipcMain.answerRenderer('getIp', getIp);
     ipcMain.answerRenderer('update', update);
     ipcMain.answerRenderer('getStaticServePath', getStaticServePath);
+
+    ipcMain.answerRenderer('checkSystemProxy', checkSystemProxy);
 
     // start a socketIO server for extension background process
     await BoardcastManager.getInstance();

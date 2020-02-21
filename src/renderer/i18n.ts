@@ -57,6 +57,8 @@ export const i18nResources = {
             'Exit App': '退出应用',
             'Default Port': '默认端口号',
             'Click to download cert': '点击下载证书',
+            'System proxy changed': '系统代理被改变',
+            'System proxy changed by other Program, re-enable proxy?': '系统代理被其他应用程序改变，是否重新启用？',
         },
     },
 };

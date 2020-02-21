@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface Props {
     rightItems: Function[];
@@ -6,11 +6,12 @@ interface Props {
 
 export const StatusBar = (props: Props) => {
     const { rightItems } = props;
+    const [color, setColor] = useState('normal');
     return (
-        <div className="lightproxy-status-bar">
+        <div className={`lightproxy-status-bar color-${color}`}>
             {rightItems.map((item, index) => {
                 const Comp = item;
-                return <Comp key={index} />;
+                return <Comp setStatusBarMode={setColor} key={index} />;
             })}
         </div>
     );

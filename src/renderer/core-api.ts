@@ -58,6 +58,13 @@ export class CoreAPIClass {
     async getStaticServePath() {
         return (await ipcRenderer.callMain('getStaticServePath')) as string;
     }
+
+    async checkSystemProxy(address: string, port: number) {
+        return (await ipcRenderer.callMain('checkSystemProxy', {
+            address,
+            port,
+        })) as boolean;
+    }
 }
 
 export const CoreAPI = new CoreAPIClass();

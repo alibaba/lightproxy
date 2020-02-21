@@ -1,29 +1,49 @@
 import { Extension } from '../../extension';
 import logger from 'electron-log';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { Icon, Dropdown, Menu } from 'antd';
 import { lazyParseData, getWhistlePort } from '../../utils';
+import { Modal, Button } from 'antd';
+const confirm = Modal.confirm;
 
 import { throttle, get } from 'lodash';
 
 import { useTranslation } from 'react-i18next';
 import { syncRuleToWhistle } from '../rule-editor/components/rule-list/remote';
+import { CoreAPI } from '../../core-api';
+
+import { remote } from 'electron';
+
+let mHasWarned = false;
+
+const diableSystemProxy = async () => {
+    console.log('disable system proxy');
+    await CoreAPI.setSystemProxy(0);
+    CoreAPI.eventEmmitter.emit('whistle-online-status-change', {
+        port: null,
+        status: 'online',
+    });
+};
+
+const enableSystemProxy = async (port: number) => {
+    console.log('enable system proxy');
+
+    mHasWarned = false;
+    await CoreAPI.setSystemProxy(0);
+    await CoreAPI.setSystemProxy(port);
+    CoreAPI.eventEmmitter.emit('whistle-online-status-change', {
+        port,
+        status: 'ready',
+    });
+};
 
 const toggleSystemProxy = async (onlineStatus: string, port: number, coreAPI: any) => {
+    console.log('toggle proxy', { onlineStatus, port });
     if (onlineStatus === 'online') {
-        await coreAPI.setSystemProxy(port);
-        coreAPI.eventEmmitter.emit('whistle-online-status-change', {
-            port,
-            status: 'ready',
-        });
+        await enableSystemProxy(port);
     } else if (onlineStatus === 'ready') {
-        await coreAPI.setSystemProxy(0);
-        coreAPI.eventEmmitter.emit('whistle-online-status-change', {
-            port,
-            status: 'online',
-        });
+        await diableSystemProxy();
     }
-
     coreAPI.store.set('onlineStatus', onlineStatus);
 };
 
@@ -103,10 +123,29 @@ export class WhistleExntension extends Extension {
     }
 
     statusbarRightComponent() {
-        const WhistleStatusbarItem = () => {
+        // @ts-ignore
+        // eslint-disable-next-line react/prop-types
+        const WhistleStatusbarItem = ({ setStatusBarMode }) => {
             const [onlineState, setOnlineState] = useState('init');
 
             const [port, setPort] = useState();
+
+            useEffect(() => {
+                const modeMap = {
+                    online: 'warn',
+                    ready: 'normal',
+                    loading: 'warn',
+                    init: 'warn',
+                };
+                // @ts-ignore
+                setStatusBarMode(modeMap[onlineState]);
+            }, [onlineState]);
+
+            const portRef = useRef(port);
+            portRef.current = port;
+
+            const onlineStateRef = useRef(onlineState);
+            onlineStateRef.current = onlineState;
 
             const { t } = useTranslation();
 
@@ -135,15 +174,53 @@ export class WhistleExntension extends Extension {
                 };
                 this.coreAPI.eventEmmitter.on('lightproxy-toggle-system-proxy', handler);
 
+                const showReEnableProxyModal = () => {
+                    confirm({
+                        title: t('System proxy changed'),
+                        content: t('System proxy changed by other Program, re-enable proxy?'),
+                        onOk: () => {
+                            mHasWarned = false;
+                            enableSystemProxy(portRef.current);
+                        },
+                        onCancel: () => {
+                            mHasWarned = true;
+                            CoreAPI.eventEmmitter.emit('whistle-online-status-change', {
+                                port: null,
+                                status: 'online',
+                            });
+                        },
+                    });
+                };
+
+                const checkProxy = async () => {
+                    if (onlineStateRef.current === 'ready' && !mHasWarned) {
+                        try {
+                            const proxyworking = await this.coreAPI.checkSystemProxy('127.0.0.1', portRef.current);
+                            console.log('proxy check', proxyworking);
+                            // maybe something has changed after the async call, recheck
+                            if (!proxyworking && onlineStateRef.current === 'ready' && !mHasWarned) {
+                                mHasWarned = true;
+                                remote.getCurrentWindow().show();
+                                showReEnableProxyModal();
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    }
+                };
+
+                const checkTimer = setInterval(checkProxy, 5000);
+
                 return () => {
                     client?.close();
                     this.coreAPI.eventEmmitter.off('lightproxy-toggle-system-proxy', handler);
+                    clearInterval(checkTimer);
                 };
             }, []);
 
             const menu = (
                 <Menu>
-                    <Menu.Item onClick={() => toggleSystemProxy(onlineState, port, this.coreAPI)}>
+                    <Menu.Item onClick={() => toggleSystemProxy(onlineState, portRef.current, this.coreAPI)}>
                         {onlineState === 'ready' ? t('disable system proxy') : t('enable system proxy')}
                     </Menu.Item>
                     <Menu.Item onClick={() => this.startWhistle()}>{t('restart proxy')}</Menu.Item>
@@ -173,7 +250,9 @@ export class WhistleExntension extends Extension {
             useEffect(() => {
                 this.coreAPI.eventEmmitter.on('whistle-online-status-change', data => {
                     setOnlineState(data.status);
-                    setPort(data.port);
+                    if (data.port) {
+                        setPort(data.port);
+                    }
                 });
             }, []);
             return (
