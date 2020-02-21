@@ -4,7 +4,7 @@ import { ipcMain } from 'electron-better-ipc';
 import logger from 'electron-log';
 
 import { BoardcastManager } from './boradcast-manager';
-import {checkSystemProxyWork, setSystemProxy} from './platform';
+import { checkSystemProxyWork, setSystemProxy } from './platform';
 import checkInstallStatus from './install';
 import treeKill from 'tree-kill';
 import ip from 'ip';

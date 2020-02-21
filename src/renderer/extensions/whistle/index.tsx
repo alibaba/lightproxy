@@ -197,7 +197,8 @@ export class WhistleExntension extends Extension {
                         try {
                             const proxyworking = await this.coreAPI.checkSystemProxy('127.0.0.1', portRef.current);
                             console.log('proxy check', proxyworking);
-                            if (!proxyworking) {
+                            // maybe something has changed after the async call, recheck
+                            if (!proxyworking && onlineStateRef.current === 'ready' && !mHasWarned) {
                                 mHasWarned = true;
                                 remote.getCurrentWindow().show();
                                 showReEnableProxyModal();

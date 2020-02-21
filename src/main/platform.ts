@@ -39,7 +39,10 @@ export async function checkSystemProxyWork(address: string, port: number) {
                 const output = stdout.toString();
                 // @ts-ignore
                 const content = /{[^]*?}/.exec(output)[0];
-                const jsonContent = content.replace(/([a-zA-Z0-9\.]+)/g, '"$1"').replace(/"\n/g, '",\n').replace(/,.*\n?}/, '}');
+                const jsonContent = content
+                    .replace(/([a-zA-Z0-9\.]+)/g, '"$1"')
+                    .replace(/"\n/g, '",\n')
+                    .replace(/,.*\n?}/, '}');
 
                 const info = JSON.parse(jsonContent) as ProxyInfo;
                 const portStr = '' + port;

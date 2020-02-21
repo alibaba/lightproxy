@@ -67,5 +67,4 @@ export class CoreAPIClass {
     }
 }
 
-
 export const CoreAPI = new CoreAPIClass();
