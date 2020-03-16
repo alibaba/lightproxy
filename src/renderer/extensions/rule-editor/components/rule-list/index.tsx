@@ -325,9 +325,10 @@ export const RuleList = (props: Props) => {
                                                     new MenuItem({
                                                         label: t('remove'),
                                                         click: () => {
-                                                            setRuleList(
-                                                                ruleList.filter(_item => _item.uuid !== item.uuid),
+                                                            const newRules = ruleList.filter(
+                                                                _item => _item.uuid !== item.uuid,
                                                             );
+                                                            setRuleList(newRules);
                                                             switchRule(0);
                                                         },
                                                     }),
@@ -392,7 +393,7 @@ export const RuleList = (props: Props) => {
                     onMount={onEditorMount}
                     onSave={handleOnSave}
                     onChange={handleEditorOnChange}
-                    content={rule.content}
+                    content={(rule && rule.content) || ''}
                 />
             ) : null}
         </div>

@@ -76,6 +76,7 @@ export class WhistleExntension extends Extension {
                     this.coreAPI.eventEmmitter.on('whistle-get-port', () => {
                         this.coreAPI.eventEmmitter.emit('whistle-get-port-response', port);
                     });
+
                     this.coreAPI.eventEmmitter.emit('whistle-get-port-response', port);
 
                     this.coreAPI.eventEmmitter.on('whistle-get-devtool-port', () => {
@@ -204,7 +205,7 @@ export class WhistleExntension extends Extension {
                                 showReEnableProxyModal();
                             }
                         } catch (e) {
-                            console.log(e);
+                            // console.log(e);
                         }
                     }
                 };
