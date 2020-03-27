@@ -28,6 +28,16 @@ interface ProxyInfo {
     SOCKSEnable: string;
 }
 
+function covertOutputToJSON(output: string) {
+    // @ts-ignore
+    const content = /{[^]*?}/.exec(output)[0];
+    const jsonContent = content
+        .replace(/([a-zA-Z0-9\.]+)/g, '"$1"')
+        .replace(/"\n/g, '",\n')
+        .replace(/,.*\n?}/, '}');
+    return jsonContent;
+}
+
 export async function checkSystemProxyWork(address: string, port: number) {
     return new Promise((resolve, reject) => {
         if (!SYSTEM_IS_MACOS) {
@@ -35,19 +45,12 @@ export async function checkSystemProxyWork(address: string, port: number) {
             return;
         }
         exec('scutil --proxy', (error, stdout, stderr) => {
-            try {
-                const output = stdout.toString();
-                // @ts-ignore
-                const content = /{[^]*?}/.exec(output)[0];
-                const jsonContent = content
-                    .replace(/([a-zA-Z0-9\.]+)/g, '"$1"')
-                    .replace(/"\n/g, '",\n')
-                    .replace(/,.*\n?}/, '}');
+            const NO_NETWORK_OUTPUT = `<dictionary> {
+}
+`;
 
-                const info = JSON.parse(jsonContent) as ProxyInfo;
-                const portStr = '' + port;
-
-                if (
+            function checkProxyInfo(info: ProxyInfo, portStr: string) {
+                return (
                     info.HTTPEnable === '1' &&
                     info.HTTPPort === portStr &&
                     info.HTTPProxy === address &&
@@ -56,7 +59,24 @@ export async function checkSystemProxyWork(address: string, port: number) {
                     info.HTTPSProxy === address &&
                     info.ProxyAutoConfigEnable === '0' &&
                     info.SOCKSEnable === '0'
-                ) {
+                );
+            }
+
+            try {
+                const output = stdout.toString();
+
+                if (output === NO_NETWORK_OUTPUT) {
+                    // no network, no proxy info
+                    reject('no network');
+                }
+
+                // @ts-ignore
+                const jsonContent = covertOutputToJSON(output);
+
+                const info = JSON.parse(jsonContent) as ProxyInfo;
+                const portStr = '' + port;
+
+                if (checkProxyInfo(info, portStr)) {
                     resolve(true);
                 } else {
                     resolve(false);
