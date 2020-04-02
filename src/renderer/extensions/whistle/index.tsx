@@ -13,6 +13,7 @@ import { syncRuleToWhistle } from '../rule-editor/components/rule-list/remote';
 import { CoreAPI } from '../../core-api';
 
 import { remote } from 'electron';
+import { SYSTEM_IS_MACOS } from '../../../renderer/const';
 
 let mHasWarned = false;
 
@@ -194,6 +195,9 @@ export class WhistleExntension extends Extension {
                 };
 
                 const checkProxy = async () => {
+                    if (!SYSTEM_IS_MACOS) {
+                        return;
+                    }
                     if (onlineStateRef.current === 'ready' && !mHasWarned) {
                         try {
                             const proxyworking = await this.coreAPI.checkSystemProxy('127.0.0.1', portRef.current);
