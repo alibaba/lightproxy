@@ -120,7 +120,7 @@ export async function installCertAndHelper() {
         cert: string;
     };
 
-    const dir = await tempdir();
+    const dir = (await tempdir()).replace('ADMINI~1', 'Administrator');
 
     // 写入证书
     await fs.mkdirp(dir);
@@ -147,10 +147,14 @@ export async function installCertAndHelper() {
             fs.copyFileSync(PROXY_CONF_HELPER_FILE_PATH, PROXY_CONF_HELPER_PATH);
             const command = `certutil -enterprise -f -v -AddStore "Root" "${path.join(dir, CERT_FILE_NAME)}"`;
             console.log('run command', command);
-            const output = execSync(command, {
-                windowsHide: true,
-            });
-            console.log('certutil result', output.toString());
+            try {
+                const output = execSync(command, {
+                    windowsHide: true,
+                });
+                console.log('certutil result', output.toString());
+            } catch (e) {
+                console.log('error', e.message, e.stderr.toString(), e.stdout.toString());
+            }
 
             // windows dose not need install helper
             resolve();
