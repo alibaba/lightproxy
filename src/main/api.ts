@@ -57,6 +57,7 @@ require(decodeURIComponent('${modulePath}'));`;
                 '-e',
                 `const code = decodeURIComponent("${encodeURIComponent(nodeScript)}");console.log(code);eval(code);`,
                 '--tls-min-v1.0',
+                '--max-http-header-size=256000',
             ],
             {
                 env: {
