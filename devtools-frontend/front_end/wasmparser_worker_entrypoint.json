@@ -1,7 +1,0 @@
-{
-  "worker": true,
-  "modules": [
-    { "name": "wasmparser_worker", "type": "autostart" },
-    { "name": "third_party/wasmparser", "type": "autostart" }
-  ]
-}
