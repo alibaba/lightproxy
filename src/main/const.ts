@@ -28,6 +28,7 @@ export const LIGHTPROXY_UPDATE_CONFIG = path.join(LIGHTPROXY_UPDATE_DIR, './conf
 export const LIGHTPROXY_FILES_DIR = path.join(LIGHTPROXY_HOME_PATH, './files');
 export const PROXY_CONF_HELPER_FILE_PATH = path.join(LIGHTPROXY_FILES_DIR, './proxy_conf_helper');
 export const PROXY_CONF_HELPER_PATH = path.join(LIGHTPROXY_HOME_PATH, './proxy_conf_helper');
+export const PROXY_REFRESH_WINDOWS_HELPER_PATH = path.join(LIGHTPROXY_FILES_DIR, './win_proxy_helper');
 
 export const LIGHTPROXY_NODEJS_PATH = path.join(
     LIGHTPROXY_FILES_DIR,
@@ -36,3 +37,6 @@ export const LIGHTPROXY_NODEJS_PATH = path.join(
 
 export const GITHUB_PROJECT_PAGE = 'https://github.com/alibaba/lightproxy';
 export const NEW_ISSUE_PAGE = 'https://github.com/alibaba/lightproxy/issues/new';
+
+// @ts-ignore
+export const APP_VERSION = __PACKAGE_INFO_VERSION__;

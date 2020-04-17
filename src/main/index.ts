@@ -1,12 +1,11 @@
 import logger from 'electron-log';
-import { LIGHTPROXY_UPDATE_CONFIG, LIGHTPROXY_UPDATE_DIR } from './const';
+import { LIGHTPROXY_UPDATE_CONFIG, LIGHTPROXY_UPDATE_DIR, APP_VERSION } from './const';
 import fs from 'fs-extra-promise';
 import md5file from 'md5-file';
 import isDev from 'electron-is-dev';
 import cp from 'child_process';
 import * as Sentry from '@sentry/node';
 import os from 'os';
-import { version } from '../../package.json';
 import { checkUpdateFreash } from './updater';
 import { app } from 'electron';
 // electron multiple process
@@ -24,7 +23,7 @@ logger.info('env', process.env.ELECTRON_RUN_MODULE);
 Sentry.init({ dsn: 'https://89c6a10a0db64fbca0f5d0c0c02b6902@sentry.io/1866159' });
 
 Sentry.configureScope(scope => {
-    scope.setTag('app-version', version);
+    scope.setTag('app-version', APP_VERSION);
     scope.setTag('os', os.type());
     scope.setTag('os-version', os.release());
     scope.setTag('electron-version', process.versions.electron);

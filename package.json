@@ -30,6 +30,7 @@
         "@sentry/electron": "1.1.0",
         "@sentry/node": "5.10.2",
         "@timkendrick/monaco-editor": "^0.0.9",
+        "@xcodebuild/global-proxy": "^0.0.6",
         "antd": "^3.26.6",
         "bufferutil": "^4.0.1",
         "classnames": "^2.2.6",
@@ -44,7 +45,6 @@
         "exit-hook": "^2.2.0",
         "fs-extra-promise": "^1.0.1",
         "get-port": "^5.0.0",
-        "global-proxy": "^0.0.4",
         "i18next": "^19.0.2",
         "ip": "^1.1.5",
         "koa": "^2.11.0",
@@ -72,6 +72,7 @@
         "tempdir": "^2.0.0",
         "tree-kill": "^1.2.2",
         "universal-analytics": "^0.4.20",
+        "utf-8-validate": "^5.0.2",
         "ws": "^7.2.1"
     },
     "devDependencies": {

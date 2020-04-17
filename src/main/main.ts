@@ -16,8 +16,8 @@ import {
     GITHUB_PROJECT_PAGE,
     LIGHTPROXY_HOME_PATH,
     LIGHTPROXY_FILES_DIR,
+    APP_VERSION,
 } from './const';
-import { version } from '../../package.json';
 import ua from 'universal-analytics';
 import { CoreAPI } from '../renderer/core-api';
 import { uuidv4 } from '../renderer/utils';
@@ -31,6 +31,8 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: BrowserWindow | null;
+
+const version = APP_VERSION;
 
 let appReady = false;
 
