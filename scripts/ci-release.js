@@ -27,6 +27,6 @@ if (TRAVIS_PULL_REQUEST !== 'false') {
     shell.exec(`cd ${RELEASE_DIR} && mv *.exe Lightproxy-${commitId}.exe && scp -o StrictHostKeyChecking=no Lightproxy-${commitId}.exe xcodebuild@frs.sourceforge.net:/home/frs/project/lightproxy/tempbuild`);
     shell.exec(`cd ${RELEASE_DIR} && mv *.dmg Lightproxy-${commitId}.dmg && scp -o StrictHostKeyChecking=no Lightproxy-${commitId}.dmg xcodebuild@frs.sourceforge.net:/home/frs/project/lightproxy/tempbuild`);
 
-    shell.exec(`curl -s -H "Authorization: token ${BOT_TOKEN}" -X POST -d '{"body": "Thanks for pull request, build for this pr is ready, you can test it with follow urls:\n- [Build for Windows](https://master.dl.sourceforge.net/project/lightproxy/tempbuild/Lightproxy-${commitId}.exe)\n- [Build for macOS](https://master.dl.sourceforge.net/project/lightproxy/tempbuild/Lightproxy-${commitId}.dmg)"}' "https://api.github.com/repos/alibaba/lightproxy/issues/${TRAVIS_PULL_REQUEST}/comments"`);
+    shell.exec(`curl -s -H "Authorization: token ${BOT_TOKEN}" -X POST -d '{"body": "Thanks for pull request, build for this pr is ready, you can test it with follow urls:\\n- [Build for Windows](https://master.dl.sourceforge.net/project/lightproxy/tempbuild/Lightproxy-${commitId}.exe)\\n- [Build for macOS](https://master.dl.sourceforge.net/project/lightproxy/tempbuild/Lightproxy-${commitId}.dmg)"}' "https://api.github.com/repos/alibaba/lightproxy/issues/${TRAVIS_PULL_REQUEST}/comments"`);
 }
 console.log('done');
