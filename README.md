@@ -3,7 +3,7 @@
 ![Beta version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/beta-release.json&label=Beta%20Version&query=$.version)
 ![GitHub issues](https://img.shields.io/github/issues/alibaba/lightproxy)
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/alibaba/lightproxy)<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <p align="center">
@@ -79,6 +79,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://www.ahonn.me"><img src="https://avatars3.githubusercontent.com/u/9718515?v=4" width="100px;" alt=""/><br /><sub><b>Yuexun Jiang</b></sub></a><br /><a href="#design-ahonn" title="Design">🎨</a> <a href="https://github.com/alibaba/lightproxy/commits?author=ahonn" title="Code">💻</a> <a href="https://github.com/alibaba/lightproxy/pulls?q=is%3Apr+reviewed-by%3Aahonn" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="https://github.com/avwo"><img src="https://avatars2.githubusercontent.com/u/11450939?v=4" width="100px;" alt=""/><br /><sub><b>avenwu</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=avwo" title="Code">💻</a></td>
     <td align="center"><a href="https://usememo.dev"><img src="https://avatars0.githubusercontent.com/u/10394160?v=4" width="100px;" alt=""/><br /><sub><b>Mashiro Wang</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=MashiroWang" title="Code">💻</a></td>
+    <td align="center"><a href="https://williamchan.me"><img src="https://avatars1.githubusercontent.com/u/9210430?v=4" width="100px;" alt=""/><br /><sub><b>William Chan</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=luckyyyyy" title="Code">💻</a></td>
   </tr>
 </table>
 
