@@ -25,5 +25,6 @@ script:
   - npm install -g yarn
   - npm run install-deps
   - npm run dist
+  - node scripts/ci-release.js
 
 
