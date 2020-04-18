@@ -22,8 +22,6 @@ if (TRAVIS_PULL_REQUEST !== 'false') {
 
     fs.writeFileSync(sshFile, sshKeyContent, 'utf-8');
 
-    console.log('write file', sshFile);
-
     shell.exec('chmod  400 ~/.ssh/id_rsa');
 
     shell.exec(`cd ${RELEASE_DIR} && scp -o StrictHostKeyChecking=no *.exe xcodebuild@frs.sourceforge.net:/home/frs/project/lightproxy/build/Lightproxy-${commitId}.exe`);
