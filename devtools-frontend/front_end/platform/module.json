@@ -1,9 +1,0 @@
-{
-    "dependencies": [
-    ],
-    "scripts": [],
-    "modules": [
-        "platform.js",
-        "utilities.js"
-    ]
-}

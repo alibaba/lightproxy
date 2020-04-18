@@ -1,8 +1,7 @@
 import { DownloaderHelper } from 'node-downloader-helper';
 import fetch from 'node-fetch';
 import logger from 'electron-log';
-import { version } from '../../package.json';
-import { LIGHTPROXY_UPDATE_DIR, LIGHTPROXY_UPDATE_CONFIG, SYSTEM_IS_MACOS } from './const';
+import { LIGHTPROXY_UPDATE_DIR, LIGHTPROXY_UPDATE_CONFIG, SYSTEM_IS_MACOS, APP_VERSION } from './const';
 import fs from 'fs-extra-promise';
 import Store from 'electron-store';
 // @ts-ignore
@@ -10,6 +9,8 @@ import { ungzip } from 'node-gzip';
 import path from 'path';
 import { app } from 'electron';
 import compareVersions from 'compare-versions';
+
+const version = APP_VERSION;
 
 // Application will write own version into /update folder
 // So when user update Application(Launcher) itself, we can just remove /update to using right version

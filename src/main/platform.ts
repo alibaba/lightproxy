@@ -3,9 +3,9 @@
 import os from 'os';
 import { app } from 'electron';
 import { execSync, exec } from 'child_process';
-import { PROXY_CONF_HELPER_PATH } from './const';
+import { PROXY_CONF_HELPER_PATH, PROXY_REFRESH_WINDOWS_HELPER_PATH } from './const';
 import logger from 'electron-log';
-import globalProxy from 'global-proxy';
+import globalProxy from '@xcodebuild/global-proxy';
 
 const systemType = os.type();
 const SYSTEM_IS_MACOS = systemType === 'Darwin';
@@ -99,10 +99,11 @@ export async function setSystemProxy(port: number) {
         if (SYSTEM_IS_MACOS) {
             execSync(`'${PROXY_CONF_HELPER_PATH}' -m off`);
         } else {
-            globalProxy
+            return globalProxy
                 .disable()
                 .then(stdout => {
                     console.log(stdout);
+                    execSync(PROXY_REFRESH_WINDOWS_HELPER_PATH);
                 })
                 .catch(error => {
                     console.log(error);
@@ -114,10 +115,11 @@ export async function setSystemProxy(port: number) {
         const output = execSync(`'${PROXY_CONF_HELPER_PATH}' -m global -p ${port} -r ${port} -s 127.0.0.1`);
         logger.info('stdout', output.toString());
     } else {
-        globalProxy
+        return globalProxy
             .enable('127.0.0.1', port, 'http')
             .then(stdout => {
                 console.log(stdout);
+                execSync(PROXY_REFRESH_WINDOWS_HELPER_PATH);
             })
             .catch(error => {
                 console.log(error);
