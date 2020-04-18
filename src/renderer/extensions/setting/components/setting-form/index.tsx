@@ -2,10 +2,12 @@ import { Form, Select, Button, Popover, Switch, InputNumber } from 'antd';
 import React from 'react';
 import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
-import { version } from '../../../../../../package.json';
 import { shell, remote } from 'electron';
 import { debounce } from 'lodash';
 import './index.less';
+import { APP_VERSION } from '../../../../const';
+
+const version = APP_VERSION;
 
 class InnerSettingForm extends React.Component {
     state = {

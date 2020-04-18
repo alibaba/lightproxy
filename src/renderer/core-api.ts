@@ -55,10 +55,6 @@ export class CoreAPIClass {
         return await ipcRenderer.callMain('update');
     }
 
-    async getStaticServePath() {
-        return (await ipcRenderer.callMain('getStaticServePath')) as string;
-    }
-
     async checkSystemProxy(address: string, port: number) {
         return (await ipcRenderer.callMain('checkSystemProxy', {
             address,

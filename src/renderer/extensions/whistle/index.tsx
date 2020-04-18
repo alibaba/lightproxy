@@ -182,7 +182,7 @@ export class WhistleExntension extends Extension {
                         content: t('System proxy changed by other Program, re-enable proxy?'),
                         onOk: () => {
                             mHasWarned = false;
-                            enableSystemProxy(portRef.current);
+                            enableSystemProxy(portRef.current as unknown as number);
                         },
                         onCancel: () => {
                             mHasWarned = true;
@@ -200,7 +200,7 @@ export class WhistleExntension extends Extension {
                     }
                     if (onlineStateRef.current === 'ready' && !mHasWarned) {
                         try {
-                            const proxyworking = await this.coreAPI.checkSystemProxy('127.0.0.1', portRef.current);
+                            const proxyworking = await this.coreAPI.checkSystemProxy('127.0.0.1', portRef.current as unknown as number);
                             console.log('proxy check', proxyworking);
                             // maybe something has changed after the async call, recheck
                             if (!proxyworking && onlineStateRef.current === 'ready' && !mHasWarned) {
@@ -225,7 +225,7 @@ export class WhistleExntension extends Extension {
 
             const menu = (
                 <Menu>
-                    <Menu.Item onClick={() => toggleSystemProxy(onlineState, portRef.current, this.coreAPI)}>
+                    <Menu.Item onClick={() => toggleSystemProxy(onlineState, portRef.current as unknown as number, this.coreAPI)}>
                         {onlineState === 'ready' ? t('disable system proxy') : t('enable system proxy')}
                     </Menu.Item>
                     <Menu.Item onClick={() => this.startWhistle()}>{t('restart proxy')}</Menu.Item>

@@ -65,13 +65,13 @@ module.exports = merge.smart(baseConfig, {
         new CopyPlugin([
             { from: './node_modules/@timkendrick/monaco-editor/dist/external/index.js', to: './monaco.js' },
             { from: './node_modules/@timkendrick/monaco-editor/dist/external/monaco.css', to: './monaco.css' },
-            { from: './devtools-frontend', to: './devtools-frontend' },
             { from: './files', to: './files' },
         ]),
         new webpack.NamedModulesPlugin(),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
             __static: `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
+            '__PACKAGE_INFO_VERSION__': JSON.stringify(pkg.version),
         }),
     ],
 });

@@ -110,19 +110,6 @@ async function update() {
 
 let server: any;
 
-async function getStaticServePath() {
-    if (!server) {
-        const app = new Koa();
-        const staticPath = electronIsDev ? path.join(__dirname, '../../') : path.join(__dirname, './');
-        logger.info('static path', staticPath);
-        app.use(KoaStatic(staticPath));
-        server = app.listen();
-    }
-    // @ts-ignore
-    const port = server.address()?.port;
-    return `http://127.0.0.1:${port}`;
-}
-
 async function checkSystemProxy(props: any) {
     const { port, address } = props;
     return checkSystemProxyWork(address, port);
@@ -141,7 +128,6 @@ export async function initIPC() {
 
     ipcMain.answerRenderer('getIp', getIp);
     ipcMain.answerRenderer('update', update);
-    ipcMain.answerRenderer('getStaticServePath', getStaticServePath);
 
     ipcMain.answerRenderer('checkSystemProxy', checkSystemProxy);
 
