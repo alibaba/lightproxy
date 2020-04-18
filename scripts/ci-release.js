@@ -19,11 +19,14 @@ console.log('pr', TRAVIS_PULL_REQUEST);
 if (TRAVIS_PULL_REQUEST !== 'false') {
     const sshFile = path.join(HOME, './.ssh/id_rsa');
     const sshKeyContent = decodeURIComponent(SSH_KEY);
-    fs.writeFileSync(sshFile, sshKeyContent, 'utf-8');
-    
-    console.log(shell.exec('chmod  400 ~/.ssh/id_rsa'));
-    console.log(shell.exec(`cd ${RELEASE_DIR} && scp -o StrictHostKeyChecking=no *.exe xcodebuild@frs.sourceforge.net:/home/frs/project/lightproxy/build/Lightproxy-${commitId}.exe`));
 
+    fs.writeFileSync(sshFile, sshKeyContent, 'utf-8');
+
+    console.log('write file', sshFile);
+
+    shell.exec('chmod  400 ~/.ssh/id_rsa');
+
+    shell.exec(`cd ${RELEASE_DIR} && scp -o StrictHostKeyChecking=no *.exe xcodebuild@frs.sourceforge.net:/home/frs/project/lightproxy/build/Lightproxy-${commitId}.exe`);
     // console.log(`curl -s -H "Authorization: token ${BOT_TOKEN}" -X POST -d '{"body": "Thanks for pull request, build for this pr is ready, you can test it from here"}' "https://api.github.com/repos/alibaba/lightproxy/issues/${TRAVIS_PULL_REQUEST}/comments"`);
 }
 console.log('done');
