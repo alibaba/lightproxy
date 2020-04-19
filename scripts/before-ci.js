@@ -14,7 +14,7 @@ const {
 if (TRAVIS_PULL_REQUEST !== 'false') {
     const packagePath = path.join(__dirname, '../package.json');
 
-    const info = JSON.stringify(fs.readFileSync(packagePath, 'utf-8'));
+    const info = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
     info.name = 'LightProxyTesting';
     info.version = info.version + `-testing-${TRAVIS_COMMIT}`;
     
