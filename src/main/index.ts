@@ -1,5 +1,5 @@
 import logger from 'electron-log';
-import { LIGHTPROXY_UPDATE_CONFIG, LIGHTPROXY_UPDATE_DIR, APP_VERSION } from './const';
+import { LIGHTPROXY_UPDATE_CONFIG, LIGHTPROXY_UPDATE_DIR, APP_VERSION, IS_BUILD_FOR_PR } from './const';
 import fs from 'fs-extra-promise';
 import md5file from 'md5-file';
 import isDev from 'electron-is-dev';
@@ -46,7 +46,7 @@ cp.spawn = function(cmd: string, argv: string[], options: any) {
 
 // @ts-ignore
 // don't need recheck if is already loaded from external asar
-if (fs.existsSync(LIGHTPROXY_UPDATE_CONFIG) && !global.isInUpdateAsar && !isDev) {
+if (fs.existsSync(LIGHTPROXY_UPDATE_CONFIG) && !global.isInUpdateAsar && !isDev && !IS_BUILD_FOR_PR) {
     const info = JSON.parse(fs.readFileSync(LIGHTPROXY_UPDATE_CONFIG, 'utf-8'));
     const { md5, path } = info;
 

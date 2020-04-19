@@ -15,4 +15,9 @@ export const NEW_ISSUE_PAGE = 'https://github.com/alibaba/lightproxy/issues/new'
 export const DOCUMENT_URL = 'https://alibaba.github.io/lightproxy/quick-start.html';
 
 // @ts-ignore
-export const APP_VERSION = __PACKAGE_INFO_VERSION__;
+export const IS_BUILD_FOR_PR  = __BUILD_FOR_TRAVIS_PR__ ? true: false;
+// @ts-ignore
+export const BUILD_FOR_TRAVIS_COMMIT = __BUILD_FOR_TRAVIS_COMMIT__;
+
+// @ts-ignore
+export const APP_VERSION = __PACKAGE_INFO_VERSION__ + IS_BUILD_FOR_PR;

@@ -22,9 +22,10 @@ cache:
   - $HOME/.npm/_prebuilds
 
 script:
+  - node scripts/before-ci.js
   - npm install -g yarn
   - npm run install-deps
-  - npm run dist
+  - env npm run dist
   - node scripts/ci-release.js
 
 
