@@ -1,0 +1,31 @@
+osx_image: xcode11.3
+
+dist: trusty
+sudo: false
+
+language: node_js
+node_js: "12"
+
+env:
+  global:
+    - ELECTRON_CACHE=$HOME/.cache/electron
+    - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+
+os:
+  - osx
+
+cache:
+  directories:
+  - node_modules
+  - $HOME/.cache/electron
+  - $HOME/.cache/electron-builder
+  - $HOME/.npm/_prebuilds
+
+script:
+  - node scripts/before-ci.js
+  - npm install -g yarn
+  - npm run install-deps
+  - env npm run dist
+  - node scripts/ci-release.js
+
+

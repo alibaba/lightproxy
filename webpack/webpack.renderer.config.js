@@ -72,6 +72,9 @@ module.exports = merge.smart(baseConfig, {
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
             __static: `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
             '__PACKAGE_INFO_VERSION__': JSON.stringify(pkg.version),
+            // 给 travis pr 构建的版本跳过更新等逻辑
+            '__BUILD_FOR_TRAVIS_PR__': JSON.stringify(process.env.TRAVIS_PULL_REQUEST || ''),
+            '__BUILD_FOR_TRAVIS_COMMIT__': JSON.stringify(process.env.TRAVIS_COMMIT || ''),
         }),
     ],
 });

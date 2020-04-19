@@ -17,6 +17,7 @@ import {
     LIGHTPROXY_HOME_PATH,
     LIGHTPROXY_FILES_DIR,
     APP_VERSION,
+    IS_BUILD_FOR_PR,
 } from './const';
 import ua from 'universal-analytics';
 import { CoreAPI } from '../renderer/core-api';
@@ -96,8 +97,8 @@ async function initSplashScreen() {
             encodeURIComponent(
                 splash({
                     brand: 'IFE Team with ♥',
-                    productName: 'LightProxy',
-                    text: 'Loading ...',
+                    productName: `LightProxy`,
+                    text: `Loading - ${version} ...`,
                     website: 'https://github.com/alibaba/lightproxy',
                     logo: logoIcon,
                     color: '#0c60aa',
@@ -152,6 +153,9 @@ function initCopyFiles() {
 }
 
 function initUpdate() {
+    if (IS_BUILD_FOR_PR) {
+        return;
+    }
     const timer = setInterval(async () => {
         const result = await checkUpdater();
         if (result) {
