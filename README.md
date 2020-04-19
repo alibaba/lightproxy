@@ -1,4 +1,4 @@
-[![Gitter](https://badges.gitter.im/lightproxy-im/community.svg)](https://gitter.im/lightproxy-im/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Build Status](https://travis-ci.org/alibaba/lightproxy.svg?branch=develop)](https://travis-ci.org/alibaba/lightproxy)
 ![Stable version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/release.json&label=Stable%20Version&query=$.version)
 ![Beta version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/beta-release.json&label=Beta%20Version&query=$.version)
 ![GitHub issues](https://img.shields.io/github/issues/alibaba/lightproxy)
@@ -33,9 +33,6 @@
 ## Preview
 
 ![preview](https://img.alicdn.com/tfs/TB1EQtHsuH2gK0jSZJnXXaT1FXa-1500-1005.png)
-
-![devtools](https://img.alicdn.com/tfs/TB1bRCKtQL0gK0jSZFAXXcA9pXa-1320-884.png)
-> Devtools feature is still in beta, you could update to beta version to use it
 
 ## Download
 
