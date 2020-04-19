@@ -16,7 +16,9 @@ if (TRAVIS_PULL_REQUEST !== 'false') {
 
     const info = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
     info.name = 'LightProxyTesting';
-    info.version = info.version + `-testing-${TRAVIS_COMMIT}`;
+    info.version = info.version + `-testing-${TRAVIS_COMMIT.slice(0, 6)}`;
+    info.build.appId = 'io.github.alibaba.lightproxytesting';
     
     fs.writeFileSync(packagePath, JSON.stringify(info), 'utf-8');
+    require('./sync-version');
 }

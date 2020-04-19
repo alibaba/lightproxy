@@ -97,8 +97,8 @@ async function initSplashScreen() {
             encodeURIComponent(
                 splash({
                     brand: 'IFE Team with ♥',
-                    productName: `LightProxy ${version}`,
-                    text: 'Loading ...',
+                    productName: `LightProxy`,
+                    text: `Loading - ${version} ...`,
                     website: 'https://github.com/alibaba/lightproxy',
                     logo: logoIcon,
                     color: '#0c60aa',
