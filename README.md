@@ -30,6 +30,8 @@
 
 :dash: Rules take effect in one second, no hosts cache from browser
 
+--- 
+
 ## Preview
 
 ![preview](https://img.alicdn.com/tfs/TB1EQtHsuH2gK0jSZJnXXaT1FXa-1500-1005.png)
