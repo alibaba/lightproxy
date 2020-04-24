@@ -394,6 +394,7 @@ export const RuleList = (props: Props) => {
                     onSave={handleOnSave}
                     onChange={handleEditorOnChange}
                     content={(rule && rule.content) || ''}
+                    enabled={rule && rule.enabled}
                 />
             ) : null}
         </div>

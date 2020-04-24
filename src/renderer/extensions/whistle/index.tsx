@@ -163,11 +163,11 @@ export class WhistleExntension extends Extension {
                     client = await this.coreAPI.joinBoardcast();
 
                     client.onmessage = event => {
-                        const data = lazyParseData(event.data as string);
-                        if (data.eventName === 'whistle-hit') {
-                            setHit(data.data.host);
-                            setTimeout(hideHit);
-                        }
+                        // const data = lazyParseData(event.data as string);
+                        // if (data.eventName === 'whistle-hit') {
+                        //     setHit(data.data.host);
+                        //     setTimeout(hideHit);
+                        // }
                     };
                 })();
 
@@ -270,8 +270,10 @@ export class WhistleExntension extends Extension {
             return (
                 <Dropdown overlay={menu}>
                     <div className="whistle-status-bar-item">
-                        {hit ? 'hit ' + hit + '  ' : null} {t(info.title)}
-                        {port ? `: ${port}` : null} <Icon type={info.icon} />
+                        {/* {hit ? 'hit ' + hit + '  ' : null}  */}
+                        {t(info.title)}
+                        {port ? `: [HTTP ${port}/SOCKS5 ${((port as unknown) as number) + 1}]` : null}{' '}
+                        <Icon type={info.icon} />
                     </div>
                 </Dropdown>
             );
