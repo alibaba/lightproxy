@@ -1,7 +1,7 @@
 import { Extension } from '../../extension';
 import logger from 'electron-log';
 import React, { useEffect, useRef, useState } from 'react';
-import { Icon, Dropdown, Menu } from 'antd';
+import { Icon, Dropdown, Menu, message } from 'antd';
 import { lazyParseData, getWhistlePort } from '../../utils';
 import { Modal, Button } from 'antd';
 const confirm = Modal.confirm;
@@ -109,9 +109,22 @@ export class WhistleExntension extends Extension {
 
             await this.startWhistle();
         })();
+
+        this.coreAPI.eventEmmitter.on('lightproxy-restart-proxy-with-lan', () => {
+            this.startWhistle(true);
+
+            // 1hour auto close
+            setTimeout(() => {
+                this.startWhistle(false);
+            }, 1000 * 60 * 60);
+        });
     }
 
-    private async startWhistle() {
+    /**
+     *
+     * @param visiableOnLan 在局域网是否可见
+     */
+    private async startWhistle(visiableOnLan = false) {
         if (this.mPid) {
             await this.coreAPI.treeKillProcess(this.mPid);
             this.mPid = null;
@@ -121,6 +134,7 @@ export class WhistleExntension extends Extension {
         this.mPid = await this.coreAPI.spawnModule('whistle-start', true, {
             // LIGHTPROXY_DEVTOOLS_PORT: '' + this.mDevtoolPort,
             DEFAULT_PORT: defaultPort,
+            WHISTLE_HOST: visiableOnLan ? '0.0.0.0' : '127.0.0.1',
         });
     }
 

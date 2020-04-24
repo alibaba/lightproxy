@@ -4,6 +4,7 @@ import QrCode from 'qrcode.react';
 import { getWhistlePort } from '../../utils';
 import { Extension } from '../../extension';
 import { useTranslation } from 'react-i18next';
+import { message } from 'antd';
 
 export class PhoneProxy extends Extension {
     constructor() {
@@ -24,6 +25,11 @@ export class PhoneProxy extends Extension {
             const [address, setAddress] = useState(null as null | string);
 
             const { t } = useTranslation();
+
+            useEffect(() => {
+                this.coreAPI.eventEmmitter.emit('lightproxy-restart-proxy-with-lan');
+                message.info(t('Visiable on LAN enabled'));
+            }, []);
 
             useEffect(() => {
                 (async () => {
