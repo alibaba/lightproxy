@@ -59,6 +59,7 @@ export const i18nResources = {
             'Click to download cert': '点击下载证书',
             'System proxy changed': '系统代理被改变',
             'System proxy changed by other Program, re-enable proxy?': '系统代理被其他应用程序改变，是否重新启用？',
+            'This rule is disabled, double click rule name to enable': '该规则已被禁用，双击规则名启用',
         },
     },
 };

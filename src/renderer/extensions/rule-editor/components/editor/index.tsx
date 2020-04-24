@@ -12,12 +12,13 @@ interface Props {
     onChange: (val: string) => void;
     onSave: () => void;
     onMount: (editor: monaco.editor.IStandaloneCodeEditor) => void;
+    enabled: boolean;
 }
 
 initRuleLanguage(monaco);
 
 export const Editor = (props: Props) => {
-    const { content, onChange, onSave, onMount } = props;
+    const { content, onChange, onSave, onMount, enabled } = props;
 
     const [showCardsPos, setShowCardsPos] = useState({ x: -1, y: -1 });
 
@@ -99,7 +100,12 @@ export const Editor = (props: Props) => {
             <div className="lightproxy-editor-actionbar drag">
                 <span className="tip">{t('Type / to insert rule')}</span>
             </div>
+
             <div className="lightproxy-code-editor-container no-drag">
+                {!enabled ? (
+                    <div className="disabled-tip">{t('This rule is disabled, double click rule name to enable')}</div>
+                ) : null}
+
                 <MonacoEditor
                     ref={editorRef}
                     language="rule"

@@ -59,6 +59,7 @@ console.info('use custom cert:', options.certDir);
 (async () => {
     try {
         const port = await getPort({ port: Number.parseInt(process.env.DEFAULT_PORT) });
+        const socksPort = await getPort({ port: Number.parseInt(process.env.DEFAULT_PORT) + 1 });
 
         console.log('Use port:', port);
         // @ts-ignore
@@ -66,6 +67,7 @@ console.info('use custom cert:', options.certDir);
 
         start({
             port,
+            socksPort,
             storage: whistleStoragePath,
             certDir: options.certDir,
             pluginPaths: pluginPaths.filter(item => typeof item === 'string' && item !== 'undefined'),
@@ -73,6 +75,7 @@ console.info('use custom cert:', options.certDir);
         })
             .then(() => {
                 console.info('Whistle for LightProxy start: http://127.0.0.1:' + port);
+                console.info('Whistle start for socks port:' + socksPort);
                 return clientReady;
             })
             .then(() => {

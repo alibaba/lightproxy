@@ -47,7 +47,7 @@ export class PhoneProxy extends Extension {
                         <QrCode size={256} value={`http://${address}:${port}/cgi-bin/rootca`}></QrCode>
                     </div>
                     <div className="title">
-                        {t('Scan to install cert')}
+                        <span>{t('Scan to install cert')}</span>
                         <a href={`http://${address}:${port}/cgi-bin/rootca`}>{t('Click to download cert')}</a>
                     </div>
                     <div className="title">
