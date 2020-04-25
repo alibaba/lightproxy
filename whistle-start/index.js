@@ -66,6 +66,7 @@ console.info('use custom cert:', options.certDir);
         process.env.WHISTLE_PORT = port;
 
         start({
+            host: process.env.WHISTLE_HOST || '127.0.0.1',
             port,
             socksPort,
             storage: whistleStoragePath,
