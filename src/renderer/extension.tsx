@@ -26,4 +26,12 @@ export class Extension {
     panelTitle(): string {
         return 'unkown';
     }
+
+    keepAlive() {
+        return false;
+    }
+
+    name() {
+        return this.constructor.name;
+    }
 }

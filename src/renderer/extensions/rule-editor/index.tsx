@@ -106,4 +106,8 @@ export class RuleEditor extends Extension {
     panelTitle() {
         return 'Rule';
     }
+
+    keepAlive(): boolean {
+        return true;
+    }
 }

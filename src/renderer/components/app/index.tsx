@@ -7,6 +7,10 @@ import { Icon } from 'antd';
 import classnames from 'classnames';
 
 import { useTranslation } from 'react-i18next';
+import {
+    Provider,
+    KeepAlive,
+} from 'react-keep-alive';
 
 // @ts-ignore
 import { Titlebar } from 'react-titlebar-osx';
@@ -38,7 +42,16 @@ export const App = () => {
                 items.push(rightStatusItem);
             }
             if (panelComponent) {
-                nextPanelItems.push(panelComponent);
+                if (ext.keepAlive()) {
+                    const PanelComponent = panelComponent;
+                    nextPanelItems.push(() => (
+                        <KeepAlive name={ext.name()}>
+                            <PanelComponent />
+                        </KeepAlive>
+                    ));
+                } else {
+                    nextPanelItems.push(panelComponent);
+                }
                 icons.push(ext.panelIcon());
                 titles.push(ext.panelTitle());
             }
@@ -75,36 +88,38 @@ export const App = () => {
 
     return (
         <div className="lightproxy-app-container">
-            {SYSTEM_IS_MACOS ? (
-                <Titlebar
-                    text="LightProxy"
-                    onClose={() => handleClose()}
-                    onMaximize={() => handleMaximize()}
-                    onFullscreen={() => handleFullscreen()}
-                    onMinimize={() => handleMinimize()}
-                    padding={5}
-                    transparent={true}
-                    draggable={true}
-                />
-            ) : null}
+            <Provider>
+                {SYSTEM_IS_MACOS ? (
+                    <Titlebar
+                        text="LightProxy"
+                        onClose={() => handleClose()}
+                        onMaximize={() => handleMaximize()}
+                        onFullscreen={() => handleFullscreen()}
+                        onMinimize={() => handleMinimize()}
+                        padding={5}
+                        transparent={true}
+                        draggable={true}
+                    />
+                ) : null}
 
-            <div className="lightproxy-panel-dock no-drag">
-                {panelIcons.map((item, index) => {
-                    const className = classnames({
-                        'lightproxy-dock-item': true,
-                        selected: index === selectedPanelIndex,
-                    });
+                <div className="lightproxy-panel-dock no-drag">
+                    {panelIcons.map((item, index) => {
+                        const className = classnames({
+                            'lightproxy-dock-item': true,
+                            selected: index === selectedPanelIndex,
+                        });
 
-                    return (
-                        <div className={className} onClick={onClickItemBuilder(index)} key={index}>
-                            <Icon style={{ fontSize: '22px' }} type={item}></Icon>
-                            <span className="lightproxy-dock-title">{t(panelTitles[index])}</span>
-                        </div>
-                    );
-                })}
-            </div>
-            <div className="lightproxy-panel-container drag">{Panel ? <Panel /> : null}</div>
-            <StatusBar rightItems={statusRightItems} />
+                        return (
+                            <div className={className} onClick={onClickItemBuilder(index)} key={index}>
+                                <Icon style={{ fontSize: '22px' }} type={item}></Icon>
+                                <span className="lightproxy-dock-title">{t(panelTitles[index])}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="lightproxy-panel-container drag">{Panel ? <Panel /> : null}</div>
+                <StatusBar rightItems={statusRightItems} />
+            </Provider>
         </div>
     );
 };
