@@ -13,10 +13,13 @@
 <p align="center">
 <b><a href="https://alibaba.github.io/lightproxy/quick-start.html">Download</a></b>
 |
-<b><a href="https://alibaba.github.io/lightproxy/quick-start.html">Document</a></b>
+<b><a href="https://alibaba.github.io/lightproxy/en/quick-start.html">Document</a></b>
 |
 <b><a href="CONTRIBUTING.org">Contribute</a></b>
 |
+  <b><a href="https://github.com/alibaba/lightproxy/issues/117">Introduction</a></b>
+
+  |
 <b><a href="https://github.com/alibaba/lightproxy/issues/19">介绍文章</a></b>
 |
 <b><a href="https://alibaba.github.io/lightproxy/start-proxy-only.html">FAQ</a></b>
