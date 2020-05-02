@@ -24,6 +24,9 @@
 <b><a href="https://alibaba.github.io/lightproxy/start-proxy-only.html">FAQ</a></b>
 
 </p>
+<p align="center">
+<a href="https://www.producthunt.com/posts/lightproxy?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-lightproxy" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=195432&theme=light" alt="LightProxy - Open-source proxy tools for macOS & Windows based on whistle | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
+</p>
 
 --- 
 :package: Out-of-box, fully automation with **certificate install & system proxy setting**
@@ -73,6 +76,7 @@ yarn run dev
 ```
 
 For new contributors you can try to fix a [good-first-issue](https://github.com/alibaba/lightproxy/labels/good%20first%20issue)
+
 
 ## Contributors ✨
 
