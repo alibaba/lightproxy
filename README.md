@@ -75,7 +75,7 @@ yarn run install-deps
 yarn run dev
 ```
 
-For new contributors you can try to fix a [good-first-issue](https://github.com/alibaba/lightproxy/labels/good%20first%20issue)
+For new contributors you can try to fix a [🏅send-a-PR](https://github.com/alibaba/lightproxy/issues?q=is%3Aissue+is%3Aopen+label%3A%22%F0%9F%8F%85send+a+PR%22)
 
 
 ## Contributors ✨
