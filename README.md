@@ -45,9 +45,11 @@
 - Mock interface and pages
 - Modify request & response, for example insert <script> , modify response header etc.
 
-## Preview
+## Preview GIF
 
-![preview](https://img.alicdn.com/tfs/TB1EQtHsuH2gK0jSZJnXXaT1FXa-1500-1005.png)
+<p align="center">
+  <img src="https://i.loli.net/2020/05/05/uRZMpi8rPDyQF6I.gif"></img>
+</p>
 
 ## Download
 
