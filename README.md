@@ -52,7 +52,7 @@
 
 ## Preview GIF
 <p align="center">
-  <img src="https://img.alicdn.com/tfs/TB1LoZ6E8r0gK0jSZFnXXbRRXXa-600-384.png"></img>
+  <img src="https://img.alicdn.com/tfs/TB180oWEVP7gK0jSZFjXXc5aXXa-600-384.gif"></img>
 </p>
 
 ## Download
