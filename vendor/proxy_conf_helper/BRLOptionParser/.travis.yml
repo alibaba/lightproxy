@@ -1,0 +1,5 @@
+language: objective-c
+before_install:
+  - gem install cocoapods --no-document --quiet
+script: make test
+
