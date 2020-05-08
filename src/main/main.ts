@@ -26,7 +26,7 @@ import windowStateKeeper from 'electron-window-state';
 import os from 'os';
 import fs from 'fs-extra';
 // @ts-ignore
-import logoIcon from '../../files/iconTemplate@2x.png';
+import logoIcon from '../../vendor/files/iconTemplate@2x.png';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -84,7 +84,7 @@ global.__static = __static;
 global.__filesDir = LIGHTPROXY_FILES_DIR;
 
 const LIGHTPROXY_FILES_IN_ASAR_PATH = electronIsDev
-    ? path.join(__dirname, '../../files/')
+    ? path.join(__dirname, '../../vendor/files/')
     : path.join(__dirname, './files/');
 
 let splashWindow: BrowserWindow | null;
