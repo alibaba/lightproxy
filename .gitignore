@@ -3,7 +3,6 @@ node_modules/
 thumbs.db
 .idea/
 private
-whistle
 !src/renderer/extensions/whistle
 yarn-error.log
 whistle.log
@@ -16,3 +15,4 @@ app/dist/
 app/node_modules/
 release/
 docs/.vuepress/dist
+.tmp

@@ -75,6 +75,7 @@
     "dist/",
     "webpack/",
     "whistle/",
-    "files"
+    "files",
+    "vendor"
   ]
 }

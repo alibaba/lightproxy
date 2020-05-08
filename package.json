@@ -16,7 +16,7 @@
     "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "lint": "eslint ./src/**/*.ts ./src/**/*.tsx --fix",
     "update:whistle": "rm -rf whistle && git clone https://github.com/avwo/whistle --depth=1 && patch -u -b whistle/lib/inspectors/res.js -i whistle.patch",
-    "update:node_modules": "npx rimraf files/node/modules && cd files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle whistle.vase whistle.scriptfile && mv node_modules modules",
+    "update:node_modules": "npx rimraf files/node/modules && cd files/node && echo {} > package.json && yarn add ../../vendor/whistle-start ../../.tmp/whistle whistle.vase whistle.scriptfile && mv node_modules modules",
     "cleanbuild": "rm -rf node_modules && yarn install && yarn run update:whistle && yarn run dist",
     "doc": "env SKIP_CACHE=1 bash scripts/depoly-doc.sh",
     "install-deps": "yarn run update:whistle && yarn run update:node_modules && yarn install",
@@ -141,7 +141,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "./static/icon.png"
+      "icon": "./vendor/static/icon.png"
     },
     "files": [
       "dist/*.js",
