@@ -7,9 +7,11 @@ import { Setting } from './setting';
 // import { Network } from './network';
 import { PhoneProxy } from './phone-proxy';
 import { WhistlePanel } from './whistle-panel';
+import { UpdaterExntension } from './updater';
 
 export function getAllExtensions() {
     const extensions = ([
+        new UpdaterExntension(),
         new RuleEditor(),
         // new Network(),
         new WhistlePanel(),

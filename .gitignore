@@ -16,3 +16,4 @@ app/dist/
 app/node_modules/
 release/
 docs/.vuepress/dist
+vendor/files/node/modules

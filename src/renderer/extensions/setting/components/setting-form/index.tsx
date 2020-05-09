@@ -30,16 +30,8 @@ class InnerSettingForm extends React.Component {
                 isUpdating: true,
             });
             try {
-                const result = await CoreAPI.update();
-                if (!result) {
-                    message.success(t('Already latest version'));
-                } else {
-                    message.success(t('Update success, app will restart'));
-                    setTimeout(() => {
-                        remote.app.relaunch();
-                        remote.app.quit();
-                    }, 800);
-                }
+                await CoreAPI.update();
+                message.info(t('Check for update...'));
             } catch (e) {
                 message.error(e.toString());
             }
