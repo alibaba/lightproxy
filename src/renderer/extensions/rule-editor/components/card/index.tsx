@@ -54,7 +54,7 @@ multiple line
         value: 'res-delay',
         title: 'Delay response',
         icon: 'coffee',
-        content: `\${1:${MOCK_PATH}} resCors://
+        content: `\${1:${MOCK_PATH}} resDelay://
 `,
     },
     {
