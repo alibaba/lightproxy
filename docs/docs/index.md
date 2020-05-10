@@ -20,12 +20,6 @@ features:
 footer: Open-source Apache Licensed | Copyright © 2020<br />Powered by [LightProxy](https://github.com/alibaba/lightproxy)
 ---
 
-## Preview
-<img className="preview lazyload" data-src="https://img.alicdn.com/tfs/TB1mCIVEYr1gK0jSZR0XXbP8XXa-1232-812.png" />
-
-## Preview GIF
-<img className="preview lazyload" data-src="https://i.loli.net/2020/05/05/uRZMpi8rPDyQF6I.gif" />
-
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -48,3 +42,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+
+## Preview
+<img className="preview lazyload" data-src="https://img.alicdn.com/tfs/TB1mCIVEYr1gK0jSZR0XXbP8XXa-1232-812.png" />
+
+## Preview GIF
+<img className="preview lazyload" data-src="https://i.loli.net/2020/05/05/uRZMpi8rPDyQF6I.gif" />
+
