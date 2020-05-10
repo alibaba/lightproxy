@@ -1,4 +1,5 @@
 ---
+title: LightProxy 💎 跨平台 Web 代理调试工具
 hero:
   title: LightProxy
   desc: 💎 跨平台 Web 代理调试工具
@@ -22,7 +23,7 @@ footer: Open-source Apache Licensed | Copyright © 2020<br />Powered by [LightPr
 ---
 
 ## 预览
-<img className="preview" src="https://img.alicdn.com/tfs/TB1mCIVEYr1gK0jSZR0XXbP8XXa-1232-812.png" />
+<img className="preview lazyload" data-src="https://img.alicdn.com/tfs/TB1mCIVEYr1gK0jSZR0XXbP8XXa-1232-812.png" />
 
 ## 预览 GIF
-<img className="preview" src="https://i.loli.net/2020/05/05/uRZMpi8rPDyQF6I.gif" />
+<img className="preview lazyload" data-src="https://i.loli.net/2020/05/05/uRZMpi8rPDyQF6I.gif" />
