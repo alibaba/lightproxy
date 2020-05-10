@@ -99,14 +99,18 @@ export const RuleList = (props: Props) => {
 
     const rule = ruleList[selected];
 
-    const switchRule = (index: number) => {
+    const switchRule = (index: number, isRemove: boolean = false) => {
         const editor = editorRef.current;
         if (editor) {
             try {
-                editorStatus[selected] = {
-                    model: editor.getModel(),
-                    viewState: editor.saveViewState(),
-                };
+                if (isRemove) {
+                    editorStatus[selected] = undefined;
+                } else {
+                    editorStatus[selected] = {
+                        model: editor.getModel(),
+                        viewState: editor.saveViewState(),
+                    };
+                }
             } catch (e) {}
 
             if (!editorStatus[index]) {
@@ -259,6 +263,8 @@ export const RuleList = (props: Props) => {
         switchRule(newList.length - 1);
 
         saveWithLimit(newList);
+
+        editorRef.current?.focus();
     };
 
     return (
@@ -329,7 +335,7 @@ export const RuleList = (props: Props) => {
                                                                 _item => _item.uuid !== item.uuid,
                                                             );
                                                             setRuleList(newRules);
-                                                            switchRule(0);
+                                                            switchRule(0, true);
                                                         },
                                                     }),
                                                 );
