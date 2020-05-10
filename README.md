@@ -7,7 +7,7 @@
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <p align="center">
-  <a href="https://img.shields.io/badge/chatting-DingTalk-blue)](https://alibaba.github.io/lightproxy/quick-start.html"><img src="https://img.alicdn.com/tfs/TB1yw0ysuL2gK0jSZPhXXahvXXa-400-150.png"/></a>
+  <img src="./vendor/files/icon.png" height="150px"/></a>
 </p>
 
 <p align="center">
