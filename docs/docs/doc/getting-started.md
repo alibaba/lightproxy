@@ -17,6 +17,10 @@ order: 1
 
 [** Windows version **](https://gw.alipayobjects.com/os/LightProxy/LightProxy-Setup.exe)
 
+
+** Linux version comming soon **
+
+
 ## Introduction
 
 LightProxy is a local proxy packet capture software based on `whistle`

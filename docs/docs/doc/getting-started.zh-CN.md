@@ -17,6 +17,10 @@ order: 1
 
 [**Windows 版**](https://gw.alipayobjects.com/os/LightProxy/LightProxy-Setup.exe)
 
+
+** Linux 版即将到来 **
+
+
 ## 介绍
 
 LightProxy 是一款基于 `whistle` 的本地代理抓包软件
