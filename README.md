@@ -34,7 +34,7 @@
 
 :battery: Battery include, powerful `hosts/proxy/capture` based on `whistle`, what u need is just input `/`
 
-:dash: Rules take effect in one second, no hosts cache from browser
+:electric_plug: Hackable, you colud write even Node.js for your proxy rule
 
 --- 
 
