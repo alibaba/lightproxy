@@ -1,6 +1,8 @@
 {
   "files": [
-    "README.md"
+    "README.md",
+    "docs/docs/index.md",
+    "docs/docs/index.zh-CN.md"
   ],
   "imageSize": 100,
   "commit": false,
@@ -62,6 +64,15 @@
       "name": "William Chan",
       "avatar_url": "https://avatars1.githubusercontent.com/u/9210430?v=4",
       "profile": "https://williamchan.me",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "njzydark",
+      "name": "njzy",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/19601720?v=4",
+      "profile": "https://blog.njzydark.com/",
       "contributions": [
         "code"
       ]
