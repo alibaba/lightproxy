@@ -38,13 +38,16 @@
 
 --- 
 
-## Why LightProxy
 
-- Caputure network request & response
-- Real-time hosts binding
-- Forward remote url to local file or other remote file
-- Mock interface and pages
-- Modify request & response, for example insert <script> , modify response header etc.
+## Get Start
+<p align="center">
+  <a href="https://lightproxy.org">
+    <img src="https://i.loli.net/2020/05/10/E3peTy9PFbzU5aA.png"></img>
+  </a>
+  <p align="center">
+    <a href="https://lightproxy.org">Get Start</a>
+  </p>
+</p>
 
 ## Preview
 <p align="center">
