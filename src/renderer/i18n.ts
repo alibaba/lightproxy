@@ -62,6 +62,9 @@ export const i18nResources = {
             'This rule is disabled, double click rule name to enable': '该规则已被禁用，双击规则名启用',
             'Visiable on LAN enabled': '以开启代理局域网可见',
             'Check for update...': '检查更新...',
+            'Ok': '确认',
+            'Cancel': '取消',
+            'New version released, go to update?': '检测到有新版本，是否更新?',
         },
     },
 };

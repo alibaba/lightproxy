@@ -5,6 +5,8 @@ import { ipcRenderer } from 'electron-better-ipc';
 import { useTranslation } from 'react-i18next';
 import { remote } from 'electron';
 
+let tipedForUpdate = false;
+
 export class UpdaterExntension extends Extension {
     constructor() {
         super('updater');
@@ -17,12 +19,27 @@ export class UpdaterExntension extends Extension {
             const [t] = useTranslation();
 
             ipcRenderer.on('updater-info', (sender, info) => {
-                // @ts-ignore
-                setMessage(info.message);
+                const message = info.message as 'downloaded' | 'downloading' | 'error';
+                setMessage(message);
+
+                if (message === 'error' && info.stack && !tipedForUpdate) {
+                    tipedForUpdate = true;
+                    remote.dialog.showMessageBox({
+                        message: t('New version released, go to update?'),
+                        buttons: [
+                            t('Cancel'),
+                            t('Ok'),
+                        ]
+                    }).then(res => {
+                        if (res.response === 1) {
+                            remote.shell.openExternal('https://release.lightproxy.org/leatest');
+                        }
+                    });
+                }
             });
 
             const handleUpdate = () => {
-                remote.require('electron-simple-updater').quitAndInstall();
+                remote.require('electron-updater').autoUpdater.quitAndInstall();
             };
 
             return (

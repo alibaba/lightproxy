@@ -1,6 +1,6 @@
 {
   "name": "LightProxy",
-  "version": "1.1.14-beta-5",
+  "version": "1.1.14-beta-2",
   "license": "MIT",
   "main": "./dist/main.js",
   "scripts": {
@@ -38,6 +38,7 @@
     "compare-versions": "^3.5.1",
     "cross-spawn": "^7.0.1",
     "electron-better-ipc": "^0.7.0",
+    "electron-dl": "^3.0.0",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^4.0.0",
     "electron-promise-ipc": "^2.0.1",
@@ -141,12 +142,16 @@
     "appId": "org.lightproxy",
     "mac": {
       "category": "",
-      "publish": ["github"]
+      "publish": [
+        "github"
+      ]
     },
     "win": {
       "target": "nsis",
       "icon": "./static/icon.png",
-      "publish": ["github"]
+      "publish": [
+        "github"
+      ]
     },
     "files": [
       "dist/*.js",
