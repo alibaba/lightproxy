@@ -24,11 +24,16 @@ export default defineConfig({
   ],
   scripts: [{
     content: `
-    setTimeout(function() {
-      try {
-        document.querySelector('.__dumi-default-layout-hero h1').outerHTML='<img height="150px" src="https://cdn.jsdelivr.net/gh/alibaba/lightproxy@master/vendor/files/icon.png"></img><h1>LightProxy</h1>';
-      } catch(e){}
-    }, 400);
+    (function() {
+      if (location.pathname === '/' || location.pathname === '/zh-CN') {
+        var timer = setInterval(function() {
+          try {
+            document.querySelector('.__dumi-default-layout-hero h1').outerHTML='<img height="150px" src="https://cdn.jsdelivr.net/gh/alibaba/lightproxy@master/vendor/files/icon.png"></img><h1>LightProxy</h1>';
+            clearInterval(timer);
+          } catch(e){}
+        }, 200);
+      }
+    })();
   `
   }],
   headScripts: [{content: `
