@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-<b><a href="https://alibaba.github.io/lightproxy/quick-start.html">Download</a></b>
+<b><a href="https://lightproxy.org/doc/getting-started#download">Download</a></b>
 |
 <b><a href="https://lightproxy.org/doc/getting-started">Document</a></b>
 |
@@ -34,17 +34,20 @@
 
 :battery: Battery include, powerful `hosts/proxy/capture` based on `whistle`, what u need is just input `/`
 
-:dash: Rules take effect in one second, no hosts cache from browser
+:electric_plug: Hackable, you colud write even Node.js for your proxy rule
 
 --- 
 
-## Why LightProxy
 
-- Caputure network request & response
-- Real-time hosts binding
-- Forward remote url to local file or other remote file
-- Mock interface and pages
-- Modify request & response, for example insert <script> , modify response header etc.
+## Get Start
+<p align="center">
+  <a href="https://lightproxy.org">
+    <img src="https://i.loli.net/2020/05/10/E3peTy9PFbzU5aA.png"></img>
+  </a>
+  <p align="center">
+    <a href="https://lightproxy.org">Get Start</a>
+  </p>
+</p>
 
 ## Preview
 <p align="center">
