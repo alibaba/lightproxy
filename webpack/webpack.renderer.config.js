@@ -65,7 +65,7 @@ module.exports = merge.smart(baseConfig, {
         new CopyPlugin([
             { from: './node_modules/@timkendrick/monaco-editor/dist/external/index.js', to: './monaco.js' },
             { from: './node_modules/@timkendrick/monaco-editor/dist/external/monaco.css', to: './monaco.css' },
-            { from: './vendor/files', to: './dist/files' },
+            { from: './vendor/files', to: './files' },
         ]),
         new webpack.NamedModulesPlugin(),
         new webpack.DefinePlugin({
