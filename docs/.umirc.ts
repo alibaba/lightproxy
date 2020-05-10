@@ -29,7 +29,8 @@ export default defineConfig({
   ],
   metas: [
     {name: 'keywords', content: 'Web debugging proxy, whistle, charles, lightproxy, proxy'},
-    {name: 'description', content: 'LightProxy - 💎 Cross platform Web debugging proxy with one-click'}
+    {name: 'description', content: 'LightProxy - 💎 Cross platform Web debugging proxy with one-click'},
+    {name: 'google-site-verification', content: '_ImTTkI_QE5qFyxsenyvUF-1iUQO0cvOFLPutf07nCI'},
   ],
   scripts: [{
     content: `
