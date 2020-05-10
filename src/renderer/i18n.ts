@@ -38,6 +38,7 @@ export const i18nResources = {
             'Phone proxy': '手机代理',
             'Scan to install cert': '扫码安装证书',
             'Setting WIFI proxy to': '设置 WIFI 代理为：',
+            'WIFI proxy address has been copied to the pasteboard': 'WIFI代理地址已复制到粘贴板',
             Switched: '已切换',
             'Custom nodejs code': ' 自定义 NodeJS 代码',
             Actions: '操作',
