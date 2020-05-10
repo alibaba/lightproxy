@@ -11,7 +11,7 @@ export default defineConfig({
       max-width: 100%;
       display: block;
       margin: auto;
-      height: 500px;
+      max-height: 500px;
     }
     img {
       max-height: 400px;
