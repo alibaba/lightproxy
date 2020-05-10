@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <meta
+      name="keywords"
+      content="Web debugging proxy, whistle, charles, lightproxy, proxy"
+    />
+    <meta
+      name="description"
+      content="LightProxy - &#x1F48E; Cross platform Web debugging proxy with one-click"
+    />
+    <style>
+      .preview {
+        max-width: 100%;
+        display: block;
+        margin: auto;
+        height: 500px;
+      }
+      img {
+        max-height: 400px;
+      }
+    </style>
+    <link rel="stylesheet" href="/umi.css" />
+    <script>
+      window.routerBase = "/";
+    </script>
+    <script>
+      //! umi version: 3.1.4
+    </script>
+    <script>
+      if (
+        document.location.host.indexOf("localhost") === -1 &&
+        document.location.host !== "lightproxy.org"
+      ) {
+        location.host = "lightproxy.org";
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.0/lazysizes.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      setTimeout(function () {
+        try {
+          document.querySelector(".__dumi-default-layout-hero h1").outerHTML =
+            '<img height="150px" src="https://cdn.jsdelivr.net/gh/alibaba/lightproxy@master/vendor/files/icon.png"></img><h1>LightProxy</h1>';
+        } catch (e) {}
+      }, 400);
+    </script>
+    <script src="/umi.js"></script>
+  </body>
+</html>
