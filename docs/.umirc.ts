@@ -16,6 +16,11 @@ export default defineConfig({
     img {
       max-height: 400px;
     }
+    @media only screen and (max-width: 767px) {
+      .github-badge {
+        display: none;
+      }
+    }
     .github-badge {
       position: fixed;
       top: 25px;
