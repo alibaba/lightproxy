@@ -4,8 +4,6 @@ hero:
   title: LightProxy
   desc: 💎 Cross platform Web debugging proxy with one-click
   actions:
-    - text: Download
-      link: ./doc/getting-started
     - text: Getting Started
       link: ./doc/getting-started
 

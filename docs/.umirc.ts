@@ -16,6 +16,15 @@ export default defineConfig({
     img {
       max-height: 400px;
     }
+    .github-badge {
+      position: absolute;
+      top: 25px;
+      left: 240px;
+      z-index: 99999;
+      border: 0;
+      width: 150px;
+      height: 20px;
+    }
     `
   ],
   metas: [
@@ -33,6 +42,13 @@ export default defineConfig({
           } catch(e){}
         }, 200);
       }
+
+      var tag = document.createElement('iframe');
+      tag.src = 'https://ghbtns.com/github-btn.html?user=alibaba&repo=lightproxy&type=star&count=true';
+      
+      tag.title = 'Star lightproxy on Github';
+      tag.className = 'github-badge';
+      document.body.appendChild(tag);
     })();
   `
   }],

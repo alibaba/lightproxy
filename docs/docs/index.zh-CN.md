@@ -4,9 +4,7 @@ hero:
   title: LightProxy
   desc: 💎 跨平台 Web 代理调试工具
   actions:
-    - text: Download
-      link: ./doc/getting-started
-    - text: Getting Started
+    - text: 快速开始
       link: ./doc/getting-started
 
 features:
