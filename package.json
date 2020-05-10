@@ -137,13 +137,14 @@
     "webpack-merge": "^4.2.2"
   },
   "build": {
-    "appId": "io.github.alibaba.lightproxy",
+    "appId": "org.lightproxy",
     "mac": {
-      "category": ""
+      "category": "",
+      "icon": "./vendor/files/icon.icns"
     },
     "win": {
       "target": "nsis",
-      "icon": "./vendor/static/icon.png"
+      "icon": "./vendor/files/icon.png"
     },
     "files": [
       "dist/*.js",
