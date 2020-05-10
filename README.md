@@ -14,7 +14,7 @@
 <p align="center">
 <b><a href="https://alibaba.github.io/lightproxy/quick-start.html">Download</a></b>
 |
-<b><a href="https://alibaba.github.io/lightproxy/en/quick-start.html">Document</a></b>
+<b><a href="https://lightproxy.org/doc/getting-started">Document</a></b>
 |
 <b><a href="CONTRIBUTING.org">Contribute</a></b>
 |
@@ -64,7 +64,7 @@
 
 ## Quick Start
 
-Take a quick start at: https://alibaba.github.io/lightproxy/quick-start.html
+Take a quick start at: https://lightproxy.org/doc/getting-started
 
 ## How to contribute
 
