@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-latest]
 
     steps:
       - name: Check out Git repository
@@ -20,13 +20,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: Install deps
+      - name: Run build
         run: |
           npm run install-deps
+          npm run dist
 
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
