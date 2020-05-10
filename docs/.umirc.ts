@@ -51,6 +51,17 @@ export default defineConfig({
       document.body.appendChild(tag);
     })();
   `
+  }, {
+    src: 'https://www.googletagmanager.com/gtag/js?id=UA-154996514-3',
+    async: true,
+  }, {
+    content: `
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154996514-3');
+    `
   }],
   headScripts: [{content: `
   if (document.location.host.indexOf('localhost') === -1 && document.location.host !== 'lightproxy.org') {
