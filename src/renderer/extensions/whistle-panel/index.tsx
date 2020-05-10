@@ -25,12 +25,22 @@ export class WhistlePanel extends Extension {
                 })();
             }, []);
 
+            function changeIframeStyle() {
+                const iframeDocumentHead = document.querySelector('iframe')?.contentDocument?.querySelector('head');
+                if (iframeDocumentHead) {
+                    const customStyle = document.createElement('style');
+                    customStyle.textContent = `#container { min-width: auto; }`;
+                    iframeDocumentHead.appendChild(customStyle);
+                }
+            }
+
             return (
                 <div className="lightproxy-network-panel no-drag">
                     {port ? (
                         <iframe
                             src={`http://127.0.0.1:${port}/#network`}
                             className="lightproxy-network-iframe"
+                            onLoad={changeIframeStyle}
                         ></iframe>
                     ) : (
                         <div className="lightproxy-tip">代理未启动</div>
