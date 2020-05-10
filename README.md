@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/alibaba/lightproxy.svg?branch=develop)](https://travis-ci.org/alibaba/lightproxy)
+![Build](https://github.com/alibaba/lightproxy/workflows/Build/badge.svg)
+![Build doc and Deploy](https://github.com/alibaba/lightproxy/workflows/Build%20and%20Deploy/badge.svg)
 ![Stable version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/release.json&label=Stable%20Version&query=$.version)
 ![Beta version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/beta-release.json&label=Beta%20Version&query=$.version)
 ![GitHub issues](https://img.shields.io/github/issues/alibaba/lightproxy)
