@@ -17,7 +17,7 @@ export default defineConfig({
       max-height: 400px;
     }
     .github-badge {
-      position: absolute;
+      position: fixed;
       top: 25px;
       left: 240px;
       z-index: 99999;
