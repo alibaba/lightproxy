@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-<b><a href="https://alibaba.github.io/lightproxy/quick-start.html">Download</a></b>
+<b><a href="https://lightproxy.org/doc/getting-started#download">Download</a></b>
 |
 <b><a href="https://lightproxy.org/doc/getting-started">Document</a></b>
 |
