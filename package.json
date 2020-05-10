@@ -18,7 +18,7 @@
     "upguard:whistle": "git subtree pull --prefix=vendor/whistle https://github.com/avwo/whistle master --squash && npm run update:node_modules",
     "update:node_modules": "npx rimraf vendor/files/node/modules && cd vendor/files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle whistle.vase whistle.scriptfile && mv node_modules modules",
     "cleanbuild": "rm -rf node_modules && yarn install && yarn run dist",
-    "doc": "env SKIP_CACHE=1 bash scripts/depoly-doc.sh",
+    "build:doc": "cd docs && yarn install && npm run build",
     "install-deps": "yarn run update:node_modules && yarn install",
     "ci": "npm install -g yarn && yarn run install-deps && yarn run dist",
     "postinstall": "electron-builder install-app-deps",
