@@ -5,7 +5,7 @@ export default defineConfig({
   title: 'LightProxy',
   mode: 'site',
   // more config: https://d.umijs.org/config
-  logo: 'https://s1.ax1x.com/2020/05/09/YMVUEQ.png',
+  logo: 'https://cdn.jsdelivr.net/gh/alibaba/lightproxy@master/vendor/files/icon.png',
   locales: [['zh-CN', '中文'], ['en-US', 'English']],
   styles: [
     `.preview {
