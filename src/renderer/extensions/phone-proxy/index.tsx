@@ -4,6 +4,7 @@ import QrCode from 'qrcode.react';
 import { getWhistlePort } from '../../utils';
 import { Extension } from '../../extension';
 import { useTranslation } from 'react-i18next';
+import { clipboard } from 'electron';
 import { message } from 'antd';
 
 export class PhoneProxy extends Extension {
@@ -47,6 +48,11 @@ export class PhoneProxy extends Extension {
                 })();
             });
 
+            function copyProxyAddress() {
+                clipboard.writeText(`${address}:${port}`);
+                message.success(t('WIFI proxy address has been copied to the pasteboard'));
+            }
+
             return (
                 <div className="lightproxy-phoneproxy-container">
                     <div className="lightproxy-phoneproxy-qrcode">
@@ -56,9 +62,9 @@ export class PhoneProxy extends Extension {
                         <span>{t('Scan to install cert')}</span>
                         <a href={`http://${address}:${port}/cgi-bin/rootca`}>{t('Click to download cert')}</a>
                     </div>
-                    <div className="title">
+                    <div className="title" onClick={copyProxyAddress}>
                         <span>{t('Setting WIFI proxy to')}</span>
-                        <span>{` ${address}:${port}`}</span>
+                        <a>{`${address}:${port}`}</a>
                     </div>
                 </div>
             );
