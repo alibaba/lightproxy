@@ -26,7 +26,7 @@
     "test": "echo 'no test here yet'",
     "syncversion": "node scripts/sync-version.js",
     "clean:dist": "npx rimraf app/dist",
-    "art:icon": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --screenshot --window-size=512,512 --default-background-color=0 art/icon/index.html && mv screenshot.png vendor/files/icon.png"
+    "art:icon": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --screenshot --window-size=512,512 --default-background-color=0 art/icon/index.html && mv screenshot.png vendor/files/icon.png && \"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --screenshot --window-size=512,512 --default-background-color=0 art/icon/index-pure.html && mv screenshot.png vendor/files/icon-pure.png"
   },
   "dependencies": {
     "@sentry/electron": "1.1.0",

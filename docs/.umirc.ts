@@ -5,7 +5,7 @@ export default defineConfig({
   title: 'LightProxy',
   mode: 'site',
   // more config: https://d.umijs.org/config
-  logo: 'https://cdn.jsdelivr.net/gh/alibaba/lightproxy@master/vendor/files/icon.png',
+  logo: 'https://cdn.jsdelivr.net/gh/alibaba/lightproxy@master/vendor/files/icon-pure.png',
   styles: [
     `.preview {
       max-width: 100%;
