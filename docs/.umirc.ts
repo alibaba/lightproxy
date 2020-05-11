@@ -30,6 +30,9 @@ export default defineConfig({
       width: 150px;
       height: 20px;
     }
+    body {
+      overflow-x:hidden;
+    }
     `
   ],
   metas: [
