@@ -23,3 +23,7 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: docs/dist # The folder the action should deploy.
+
+      - name: Purge Cache
+        run: |
+          curl https://purge.jsdelivr.net/gh/alibaba/lightproxy@gh-pages/index.html
