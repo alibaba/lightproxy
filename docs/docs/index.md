@@ -1,8 +1,8 @@
 ---
-title: LightProxy 💎 Cross platform Web debugging proxy with one-click
+title: LightProxy 💎 Cross platform Web debugging proxy
 hero:
   title: LightProxy
-  desc: 💎 Cross platform Web debugging proxy with one-click
+  desc: 💎 Cross platform Web debugging proxy
   actions:
     - text: Getting Started
       link: ./doc/getting-started
