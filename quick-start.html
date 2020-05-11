@@ -1,9 +1,12 @@
 <html>
   <head>
-    <meta http-equiv="refresh" content="0; url=http://lightproxy.org" />
+   
   </head>
 
   <body>
     <p><a href="http://lightproxy.org">Redirect</a></p>
+    if (window.location.href.indexOf('lightproxy.org') === 0) {
+    window.location.href = 'https://lightproxy.org';
+}
   </body>
 </html>
