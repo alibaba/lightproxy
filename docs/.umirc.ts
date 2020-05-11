@@ -74,7 +74,7 @@ export default defineConfig({
   }],
   headScripts: [{content: `
   if (document.location.host.indexOf('localhost') === -1 && document.location.host !== 'lightproxy.org') {
-    location.host = 'lightproxy.org';
+    location.href = 'https://lightproxy.org/';
   }
   `}, {
     src: 'https://cdn.jsdelivr.net/npm/lazysizes@5.2.0/lazysizes.min.js'
