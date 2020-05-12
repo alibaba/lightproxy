@@ -15,6 +15,9 @@ import electronIsDev from 'electron-is-dev';
 import path from 'path';
 import { LIGHTPROXY_FILES_DIR } from './const';
 import { app, nativeTheme, BrowserWindow } from 'electron';
+import Store from 'electron-store';
+
+const store = new Store();
 
 interface SwpanModuleProp {
     moduleId: string;
@@ -146,6 +149,7 @@ export async function initIPC(mainWindow: BrowserWindow) {
     await BoardcastManager.getInstance();
 
     exitHook(async () => {
-        await setSystemProxy(0);
+        const onlineStatus = store.get('onlineStatus', 'ready');
+        onlineStatus === 'online' && (await setSystemProxy(0));
     });
 }

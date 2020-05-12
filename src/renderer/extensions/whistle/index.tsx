@@ -86,8 +86,8 @@ export class WhistleExntension extends Extension {
                     this.coreAPI.eventEmmitter.emit('whistle-get-devtool-port-response', this.mDevtoolPort);
 
                     // ... ready to set system proxy
-                    const onlineStatus = this.coreAPI.store.get('onlineStatus');
-                    toggleSystemProxy(onlineStatus || 'online', port, this.coreAPI);
+                    const onlineStatus = this.coreAPI.store.get('onlineStatus', 'ready');
+                    onlineStatus === 'online' && toggleSystemProxy(onlineStatus, port, this.coreAPI);
 
                     this.coreAPI.eventEmmitter.on('lightproxy-toggle-system-proxy', async () => {
                         const onlineStatus = this.coreAPI.store.get('onlineStatus');
