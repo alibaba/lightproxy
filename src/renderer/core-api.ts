@@ -47,6 +47,14 @@ export class CoreAPIClass {
         return (await ipcRenderer.callMain('getIp')) as string;
     }
 
+    async checkDarkMode(setDarkMode: (isDarkMode: boolean) => void) {
+        ipcRenderer.answerMain('updateDarkMode', async isDarkMode => {
+            setDarkMode(isDarkMode as boolean);
+        });
+        const isDarkMode = (await ipcRenderer.callMain('checkDarkMode')) as boolean;
+        setDarkMode(isDarkMode);
+    }
+
     async treeKillProcess(pid: number) {
         return await ipcRenderer.callMain('treeKillProcess', pid);
     }

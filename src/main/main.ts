@@ -333,7 +333,7 @@ app.on('ready', async () => {
     initCopyFiles();
     mainWindow = createMainWindow();
     setApplicationMenu();
-    initIPC();
+    initIPC(mainWindow);
 
     if (!CoreAPI.store.get('userid')) {
         CoreAPI.store.set('userid', uuidv4());

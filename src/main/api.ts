@@ -14,7 +14,7 @@ import KoaStatic from 'koa-static';
 import electronIsDev from 'electron-is-dev';
 import path from 'path';
 import { LIGHTPROXY_FILES_DIR } from './const';
-import { app } from 'electron';
+import { app, nativeTheme, BrowserWindow } from 'electron';
 
 interface SwpanModuleProp {
     moduleId: string;
@@ -105,6 +105,13 @@ async function getIp() {
     return ip.address();
 }
 
+async function checkDarkMode(mainWindow: BrowserWindow) {
+    nativeTheme.on('updated', () => {
+        ipcMain.callRenderer(mainWindow, 'updateDarkMode', nativeTheme.shouldUseDarkColors);
+    });
+    return nativeTheme.shouldUseDarkColors;
+}
+
 async function update() {
     return checkUpdater();
 }
@@ -116,7 +123,7 @@ async function checkSystemProxy(props: any) {
     return checkSystemProxyWork(address, port);
 }
 
-export async function initIPC() {
+export async function initIPC(mainWindow: BrowserWindow) {
     // ipcMain
     ipcMain.answerRenderer('spawnModule', spawnModule);
     ipcMain.answerRenderer('checkInstall', checkInstall);
@@ -128,6 +135,9 @@ export async function initIPC() {
     ipcMain.answerRenderer('treeKillProcess', treeKillProcess);
 
     ipcMain.answerRenderer('getIp', getIp);
+
+    ipcMain.answerRenderer('checkDarkMode', () => checkDarkMode(mainWindow));
+
     ipcMain.answerRenderer('update', update);
 
     ipcMain.answerRenderer('checkSystemProxy', checkSystemProxy);

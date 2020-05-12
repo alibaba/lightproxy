@@ -1,11 +1,11 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import { initRuleLanguage } from './rule-language/rule';
 import { useTranslation } from 'react-i18next';
 import { Card, Option } from '../card';
 
 import * as monaco from 'monaco-editor';
-import { remote } from 'electron';
+import { AppContext } from '../../../../components/app/index';
 
 interface Props {
     content: string;
@@ -19,6 +19,8 @@ initRuleLanguage(monaco);
 
 export const Editor = (props: Props) => {
     const { content, onChange, onSave, onMount, enabled } = props;
+
+    const { isDarkMode } = useContext(AppContext);
 
     const [showCardsPos, setShowCardsPos] = useState({ x: -1, y: -1 });
 
@@ -92,8 +94,6 @@ export const Editor = (props: Props) => {
         const editor = editorRef.current?.editor;
         editor?.focus();
     };
-
-    const isDarkMode = useMemo(() => remote.nativeTheme.shouldUseDarkColors, []);
 
     return (
         <div className="lightproxy-rule-editor-container">

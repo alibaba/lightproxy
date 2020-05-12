@@ -48,12 +48,6 @@ i18n.use(initReactI18next) // passes i18n down to react-i18next
         },
     });
 
-if (remote.nativeTheme.shouldUseDarkColors) {
-    require('./style/theme/dark.less');
-} else {
-    require('./style/theme/default.less');
-}
-
 ReactDOM.render(
     <AppContainer>
         <App />
