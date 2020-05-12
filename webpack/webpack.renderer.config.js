@@ -39,6 +39,7 @@ module.exports = merge.smart(baseConfig, {
             },
             {
                 test: /\.(le|c)ss$/,
+                exclude: /\.lazy\.(le|c)ss$/i,
                 use: [
                     'style-loader',
                     'css-loader',
@@ -50,7 +51,19 @@ module.exports = merge.smart(baseConfig, {
                     },
                 ],
             },
-
+            {
+                test: /\.lazy\.(le|c)ss$/i,
+                use: [
+                    { loader: 'style-loader', options: { injectType: 'lazyStyleTag' } },
+                    'css-loader',
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            javascriptEnabled: true,
+                        },
+                    },
+                ],
+            },
         ],
     },
     plugins: [
@@ -61,7 +74,6 @@ module.exports = merge.smart(baseConfig, {
             title: pkg.title,
             template: path.resolve(__dirname, '../src/index.ejs'),
         }),
-
         new CopyPlugin([
             { from: './node_modules/@timkendrick/monaco-editor/dist/external/index.js', to: './monaco.js' },
             { from: './node_modules/@timkendrick/monaco-editor/dist/external/monaco.css', to: './monaco.css' },
@@ -71,10 +83,10 @@ module.exports = merge.smart(baseConfig, {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
             __static: `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
-            '__PACKAGE_INFO_VERSION__': JSON.stringify(pkg.version),
+            __PACKAGE_INFO_VERSION__: JSON.stringify(pkg.version),
             // 给 travis pr 构建的版本跳过更新等逻辑
-            '__BUILD_FOR_TRAVIS_PR__': JSON.stringify(process.env.TRAVIS_PULL_REQUEST || ''),
-            '__BUILD_FOR_TRAVIS_COMMIT__': JSON.stringify(process.env.TRAVIS_COMMIT || ''),
+            __BUILD_FOR_TRAVIS_PR__: JSON.stringify(process.env.TRAVIS_PULL_REQUEST || ''),
+            __BUILD_FOR_TRAVIS_COMMIT__: JSON.stringify(process.env.TRAVIS_COMMIT || ''),
         }),
     ],
 });
