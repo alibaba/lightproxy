@@ -77,6 +77,11 @@ export default defineConfig({
     location.href = 'https://lightproxy.org/';
   }
   `}, {
+    content: `
+    window.lazySizesConfig = window.lazySizesConfig || {};
+    lazySizesConfig.loadMode = 1;
+    `
+  }, {
     src: 'https://cdn.jsdelivr.net/npm/lazysizes@5.2.0/lazysizes.min.js'
   }],
   navs: {

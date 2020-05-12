@@ -3,6 +3,7 @@ nav:
   title: Quick start
   order: 1
 order: 1
+title: Quick start
 ---
 
 # Quick start
