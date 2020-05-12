@@ -103,5 +103,4 @@ export default defineConfig({
     ],
   },
   hash: true,
-  exportStatic: {},
 });
