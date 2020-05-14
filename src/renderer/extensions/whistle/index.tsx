@@ -14,6 +14,7 @@ import { CoreAPI } from '../../core-api';
 
 import { remote } from 'electron';
 import { SYSTEM_IS_MACOS } from '../../../renderer/const';
+import { getHelperMenus } from './helper-menus';
 
 let mHasWarned = false;
 
@@ -247,9 +248,14 @@ export class WhistleExntension extends Extension {
                             toggleSystemProxy(onlineState, (portRef.current as unknown) as number, this.coreAPI)
                         }
                     >
-                        {onlineState === 'ready' ? t('disable system proxy') : t('enable system proxy')}
+                        <Icon type="desktop" />
+                        {onlineState === 'ready' ? t('Disable system proxy') : t('Enable system proxy')}
                     </Menu.Item>
-                    <Menu.Item onClick={() => this.startWhistle()}>{t('restart proxy')}</Menu.Item>
+                    <Menu.Item onClick={() => this.startWhistle()}>
+                        <Icon type="retweet"></Icon>
+                        {t('Restart proxy')}
+                    </Menu.Item>
+                    {getHelperMenus(t)}
                 </Menu>
             );
 
@@ -257,19 +263,29 @@ export class WhistleExntension extends Extension {
             const info = {
                 init: {
                     title: 'Proxy starting',
-                    icon: 'loading',
+                    proxyIcon: 'loading',
+                    proxyClassName: 'color-warn',
+                    systemProxyIcon: 'warning',
+                    systemProxyClassName: 'color-warn',
                 },
                 online: {
                     title: 'Online but not system proxy',
-                    icon: 'loading-3-quarters',
+                    proxyIcon: 'check-circle',
+                    proxyClassName: 'color-success',
+                    systemProxyIcon: 'warning',
+                    systemProxyClassName: 'color-warn',
                 },
                 ready: {
                     title: 'Online & system proxy ready',
-                    icon: 'check-circle',
+                    proxyIcon: 'check-circle',
+                    proxyClassName: 'color-success',
+                    systemProxyIcon: 'check-circle',
+                    systemProxyClassName: 'color-success',
                 },
                 error: {
                     title: 'Error',
-                    icon: 'error',
+                    proxyIcon: 'error',
+                    systemProxyIcon: 'error',
                 },
             }[onlineState];
 
@@ -285,9 +301,14 @@ export class WhistleExntension extends Extension {
                 <Dropdown overlay={menu}>
                     <div className="whistle-status-bar-item">
                         {/* {hit ? 'hit ' + hit + '  ' : null}  */}
-                        {t(info.title)}
+                        {/* {t(info.title)} */}
+                        {t('Proxy')}
                         {port ? `: [HTTP ${port}/SOCKS5 ${((port as unknown) as number) + 1}]` : null}{' '}
-                        <Icon type={info.icon} />
+                        <Icon style={{marginRight: '10px', marginLeft: '5px'}} className={info.proxyClassName} type={info.proxyIcon} />
+
+                        {t('System Proxy')}
+                        <Icon style={{marginLeft: '5px'}} className={info.systemProxyClassName} type={info.systemProxyIcon} />
+                        <Icon style={{marginLeft: '10px'}} type="menu" />
                     </div>
                 </Dropdown>
             );

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { StatusBar } from '../status-bar';
-import { HelperButton } from '../helper-button';
 import { getAllExtensions } from '../../extensions';
 
 import { Icon } from 'antd';
@@ -147,8 +146,6 @@ export const App = () => {
                     </div>
                     <div className="lightproxy-panel-container drag">{Panel ? <Panel /> : null}</div>
                     <StatusBar rightItems={statusRightItems} />
-
-                    <HelperButton></HelperButton>
                 </Provider>
             </div>
         </AppContext.Provider>
