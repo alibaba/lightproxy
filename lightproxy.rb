@@ -1,8 +1,8 @@
 cask 'lightproxy' do
-  version '1.1.14'
-  sha256 '4530ecd308c2b7111bc6e5e58f412e8c31575970c4b697b935ee9226484da433'
+  version '1.1.15'
+  sha256 '45789e17d14c6c79c4c8d3cf74d272f1a884a80eaf8f50bb1e46e93fb1cf9512'
   # gw.alipayobjects.com/os/LightProxy was verified as official when first introduced to the cask
-  url "https://gw.alipayobjects.com/os/LightProxy/281e16c2-affb-473a-9984-c43375a1709c/LightProxy.dmg"
+  url "https://gw.alipayobjects.com/os/LightProxy/736c6a6b-4cd0-473b-9d2b-8b91775088ba/LightProxy.dmg"
   name 'LightProxy'
   homepage 'https://github.com/alibaba/lightproxy'
 

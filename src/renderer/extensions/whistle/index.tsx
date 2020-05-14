@@ -219,7 +219,6 @@ export class WhistleExntension extends Extension {
                                 '127.0.0.1',
                                 (portRef.current as unknown) as number,
                             );
-                            console.log('proxy check', proxyworking);
                             // maybe something has changed after the async call, recheck
                             if (!proxyworking && onlineStateRef.current === 'ready' && !mHasWarned) {
                                 mHasWarned = true;
