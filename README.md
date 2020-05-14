@@ -29,6 +29,11 @@
 <a href="https://www.producthunt.com/posts/lightproxy?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-lightproxy" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=195432&theme=light" alt="LightProxy - Open-source proxy tools for macOS & Windows based on whistle | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
 </p>
 
+<p align="center">
+  <img src="https://img.alicdn.com/tfs/TB157bJF.T1gK0jSZFrXXcNCXXa-1393-921.png"></img>
+</p>
+
+
 --- 
 :package: Out-of-box, fully automation with **certificate install & system proxy setting**
 
@@ -47,11 +52,6 @@
   <p align="center">
     <a href="https://lightproxy.org">Get Start</a>
   </p>
-</p>
-
-## Preview
-<p align="center">
-  <img src="https://img.alicdn.com/tfs/TB157bJF.T1gK0jSZFrXXcNCXXa-1393-921.png"></img>
 </p>
 
 ## Preview GIF
