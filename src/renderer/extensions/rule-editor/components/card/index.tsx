@@ -14,6 +14,16 @@ const MOCK_PATH = 'github.com/alibaba/lightproxy';
 
 const options = [
     {
+        value: 'js-console',
+        title: 'JS Console(with eruda)',
+        icon: 'code',
+        content: `\${1:${MOCK_PATH}} \`
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+}\`
+`,
+    },
+    {
         value: 'serve-content',
         title: 'Resposne static content(can be use for mock)',
         icon: 'edit',

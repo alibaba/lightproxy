@@ -64,8 +64,9 @@ export const i18nResources = {
             'Visiable on LAN enabled': '以开启代理局域网可见',
             'Home Page & Document': '主页 & 文档',
             'Report issue': '意见反馈',
-            'Proxy': '代理',
+            Proxy: '代理',
             'Show logs': '显示日志',
+            'JS Console(with eruda)': 'JS Console 调试控制台（eruda）',
         },
     },
 };
