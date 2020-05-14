@@ -51,7 +51,7 @@
 
 ## Preview
 <p align="center">
-  <img src="https://img.alicdn.com/tfs/TB1mCIVEYr1gK0jSZR0XXbP8XXa-1232-812.png"></img>
+  <img src="https://img.alicdn.com/tfs/TB157bJF.T1gK0jSZFrXXcNCXXa-1393-921.png"></img>
 </p>
 
 ## Preview GIF
