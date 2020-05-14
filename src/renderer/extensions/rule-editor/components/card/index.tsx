@@ -17,7 +17,7 @@ const options = [
         value: 'js-console',
         title: 'JS Console(with eruda)',
         icon: 'code',
-        content: `\${1:${MOCK_PATH}} \`
+        content: `\${1:${MOCK_PATH}} htmlPrepend://\`
 <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 <script>eruda.init();</script>
 }\`
