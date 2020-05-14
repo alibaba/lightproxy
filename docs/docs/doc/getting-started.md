@@ -26,7 +26,7 @@ title: Quick start
 
 LightProxy is a local proxy packet capture software based on `whistle`
 
-![image.png](../imgs/preview.png)
+![image.png](../imgs/preview-new.png)
 
 ## What can LightProxy do for you
 

@@ -25,7 +25,7 @@ order: 1
 
 LightProxy 是一款基于 `whistle` 的本地代理抓包软件
 
-![image.png](../imgs/preview.png)
+![image.png](../imgs/preview-new.png)
 
 ## LightProxy 能帮你做什么
 
