@@ -36,6 +36,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://usememo.dev"><img class="lazyload" data-src="https://avatars0.githubusercontent.com/u/10394160?v=4" width="100px;" alt=""/><br /><sub><b>Mashiro Wang</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=MashiroWang" title="Code">💻</a></td>
     <td align="center"><a href="https://williamchan.me"><img class="lazyload" data-src="https://avatars1.githubusercontent.com/u/9210430?v=4" width="100px;" alt=""/><br /><sub><b>William Chan</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=luckyyyyy" title="Code">💻</a></td>
     <td align="center"><a href="https://blog.njzydark.com/"><img class="lazyload" data-src="https://avatars3.githubusercontent.com/u/19601720?v=4" width="100px;" alt=""/><br /><sub><b>njzy</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=njzydark" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/kenve"><img class="lazyload" data-src="https://avatars0.githubusercontent.com/u/7636918?v=4" width="100px;" alt=""/><br /><sub><b>kenve</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=kenve" title="Code">💻</a></td>
   </tr>
 </table>
 

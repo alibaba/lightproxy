@@ -4,7 +4,7 @@
 ![Beta version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/beta-release.json&label=Beta%20Version&query=$.version)
 ![GitHub issues](https://img.shields.io/github/issues/alibaba/lightproxy)
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/alibaba/lightproxy)<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <p align="center">
@@ -105,6 +105,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://usememo.dev"><img src="https://avatars0.githubusercontent.com/u/10394160?v=4" width="100px;" alt=""/><br /><sub><b>Mashiro Wang</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=MashiroWang" title="Code">💻</a></td>
     <td align="center"><a href="https://williamchan.me"><img src="https://avatars1.githubusercontent.com/u/9210430?v=4" width="100px;" alt=""/><br /><sub><b>William Chan</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=luckyyyyy" title="Code">💻</a></td>
     <td align="center"><a href="https://blog.njzydark.com/"><img src="https://avatars3.githubusercontent.com/u/19601720?v=4" width="100px;" alt=""/><br /><sub><b>njzy</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=njzydark" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/kenve"><img src="https://avatars0.githubusercontent.com/u/7636918?v=4" width="100px;" alt=""/><br /><sub><b>kenve</b></sub></a><br /><a href="https://github.com/alibaba/lightproxy/commits?author=kenve" title="Code">💻</a></td>
   </tr>
 </table>
 

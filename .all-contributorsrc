@@ -1,8 +1,6 @@
 {
   "files": [
-    "README.md",
-    "docs/docs/index.md",
-    "docs/docs/index.zh-CN.md"
+    "README.md"
   ],
   "imageSize": 100,
   "commit": false,
@@ -73,6 +71,15 @@
       "name": "njzy",
       "avatar_url": "https://avatars3.githubusercontent.com/u/19601720?v=4",
       "profile": "https://blog.njzydark.com/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "kenve",
+      "name": "kenve",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/7636918?v=4",
+      "profile": "https://github.com/kenve",
       "contributions": [
         "code"
       ]
