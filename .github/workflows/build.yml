@@ -22,7 +22,6 @@ jobs:
       - name: Remove npmrc
         run: |
           rm .npmrc
-          rm yarn.lock
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
