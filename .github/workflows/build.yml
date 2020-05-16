@@ -19,9 +19,10 @@ jobs:
         with:
           node-version: 12
 
-      - name: Remove npmrc
+      - name: Install deps
         run: |
           rm .npmrc
+          npm run install-deps
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
