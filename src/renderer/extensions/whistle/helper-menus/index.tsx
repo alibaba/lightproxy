@@ -12,22 +12,22 @@ const handleGithub = () => remote.shell.openExternal('https://github.com/alibaba
 const handleShowLogs = () => remote.getCurrentWindow().webContents.openDevTools();
 
 export function getHelperMenus(t: Function) {
-    return  [
-        <Menu.Item onClick={handleHomepage}>
+    return [
+        <Menu.Item key="home" onClick={handleHomepage}>
             <Icon type="home" />
             {t('Home Page & Document')}
         </Menu.Item>,
-        <Menu.Item onClick={handleIssue}>
+        <Menu.Item key="issue" onClick={handleIssue}>
             <Icon type="bug" />
             {t('Report issue')}
         </Menu.Item>,
-        <Menu.Item onClick={handleGithub}>
+        <Menu.Item key="github" onClick={handleGithub}>
             <Icon type="github" />
             {t('Github')}
         </Menu.Item>,
-        <Menu.Item onClick={handleShowLogs}>
+        <Menu.Item key="log" onClick={handleShowLogs}>
             <Icon type="file-text" />
             {t('Show logs')}
-        </Menu.Item>
+        </Menu.Item>,
     ];
 }
