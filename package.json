@@ -1,6 +1,6 @@
 {
   "name": "LightProxy",
-  "version": "1.1.15",
+  "version": "1.1.16-beta-2",
   "license": "MIT",
   "main": "./dist/main.js",
   "scripts": {
@@ -10,16 +10,17 @@
     "compile-main": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.main.prod.config.js",
     "compile-renderer": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.renderer.prod.config.js",
     "compile": "yarn run lint && yarn run compile-main && yarn run compile-renderer",
-    "dist": "yarn clean:dist && yarn syncversion && yarn compile && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --win --x64 --publish never",
-    "dist:mac": "yarn clean:dist && yarn syncversion && yarn compile && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --x64",
-    "dist:win": "yarn clean:dist && yarn syncversion && yarn compile && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win --x64",
-    "dist-codesign": "yarn clean:dist && yarn syncversion && yarn compile && electron-builder --mac --win --x64",
+    "build": "yarn clean:dist && yarn syncversion && yarn compile ",
+    "dist": "yarn run build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --win --x64 --publish never",
+    "dist:mac": "yarn run build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --x64",
+    "dist:win": "yarn run build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win --x64",
+    "dist-codesign": "yarn run build && electron-builder --mac --win --x64 --publish never",
     "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "lint": "eslint ./src/**/*.ts ./src/**/*.tsx --fix",
     "upguard:whistle": "git subtree pull --prefix=vendor/whistle https://github.com/avwo/whistle master --squash && npm run update:node_modules",
     "update:node_modules": "npx rimraf vendor/files/node/modules && cd vendor/files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle whistle.vase whistle.scriptfile && mv node_modules modules",
     "cleanbuild": "rm -rf node_modules && yarn install && yarn run dist",
-    "build:doc": "cd docs && yarn install && npm run build",
+    "build:doc": "cd docs && yarn install && yarn run build",
     "install-deps": "yarn run update:node_modules && yarn install",
     "ci": "npm install -g yarn && yarn run install-deps && yarn run dist",
     "postinstall": "electron-builder install-app-deps",
@@ -141,11 +142,17 @@
     "appId": "org.lightproxy",
     "mac": {
       "category": "",
-      "icon": "./vendor/files/icon.icns"
+      "icon": "./vendor/files/icon.icns",
+      "publish": [
+        "github"
+      ]
     },
     "win": {
       "target": "nsis",
-      "icon": "./vendor/files/icon.png"
+      "icon": "./vendor/files/icon.png",
+      "publish": [
+        "github"
+      ]
     },
     "files": [
       "dist/*.js",
