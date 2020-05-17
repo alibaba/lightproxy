@@ -1,15 +1,18 @@
-import {
-    Menu,
-    Icon,
-} from 'antd';
+import { Menu, Icon } from 'antd';
 
 import { remote } from 'electron';
 import React from 'react';
+import logger from 'electron-log';
+import path from 'path';
 
 const handleHomepage = () => remote.shell.openExternal('https://lightproxy.org?from=desktop');
 const handleIssue = () => remote.shell.openExternal('https://github.com/alibaba/lightproxy/issues');
 const handleGithub = () => remote.shell.openExternal('https://github.com/alibaba/lightproxy');
-const handleShowLogs = () => remote.getCurrentWindow().webContents.openDevTools();
+const handleShowLogs = () => {
+    const logFile = logger.transports.file.file as string;
+    const logDirectory = path.dirname(logFile);
+    remote.shell.openItem(logDirectory);
+};
 
 export function getHelperMenus(t: Function) {
     return [

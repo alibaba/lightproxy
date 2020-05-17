@@ -9,10 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "get-port": "^5.0.0",
     "glob": "^7.1.6",
-    "ws": "^7.2.1",
+    "portfinder": "^1.0.26",
     "whistle.scriptfile": "0.3.3",
-    "whistle.vase": "^1.2.1"
+    "whistle.vase": "^1.2.1",
+    "ws": "^7.2.1"
   }
 }

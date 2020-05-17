@@ -1,5 +1,5 @@
 const path = require('path');
-const getPort = require('get-port');
+const portfinder = require('portfinder');
 
 const userData = path.join(process.env.USER_DATA, '/LightProxy');
 const ws = require('ws');
@@ -58,10 +58,10 @@ const whistleStoragePath = path.join(userData, './whistle');
 console.info('use custom cert:', options.certDir);
 (async () => {
     try {
-        const port = await getPort({ port: Number.parseInt(process.env.DEFAULT_PORT) });
-        const socksPort = await getPort({ port: Number.parseInt(process.env.DEFAULT_PORT) + 1 });
+        const port = await portfinder.getPortPromise({ port: Number.parseInt(process.env.DEFAULT_PORT) });
+        const socksPort = await portfinder.getPortPromise({ port: port + 1 });
 
-        console.log('Use port:', port);
+        console.log('Use port:', {port, socksPort});
         // @ts-ignore
         process.env.WHISTLE_PORT = port;
 
