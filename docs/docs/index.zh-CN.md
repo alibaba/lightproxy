@@ -25,3 +25,8 @@ footer: Open-source Apache Licensed | Copyright © 2020<br />Powered by [LightPr
 
 ## 预览 GIF
 <img className="preview lazyload" data-src="https://i.loli.net/2020/05/05/uRZMpi8rPDyQF6I.gif" />
+
+## 贡献者 ✨
+<a href="https://github.com/alibaba/lightproxy/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=alibaba/lightproxy" />
+</a>
