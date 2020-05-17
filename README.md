@@ -3,12 +3,13 @@
 ![Stable version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/release.json&label=Stable%20Version&query=$.version)
 ![Beta version](https://img.shields.io/badge/dynamic/json?url=https://gw.alipayobjects.com/os/LightProxy/beta-release.json&label=Beta%20Version&query=$.version)
 ![GitHub issues](https://img.shields.io/github/issues/alibaba/lightproxy)
-![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/alibaba/lightproxy)<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/alibaba/lightproxy)
+[![HitCount](http://hits.dwyl.com/alibaba/lightproxy.svg)](http://hits.dwyl.com/alibaba/lightproxy)
 
 <p align="center">
-  <img src="./vendor/files/icon.png" height="150px"/></a>
+   <a href="https://lightproxy.org">
+    <img src="./vendor/files/icon.png" height="150px"/>
+  </a>
 </p>
 
 <p align="center">
@@ -30,7 +31,9 @@
 </p>
 
 <p align="center">
-  <img src="https://img.alicdn.com/tfs/TB157bJF.T1gK0jSZFrXXcNCXXa-1393-921.png"></img>
+  <a href="https://lightproxy.org">
+    <img src="https://img.alicdn.com/tfs/TB157bJF.T1gK0jSZFrXXcNCXXa-1393-921.png"></img>
+  </a>
 </p>
 
 
@@ -43,16 +46,6 @@
 
 --- 
 
-
-## Get Start
-<p align="center">
-  <a href="https://lightproxy.org">
-    <img src="https://i.loli.net/2020/05/10/E3peTy9PFbzU5aA.png"></img>
-  </a>
-  <p align="center">
-    <a href="https://lightproxy.org">Get Start</a>
-  </p>
-</p>
 
 ## Preview GIF
 <p align="center">
@@ -86,6 +79,7 @@ yarn run dev
 ```
 
 For new contributors you can try to fix a [🏅send-a-PR](https://github.com/alibaba/lightproxy/issues?q=is%3Aissue+is%3Aopen+label%3A%22%F0%9F%8F%85send+a+PR%22)
+
 
 ## Contributors ✨
 <p align="center">
