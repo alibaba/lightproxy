@@ -21,7 +21,7 @@
     "update:node_modules": "npx rimraf vendor/files/node/modules && cd vendor/files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle whistle.vase whistle.scriptfile && mv node_modules modules",
     "cleanbuild": "rm -rf node_modules && yarn install && yarn run dist",
     "build-doc": "cd docs && yarn install && yarn run build",
-    "install-deps": "yarn run update:node_modules && yarn install",
+    "install-deps": "yarn install && yarn run update:node_modules",
     "ci": "npm install -g yarn && yarn run install-deps && yarn run dist",
     "postinstall": "electron-builder install-app-deps",
     "test": "echo 'no test here yet'",
