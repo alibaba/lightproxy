@@ -158,3 +158,8 @@ body .cm-s-cobalt span.cm-number {
 .CodeMirror-hints {
   z-index: 999999!important;
 }
+
+.w-mark th, .w-mark td {
+  background-color: #3b88fd!important;
+  color: #fff!important;
+}

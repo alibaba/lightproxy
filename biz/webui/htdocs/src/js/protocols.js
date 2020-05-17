@@ -2,9 +2,8 @@ var events = require('./events');
 var PROTOCOLS = ['rule', 'style', 'pipe', 'plugin', 'host', 'xhost', 'proxy', 'xproxy', 'http-proxy',
   'xhttp-proxy', 'https-proxy', 'xhttps-proxy', 'socks', 'xsocks',
   'pac', 'weinre', 'log', 'filter', 'ignore', 'enable', 'disable', 'delete',
-  'urlParams', 'pathReplace', 'method', 'statusCode',
-  'replaceStatus', 'referer', 'auth', 'ua', 'cache', 'redirect',
-  'attachment', 'forwardedFor', 'responseFor', 'reqMerge', 'resMerge',
+  'urlParams', 'pathReplace', 'method', 'replaceStatus', 'referer', 'auth', 'ua', 'cache',
+  'redirect', 'attachment', 'forwardedFor', 'responseFor', 'reqMerge', 'resMerge',
   'reqScript', 'resScript', 'reqDelay', 'resDelay', 'reqSpeed', 'resSpeed',
   'reqHeaders', 'resHeaders', 'reqType', 'resType', 'reqCharset',
   'resCharset', 'reqCookies', 'resCookies', 'reqCors', 'resCors', 'reqPrepend', 'resPrepend',
@@ -15,7 +14,7 @@ var PROTOCOLS = ['rule', 'style', 'pipe', 'plugin', 'host', 'xhost', 'proxy', 'x
 ];
 
 
-var innerRules = ['file', 'xfile', 'tpl', 'xtpl', 'rawfile', 'xrawfile'];
+var innerRules = ['file', 'xfile', 'tpl', 'xtpl', 'rawfile', 'xrawfile', 'statusCode'];
 var pluginRules = [];
 var forwardRules = innerRules.slice();
 var webProtocols = ['http', 'https', 'ws', 'wss', 'tunnel'];

@@ -42,8 +42,8 @@ var proto = NetworkModal.prototype;
 proto.search = function(keyword) {
   this._type = 'url';
   this._keyword = typeof keyword != 'string' ? '' : keyword.trim();
-  if (this._keyword && /^(url|u|content|c|b|body|headers|h|ip|i|status|result|s|r|method|m|type|t):(.*)$/.test(keyword)) {
-    this._type = RegExp.$1;
+  if (this._keyword && /^(url|u|content|c|b|body|headers|h|ip|i|status|result|s|r|method|m|mark|type|t):(.*)$/i.test(keyword)) {
+    this._type = RegExp.$1.toLowerCase();
     this._keyword = RegExp.$2.trim();
   }
   if (this._not = this._keyword[0] === '!') {
@@ -80,11 +80,25 @@ proto.setSortColumns = function(columns) {
 proto.checkNot = function(flag) {
   return this._not ? !flag : flag;
 };
+
+proto.hasUnmarked = function() {
+  var list = this._list;
+  for (var i = list.length - 1; i >= 0; --i) {
+    if (!list[i].mark) {
+      return true;
+    }
+  }
+};
+
 proto.filter = function(newList) {
   var self = this;
   var keyword = self._keyword;
   var list = self.list;
-  if (!keyword) {
+  if (self._type === 'mark') {
+    list.forEach(function(item) {
+      item.hide = !item.mark || self.checkNot(!self.checkKeywork(item.url));
+    });
+  } else if (!keyword) {
     list.forEach(function(item) {
       item.hide = false;
     });
@@ -138,7 +152,7 @@ proto.filter = function(newList) {
       break;
     default:
       list.forEach(function(item) {
-        item.hide = self.checkNot(!self.checkKeywork(item.url.toLowerCase()));
+        item.hide = self.checkNot(!self.checkKeywork(item.url));
       });
     }
   }
@@ -334,6 +348,33 @@ proto.removeUnselectedItems = function() {
   }
 
   if (hasUnselectedItem) {
+    this.update(false, true);
+    return true;
+  }
+};
+
+proto.removeUnmarkedItems = function() {
+  var hasUnmarkedItem;
+  var endIndex = -1;
+  var list = this._list;
+
+  for (var i = list.length - 1; i >= 0; i--) {
+    var item = list[i];
+    if (!item.mark) {
+      hasUnmarkedItem = true;
+      if (endIndex == -1) {
+        endIndex = i;
+      }
+      if (!i) {
+        list.splice(i, endIndex - i + 1);
+      }
+    } else if (endIndex != -1) {
+      list.splice(i + 1, endIndex - i);
+      endIndex = -1;
+    }
+  }
+
+  if (hasUnmarkedItem) {
     this.update(false, true);
     return true;
   }
