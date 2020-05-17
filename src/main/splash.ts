@@ -154,7 +154,7 @@ export const splash = ({
       <div class="dot" id="dot4"></div>
       <div class="dot" id="dot5"></div>
       <h4 class="text" id="starting-txt">${text}</h4>
-      <a href="${website}" class="text" id="author-txt">${website}</a>
+      <span class="text" id="author-txt">${website}</span>
     </div>
   </body>
   
