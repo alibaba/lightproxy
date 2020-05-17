@@ -29,3 +29,14 @@ order: 5
 ```
 
 具体可以参考 [https://github.com/alibaba/lightproxy/issues/91](https://github.com/alibaba/lightproxy/issues/91)
+
+
+## Cannot be opened because the developer cannot be verified
+
+是因为没有苹果开发者证书签名导致的，参考 https://support.apple.com/en-us/HT202491
+
+打开设置 => 安全
+
+![img](../imgs/security-open-anyway.png)
+
+点击 Open anyway，然后确定

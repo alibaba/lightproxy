@@ -29,3 +29,13 @@ For HTTP proxy, use
 ```
 
 For details, please refer to [https://github.com/alibaba/lightproxy/issues/91](https://github.com/alibaba/lightproxy/issues/91)
+
+## Cannot be opened because the developer cannot be verified
+
+It is because there is no Apple developer certificate signature, please refer to https://support.apple.com/en-us/HT202491
+
+Open Settings => Security
+
+![img](../imgs/security-open-anyway.png)
+
+Click Open anyway and confirm
