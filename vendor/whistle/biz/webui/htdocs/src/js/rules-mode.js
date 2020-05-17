@@ -59,7 +59,7 @@ CodeMirror.defineMode('rules', function() {
   }
 
   function isRes(str) {
-    return /^(?:resScript|resRules|responseFor|resCookies|resHeaders|statusCode|status|replaceStatus|redirect|resDelay|resSpeed|resCors|resType|resCharset|cache|attachment|download|resBody|resPrepend|resAppend|css(?:Append|Prepend|Body)?|html(?:Append|Prepend|Body)?|js(?:Append|Prepend|Body)?|resReplace|resMerge|resWrite|resWriteRaw):\/\//.test(str);
+    return /^(?:resScript|resRules|responseFor|resCookies|resHeaders|replaceStatus|redirect|resDelay|resSpeed|resCors|resType|resCharset|cache|attachment|download|resBody|resPrepend|resAppend|css(?:Append|Prepend|Body)?|html(?:Append|Prepend|Body)?|js(?:Append|Prepend|Body)?|resReplace|resMerge|resWrite|resWriteRaw):\/\//.test(str);
   }
 
   function isUrl(str) {
@@ -72,7 +72,7 @@ CodeMirror.defineMode('rules', function() {
 
   function notExistRule(str) {
     str = str.substring(0, str.indexOf(':'));
-    return forwardRules.indexOf(str) == -1;
+    return forwardRules.indexOf(str) == -1 && str !== 'status';
   }
 
   function notExistPlugin(str) {

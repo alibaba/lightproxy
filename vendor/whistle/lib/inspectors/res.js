@@ -168,7 +168,7 @@ module.exports = function(req, res, next) {
   req.request = function(options) {
     readFirstChunk(req, function() {
       options = options || req.options;
-      req.realUrl = res.realUrl = options.isPlugin ? req.fullUrl : options.href;
+      req.realUrl = res.realUrl = options.isPlugin ? (req._realUrl || req.fullUrl) : options.href;
       var originPort = options.port;
       var now = Date.now();
       rules.getClientCert(req, function(key, cert, isPfx, cacheKey) {
@@ -588,8 +588,7 @@ module.exports = function(req, res, next) {
     util.drain(req, function() {
       readFirstChunk(req, res, _res, function(firstChunk){
         pluginMgr.getResRules(req, _res, function() {
-          var replaceStatus = util.getMatcherValue(resRules.replaceStatus)
-            || util.getMatcherValue(resRules.statusCode);
+          var replaceStatus = util.getMatcherValue(resRules.replaceStatus);
           if (replaceStatus && replaceStatus != _res.statusCode) {
             res.statusCode = _res.statusCode = replaceStatus;
             util.handleStatusCode(replaceStatus, _res.headers);
@@ -909,7 +908,7 @@ module.exports = function(req, res, next) {
     });
   };
 
-  var statusCode = util.getMatcherValue(resRules.statusCode);
+  var statusCode = util.getStatusCodeFromRule(resRules);
   var resHeaders = {};
   if (!statusCode && resRules.redirect) {
     statusCode = 302;

@@ -73,156 +73,151 @@ function handleAuth(data, auth) {
   }
 }
 
-function handleParams(req, params) {
-  var _params = params;
-  if (!(params = params && qs.stringify(params))) {
-    return;
-  }
-
-  var transform;
-  var headers = req.headers;
-  var isJson = util.isJSONContent(req);
-  if (isJson || util.isUrlEncoded(req)) {
-    delete headers['content-length'];
-    transform = new Transform();
-    var buffer, interrupt;
-    transform._transform = function(chunk, encoding, callback) {
-      if (chunk) {
-        if (!interrupt) {
-          buffer = buffer ? Buffer.concat([buffer, chunk]) : chunk;
-          chunk = null;
-          if (buffer.length > MAX_REQ_SIZE) {
-            interrupt = true;
-            chunk = buffer;
-            buffer = null;
-          }
-        }
-      } else if (buffer && buffer.length) {
-        var body;
-        var isGBK = !util.isUtf8(buffer);
-        if (isGBK) {
-          try {
-            body = iconv.decode(buffer, 'GB18030');
-          } catch(e) {}
-        }
-        if (!body) {
-          body = buffer + '';
-        }
-        if (isJson) {
-          body = body.replace(JSON_RE, function(json) {
-            var obj = util.parseRawJson(json);
-            return obj ? JSON.stringify(extend(true, obj, _params)) : json;
-          });
-        } else {
-          body = util.replaceQueryString(body, params);
-        }
-        if (isGBK) {
-          try {
-            body = iconv.encode(body, 'GB18030');
-          } catch(e) {}
-        } else {
-          chunk = util.toBuffer(body);
-        }
-        buffer = null;
-      } else {
-        var data = params;
-        if (isJson) {
-          try {
-            data = JSON.stringify(_params);
-          } catch(e) {}
-        }
-        chunk = util.toBuffer(data);
-      }
-
-      callback(null, chunk);
-    };
-    req.addZipTransform(transform);
-  } else if (util.isMultipart(req) && /boundary=(?:"([^"]+)"|([^;]+))/i.test(headers['content-type'])) {
-    delete headers['content-length'];
-    var boundaryStr = '--' + (RegExp.$1 || RegExp.$2);
-    var startBoundary = util.toBuffer(boundaryStr + '\r\n');
-    var boundary = util.toBuffer('\r\n' + boundaryStr);
-    var sepBoundary = util.toBuffer('\r\n' + boundaryStr + '\r\n');
-    var endBoudary = util.toBuffer('\r\n' + boundaryStr + '--');
-    var length = startBoundary.length;
-    var sepLength = sepBoundary.length;
-    transform = new Transform();
-
-    transform.parse = function(chunk) {
-      var index, result, sep, data;
-      while((index = util.indexOfList(chunk, boundary)) != -1
-          && ((sep = util.startWithList(chunk, sepBoundary, index))
-              || util.startWithList(chunk, endBoudary, index))) {
-        data = this.parser.transform(chunk.slice(0, index));
-        result = result && data ? Buffer.concat([result, data]) : (result || data);
-        if (!sep) {
-          data = toMultiparts(_params, boundaryStr);
-          result = result ? Buffer.concat([result, data]) : data;
-        }
-        sep = sep ? sepBoundary : endBoudary;
-        result = result ? Buffer.concat([result, sep]) : sep;
-        chunk = chunk.slice(index + sepLength);
-        this.parser = new MultipartParser(_params);
-      }
-
-      var len = chunk.length;
-      if (len >= sepLength) {
-        var lastIndex = len - sepLength + 1;
-        data = this.parser.transform(chunk.slice(0, lastIndex));
-        chunk = chunk.slice(lastIndex);
-        result = result && data ? Buffer.concat([result, data]) : (result || data);
-      }
-      this.buffer = chunk;
-
-      return result;
-    };
-    transform._transform = function(chunk, encoding, callback) {
-      if (this.badMultipart) {
-        return callback(null, chunk);
-      }
-
-      var end;
-      if (chunk) {
-        chunk = this.buffer ? Buffer.concat([this.buffer, chunk]) : chunk;
-      } else {
-        end = true;
-        chunk = this.buffer;
-      }
-
-      if (chunk) {
-        this.buffer = null;
-        if (!this.parser) {
-          if (util.startWithList(chunk, startBoundary)) {
-            this.parser = new MultipartParser(_params);
-            chunk = this.parse(chunk.slice(length));
-            chunk = chunk ? Buffer.concat([startBoundary, chunk]) : startBoundary;
-          } else if(end || chunk.length >= length) {
-            this.badMultipart = true;
-          } else {
-            this.buffer = chunk;
+function handleParams(req, params, urlParams) {
+  var originParams = params;
+  var hasBody;
+  if (params = params && qs.stringify(params)) {
+    var transform;
+    var headers = req.headers;
+    var isJson = util.isJSONContent(req);
+    if (isJson || util.isUrlEncoded(req)) {
+      delete headers['content-length'];
+      transform = new Transform();
+      var buffer, interrupt;
+      transform._transform = function(chunk, encoding, callback) {
+        if (chunk) {
+          if (!interrupt) {
+            buffer = buffer ? Buffer.concat([buffer, chunk]) : chunk;
             chunk = null;
+            if (buffer.length > MAX_REQ_SIZE) {
+              interrupt = true;
+              chunk = buffer;
+              buffer = null;
+            }
           }
+        } else if (buffer && buffer.length) {
+          var body;
+          var isGBK = !util.isUtf8(buffer);
+          if (isGBK) {
+            try {
+              body = iconv.decode(buffer, 'GB18030');
+            } catch(e) {}
+          }
+          if (!body) {
+            body = buffer + '';
+          }
+          if (isJson) {
+            body = body.replace(JSON_RE, function(json) {
+              var obj = util.parseRawJson(json);
+              return obj ? JSON.stringify(extend(true, obj, originParams)) : json;
+            });
+          } else {
+            body = util.replaceQueryString(body, params);
+          }
+          if (isGBK) {
+            try {
+              body = iconv.encode(body, 'GB18030');
+            } catch(e) {}
+          } else {
+            chunk = util.toBuffer(body);
+          }
+          buffer = null;
         } else {
-          chunk = this.parse(chunk);
+          var data = params;
+          if (isJson) {
+            try {
+              data = JSON.stringify(originParams);
+            } catch(e) {}
+          }
+          chunk = util.toBuffer(data);
         }
-      }
 
-      if (end && this.buffer) {
-        chunk = chunk ? Buffer.concat([chunk, this.buffer]) : this.buffer;
-      }
-      callback(null, chunk);
-    };
-    req.addZipTransform(transform);
-  } else if (/^https?:/.test(req.options.href)) {
-    var newUrl = util.replaceUrlQueryString(req.options.href, params);
-    req.options = util.parseUrl(newUrl);
+        callback(null, chunk);
+      };
+      req.addZipTransform(transform);
+      hasBody = true;
+    } else if (util.isMultipart(req) && /boundary=(?:"([^"]+)"|([^;]+))/i.test(headers['content-type'])) {
+      delete headers['content-length'];
+      var boundaryStr = '--' + (RegExp.$1 || RegExp.$2);
+      var startBoundary = util.toBuffer(boundaryStr + '\r\n');
+      var boundary = util.toBuffer('\r\n' + boundaryStr);
+      var sepBoundary = util.toBuffer('\r\n' + boundaryStr + '\r\n');
+      var endBoudary = util.toBuffer('\r\n' + boundaryStr + '--');
+      var length = startBoundary.length;
+      var sepLength = sepBoundary.length;
+      transform = new Transform();
+
+      transform.parse = function(chunk) {
+        var index, result, sep, data;
+        while((index = util.indexOfList(chunk, boundary)) != -1
+            && ((sep = util.startWithList(chunk, sepBoundary, index))
+                || util.startWithList(chunk, endBoudary, index))) {
+          data = this.parser.transform(chunk.slice(0, index));
+          result = result && data ? Buffer.concat([result, data]) : (result || data);
+          if (!sep) {
+            data = toMultiparts(originParams, boundaryStr);
+            result = result ? Buffer.concat([result, data]) : data;
+          }
+          sep = sep ? sepBoundary : endBoudary;
+          result = result ? Buffer.concat([result, sep]) : sep;
+          chunk = chunk.slice(index + sepLength);
+          this.parser = new MultipartParser(originParams);
+        }
+
+        var len = chunk.length;
+        if (len >= sepLength) {
+          var lastIndex = len - sepLength + 1;
+          data = this.parser.transform(chunk.slice(0, lastIndex));
+          chunk = chunk.slice(lastIndex);
+          result = result && data ? Buffer.concat([result, data]) : (result || data);
+        }
+        this.buffer = chunk;
+
+        return result;
+      };
+      transform._transform = function(chunk, encoding, callback) {
+        if (this.badMultipart) {
+          return callback(null, chunk);
+        }
+
+        var end;
+        if (chunk) {
+          chunk = this.buffer ? Buffer.concat([this.buffer, chunk]) : chunk;
+        } else {
+          end = true;
+          chunk = this.buffer;
+        }
+
+        if (chunk) {
+          this.buffer = null;
+          if (!this.parser) {
+            if (util.startWithList(chunk, startBoundary)) {
+              this.parser = new MultipartParser(originParams);
+              chunk = this.parse(chunk.slice(length));
+              chunk = chunk ? Buffer.concat([startBoundary, chunk]) : startBoundary;
+            } else if(end || chunk.length >= length) {
+              this.badMultipart = true;
+            } else {
+              this.buffer = chunk;
+              chunk = null;
+            }
+          } else {
+            chunk = this.parse(chunk);
+          }
+        }
+
+        if (end && this.buffer) {
+          chunk = chunk ? Buffer.concat([chunk, this.buffer]) : this.buffer;
+        }
+        callback(null, chunk);
+      };
+      req.addZipTransform(transform);
+      hasBody = true;
+    }
   }
-}
-
-function handleUrlReplace(req, params) {
-  var newUrl = util.parsePathReplace(req.options.href, params);
-  if (newUrl) {
-    req.options = util.parseUrl(newUrl);
+  var _params = hasBody ? null : originParams;
+  if ((_params || urlParams)) {
+    req._urlParams = urlParams && _params ? extend(_params, urlParams) : (_params || urlParams);
   }
 }
 
@@ -263,8 +258,8 @@ module.exports = function(req, res, next) {
     }
   }
   util.parseRuleJson([reqRules.reqHeaders, reqRules.reqCookies,
-authObj ? null : reqRules.auth, reqRules.params, reqRules.reqCors, reqRules.reqReplace, reqRules.urlReplace],
-function(headers, cookies, auth, params, cors, replacement, urlReplace) {
+authObj ? null : reqRules.auth, reqRules.params, reqRules.reqCors, reqRules.reqReplace, reqRules.urlReplace, reqRules.urlParams],
+function(headers, cookies, auth, params, cors, replacement, urlReplace, urlParams) {
   var data = {};
   if (headers) {
     data.headers =  extend(data.headers || {}, headers);
@@ -348,8 +343,25 @@ function(headers, cookies, auth, params, cors, replacement, urlReplace) {
       }
 
       handleReq(req, data);
-      handleParams(req, params);
-      handleUrlReplace(req, urlReplace);
+      handleParams(req, params, urlParams);
+      if (req._urlParams || urlReplace) {
+        var options = req.options;
+        var isUrl = util.isUrl(options.href);
+        var newUrl = isUrl ? options.href : req.fullUrl;
+        if (req._urlParams) {
+          newUrl = util.replaceUrlQueryString(newUrl, req._urlParams);
+        }
+        if (urlReplace) {
+          newUrl = util.parsePathReplace(newUrl, urlReplace);
+        }
+        if (newUrl !== options.href) {
+          if (isUrl) {
+            req.options = util.parseUrl(newUrl);
+          } else {
+            req._realUrl = newUrl;
+          }
+        }
+      }
       util.removeUnsupportsHeaders(req.headers);
       util.disableReqProps(req);
       handleReplace(req, replacement);

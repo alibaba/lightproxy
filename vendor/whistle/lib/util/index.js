@@ -61,6 +61,7 @@ var resetContext = function() {
   CONTEXT = vm.createContext();
 };
 var SUB_MATCH_RE = /\$[&\d]/;
+var HTTP_URL_RE = /^https?:\/\//;
 var replacePattern = ReplacePatternTransform.replacePattern;
 var parseUrl = require('./parse-url');
 // 避免属性被 stringify ，减少冗余数据传给前端
@@ -87,6 +88,12 @@ function noop(_) {
 }
 
 exports.noop = noop;
+
+function isUrl(str) {
+  return HTTP_URL_RE.test(str);
+}
+
+exports.isUrl = isUrl;
 
 function wrapJs(js, charset, isUrl) {
   if (!js) {
@@ -1233,13 +1240,13 @@ exports.rule = {
   getUrl: getUrl
 };
 
-function getMatcherValue(rule, raw) {
-  rule = getMatcher(rule, raw);
+function getMatcherValue(rule) {
+  rule = getMatcher(rule);
   return rule && removeProtocol(rule, true);
 }
 
 function getUrlValue(rule, raw) {
-  rule = getUrl(rule, raw);
+  rule = getUrl(rule);
   if (rule && raw !== true) {
     rule = rule.trim();
   }
@@ -1849,24 +1856,21 @@ function filterRepeatPlugin(rule) {
 
 exports.filterRepeatPlugin = filterRepeatPlugin;
 
-function mergeRule(curRule, newRule, reserve) {
-  if (!curRule || !newRule) {
+function mergeRule(curRule, newRule) {
+  if (!curRule || !newRule || !newRule.list) {
     return newRule;
   }
-  if (!newRule.list) {
-    return curRule && reserve ? curRule : newRule;
-  }
-  curRule.list = reserve ? curRule.list.concat(newRule.list) : newRule.list.concat(curRule.list);
+  curRule.list = curRule.list.concat(newRule.list);
   filterRepeatPlugin(curRule);
   return curRule;
 }
 
-function mergeRules(req, add, isResRules, reserve) {
+function mergeRules(req, add, isResRules) {
   var origin = req.rules;
   var origAdd = add;
   add = add || {};
   var merge = function(protocol) {
-    var rule = mergeRule(origin[protocol], add[protocol], reserve);
+    var rule = mergeRule(origin[protocol], add[protocol]);
     if (rule) {
       origin[protocol] = rule;
     }
@@ -2807,4 +2811,9 @@ exports.setClientCert = function(options, key, cert, isPfx, cacheKey) {
     options.key = key;
     options.cert = cert;
   }
+};
+
+exports.getStatusCodeFromRule = function(rules) {
+  var rule = rules.rule;
+  return rule && rule.statusCode;
 };

@@ -316,8 +316,13 @@ function addRealUrl(req, newHeaders) {
   if (!rule || !newHeaders || !rule.url) {
     return;
   }
-  if (rule.url !== req.fullUrl) {
-    newHeaders[REAL_URL_HEADER] = encodeURIComponent(rule.url);
+  var realUrl = req._realUrl;
+  if (!realUrl) {
+    var href = req.options && req.options.href;
+    realUrl = util.isUrl(href) ? href : null;
+  }
+  if (realUrl && realUrl != req.fullUrl) {
+    newHeaders[REAL_URL_HEADER] = encodeURIComponent(realUrl);
   }
   if (rule.url !== rule.matcher) {
     var relPath = rule.url.substring(rule.matcher.length);
@@ -332,7 +337,7 @@ function addRuleHeaders(req, rules, headers) {
   if (localHost) {
     headers[LOCAL_HOST_HEADER] = localHost;
   }
-  var ruleValue = util.getMatcherValue(rules.rule, true);
+  var ruleValue = util.getMatcherValue(rules.rule);
   if (ruleValue) {
     headers[RULE_VALUE_HEADER] = encodeURIComponent(ruleValue);
   }
@@ -889,7 +894,7 @@ pluginMgr.getRules = function(req, callback) {
 pluginMgr.getResRules = function(req, res, callback) {
   req.curUrl = req.fullUrl;
   var resRules = rulesMgr.resolveResRules(req, true);
-  util.mergeRules(req, resRules, true, true);
+  util.mergeRules(req, resRules, true);
   var resScriptRules;
   var resHeaderRules = res.headers[config.RES_RULES_HEAD];
   if (resHeaderRules) {
@@ -972,7 +977,7 @@ function postStats(req, res) {
 pluginMgr.postStats = postStats;
 
 var PLUGIN_RULE_RE = /^([a-z\d_\-]+)(?:\(([\s\S]*)\))?$/;
-var PLUGIN_RULE_RE2 = /^([a-z\d_\-]+)(?:\:\/\/([\s\S]*))?$/;
+var PLUGIN_RULE_RE2 = /^(?:\w+\.)?([a-z\d_\-]+)(?:\:\/\/([\s\S]*))?$/;
 var PLUGIN_RE = /^plugin:\/\//;
 
 function getPluginByPluginRule(pluginRule) {
@@ -984,7 +989,7 @@ function getPluginByPluginRule(pluginRule) {
   if (PLUGIN_RE.test(value)) {
     value = util.getMatcherValue(pluginRule);
   } else {
-    value = value.substring(value.indexOf('.') + 1);
+    value = util.rule.getMatcher(pluginRule);
   }
 
   if (PLUGIN_RULE_RE.test(value) || PLUGIN_RULE_RE2.test(value)) {
@@ -1008,7 +1013,7 @@ function resolveWhistlePlugins(req) {
   var plugin = req.pluginMgr = getPluginByRuleUrl(util.rule.getUrl(rules.rule));
   if (plugin) {
     rules._pluginRule = rules.rule;
-    var ruleValue = util.getMatcherValue(rules.rule, true);
+    var ruleValue = util.getMatcherValue(rules.rule);
     var ruleUrl = util.getUrlValue(rules.rule, true);
     plugins.push({
       plugin: plugin,

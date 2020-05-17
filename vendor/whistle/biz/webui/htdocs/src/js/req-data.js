@@ -70,10 +70,11 @@ var contextMenuList = [
     name: 'Remove',
     list:  [
       { name: 'All' },
-      { name: 'One' },
+      { name: 'This' },
       { name: 'Others' },
       { name: 'Selected' },
       { name: 'Unselected' },
+      { name: 'Unmarked' },
       { name: 'All Such Host', action: 'removeAllSuchHost' },
       { name: 'All Such URL', action: 'removeAllSuchURL' }
     ]
@@ -91,7 +92,8 @@ var contextMenuList = [
     list: [
       { name: 'Abort' },
       { name: 'Replay' },
-      { name: 'Compose' }
+      { name: 'Compose' },
+      { name: 'Mark' }
     ]
   },
   { name: 'Share' },
@@ -112,6 +114,13 @@ function stopPropagation(e) {
   e.stopPropagation();
   e.preventDefault();
 }
+
+var getFocusItemList = function(curItem) {
+  if (!curItem || curItem.selected) {
+    return;
+  }
+  return [curItem];
+};
 
 var Spinner = React.createClass({
   render: function() {
@@ -195,6 +204,10 @@ function getStatusClass(data) {
     type += ' w-forbidden';
   } else if (statusCode && (!/^\d+$/.test(statusCode) || statusCode >= 400)) {
     type += ' w-error-status';
+  }
+
+  if (data.mark) {
+    type += ' w-mark';
   }
 
   return type;
@@ -481,6 +494,16 @@ var ReqData = React.createClass({
     case 'Compose':
       events.trigger('composer', item);
       break;
+    case 'Mark':
+      var modal = this.props.modal;
+      var list = getFocusItemList(item) || (modal && modal.getSelectedList());
+      if (list) {
+        list.forEach(function(item) {
+          item.mark = !item.mark;
+        });
+      }
+      this.setState({});
+      break;
     case 'Replay':
       events.trigger('replaySessions', [item, e.shiftKey]);
       break;
@@ -554,7 +577,7 @@ var ReqData = React.createClass({
     case 'excludeUrl':
       item && self.removeAllSuchURL(item);
       break;
-    case 'One':
+    case 'This':
       events.trigger('removeIt', item);
       break;
     case 'All':
@@ -568,6 +591,9 @@ var ReqData = React.createClass({
       break;
     case 'Unselected':
       events.trigger('removeUnselected');
+      break;
+    case 'Unmarked':
+      events.trigger('removeUnmarked');
       break;
     case 'Help':
       window.open('https://avwo.github.io/whistle/webui/network.html');
@@ -669,8 +695,9 @@ var ReqData = React.createClass({
     list3[2].disabled = disabled || selectedCount === hasData;
     list3[3].disabled = !selectedCount;
     list3[4].disabled = selectedCount === hasData;
-    list3[5].disabled = disabled;
+    list3[5].disabled = !modal.hasUnmarked();
     list3[6].disabled = disabled;
+    list3[7].disabled = disabled;
 
     var list4 = contextMenuList[4].list;
     list4[1].disabled = disabled;
@@ -680,6 +707,7 @@ var ReqData = React.createClass({
     var list5 = contextMenuList[5].list;
     if (item) {
       list5[2].disabled = false;
+      list5[3].disabled = false;
       if (item.selected) {
         list5[1].disabled = !selectedList.filter(util.canReplay).length;
         list5[0].disabled = !selectedList.filter(util.canAbort).length;
@@ -691,6 +719,7 @@ var ReqData = React.createClass({
       list5[0].disabled = true;
       list5[1].disabled = true;
       list5[2].disabled = true;
+      list5[3].disabled = true;
     }
     var uploadItem = contextMenuList[6];
     uploadItem.hide = !getUploadSessionsFn();
