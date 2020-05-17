@@ -8,6 +8,8 @@
 <url><loc>https://lightproxy.org/doc/use-with-umi-antd-pro</loc></url>
 <url><loc>https://lightproxy.org/doc/wireless</loc></url>
 <url><loc>https://lightproxy.org/doc/write-rule-in-nodejs</loc></url>
+<url><loc>https://lightproxy.org/rules/match</loc></url>
+  
 <url><loc>https://lightproxy.org/zh-CN</loc></url>
 <url><loc>https://lightproxy.org/zh-CN/doc</loc></url>
 <url><loc>https://lightproxy.org/zh-CN/doc/capture-network</loc></url>
@@ -16,5 +18,6 @@
 <url><loc>https://lightproxy.org/zh-CN/doc/use-with-umi-antd-pro</loc></url>
 <url><loc>https://lightproxy.org/zh-CN/doc/wireless</loc></url>
 <url><loc>https://lightproxy.org/zh-CN/doc/write-rule-in-nodejs</loc></url>
+<url><loc>https://lightproxy.org/zh-CN/rules/match</loc></url>
 
 </urlset>
