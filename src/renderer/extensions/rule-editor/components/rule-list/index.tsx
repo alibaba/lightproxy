@@ -81,7 +81,7 @@ export const RuleList = (props: Props) => {
 # https://www.google.com file:///User/xxx/xxx.html
 
 # mapping by wildcard
-# ^https://*.xxx.com file:///User/xxx/xxx.html
+# ^https://*.example.com file:///User/xxx/xxx.html
 
 # More usage follow document: https://alibaba.github.io/lightproxy/quick-start.html
 
