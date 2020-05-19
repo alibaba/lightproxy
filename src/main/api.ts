@@ -149,7 +149,6 @@ export async function initIPC(mainWindow: BrowserWindow) {
     await BoardcastManager.getInstance();
 
     exitHook(async () => {
-        const onlineStatus = store.get('onlineStatus', 'ready');
-        onlineStatus === 'online' && (await setSystemProxy(0));
+        await setSystemProxy(0);
     });
 }
