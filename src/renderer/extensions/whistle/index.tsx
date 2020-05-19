@@ -87,7 +87,10 @@ export class WhistleExntension extends Extension {
                     this.coreAPI.eventEmmitter.emit('whistle-get-devtool-port-response', this.mDevtoolPort);
 
                     // ... ready to set system proxy
-                    const onlineStatus = this.coreAPI.store.get('onlineStatus', 'ready');
+                    // online mean whistle ready & system proxy setting
+                    // ready mean whistle ready & system proxy not setting
+                    const onlineStatus = this.coreAPI.store.get('onlineStatus', 'online');
+
                     onlineStatus === 'online' && toggleSystemProxy(onlineStatus, port, this.coreAPI);
 
                     this.coreAPI.eventEmmitter.on('lightproxy-toggle-system-proxy', async () => {
@@ -303,11 +306,18 @@ export class WhistleExntension extends Extension {
                         {/* {t(info.title)} */}
                         {t('Proxy')}
                         {port ? `: [HTTP ${port}/SOCKS5 ${((port as unknown) as number) + 1}]` : null}{' '}
-                        <Icon style={{marginRight: '10px', marginLeft: '5px'}} className={info.proxyClassName} type={info.proxyIcon} />
-
+                        <Icon
+                            style={{ marginRight: '10px', marginLeft: '5px' }}
+                            className={info.proxyClassName}
+                            type={info.proxyIcon}
+                        />
                         {t('System Proxy')}
-                        <Icon style={{marginLeft: '5px'}} className={info.systemProxyClassName} type={info.systemProxyIcon} />
-                        <Icon style={{marginLeft: '10px'}} type="menu" />
+                        <Icon
+                            style={{ marginLeft: '5px' }}
+                            className={info.systemProxyClassName}
+                            type={info.systemProxyIcon}
+                        />
+                        <Icon style={{ marginLeft: '10px' }} type="menu" />
                     </div>
                 </Dropdown>
             );
