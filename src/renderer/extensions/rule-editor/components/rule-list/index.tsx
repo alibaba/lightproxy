@@ -115,7 +115,7 @@ export const RuleList = (props: Props) => {
 
             if (!editorStatus[index]) {
                 editorStatus[index] = {
-                    model: monaco.editor.createModel('rule', 'rule'),
+                    model: monaco.editor.createModel(ruleList[index].content, 'rule'),
                     viewState: initalEditorViewState,
                 };
             }
@@ -125,7 +125,7 @@ export const RuleList = (props: Props) => {
             } catch (e) {
                 // Model is disposed
                 editorStatus[index] = {
-                    model: monaco.editor.createModel('rule', 'rule'),
+                    model: monaco.editor.createModel(ruleList[index].content, 'rule'),
                     viewState: initalEditorViewState,
                 };
                 editor.setModel(editorStatus[index]?.model);
@@ -147,7 +147,7 @@ export const RuleList = (props: Props) => {
     const saveWithLimit = useCallback(
         throttle((rules: Rule[]) => {
             saveRules(rules);
-        }),
+        }, 1000),
         [],
     );
 
