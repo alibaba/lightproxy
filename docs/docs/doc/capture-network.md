@@ -16,6 +16,6 @@ When we visit `https://www.bing.com`, we can see the corresponding request detai
 
 ## Mobile phone capture
 
-If you need to capture the network request of the mobile phone, please refer to [Wireless Agent](./wireless)
+If you need to capture the network request of the mobile phone, please refer to [Wireless proxy](./wireless)
 
-<Alert> Note: LightProxy is not visible in the LAN by default, you must click the mobile agent Tab to capture packets on the mobile to enable the LAN to be visible </Alert>
+<Alert> Note: LightProxy is not visible in the LAN by default, you must click the mobile proxy Tab to capture packets on the mobile to enable the LAN to be visible </Alert>
