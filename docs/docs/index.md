@@ -23,6 +23,8 @@ footer: Open-source Apache Licensed | Copyright © 2020<br />Powered by [LightPr
 ## Preview
 <img className="preview lazyload" data-src="https://img.alicdn.com/tfs/TB157bJF.T1gK0jSZFrXXcNCXXa-1393-921.png" />
 
+<img className="preview lazyload" data-src="https://img.alicdn.com/tfs/TB1vd0uGYj1gK0jSZFOXXc7GpXa-1549-1018.png" />
+
 ## Preview GIF
 <img className="preview lazyload" data-src="https://i.loli.net/2020/05/05/uRZMpi8rPDyQF6I.gif" />
 
