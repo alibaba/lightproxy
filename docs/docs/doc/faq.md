@@ -3,32 +3,32 @@ title: 'FAQ'
 order: 5
 ---
 
-## What to do if the proxy does not take effect
+## What to do if the agent does not take effect
 
-### Check proxy status
+### Check agent status
 
 First make sure that the proxy and system proxy status of the lower right corner of LightProxy are OK, as shown in the figure:
 
-! [check-status] (../ imgs / check-status.png)
+![check-status](../imgs/check-status.png)
 
 ### Confirm whether the proxy is effective in the browser
 
 Just open a webpage, open the Chrome Devtools Network interface, and confirm that if there is lightproxy in the response header, the proxy is in effect.
 
-! [devtools] (../ imgs / devtools.png)
+![devtools](../imgs/devtools.png)
 
-<Alert> By default, 127.0.0.1 and localhost are not proxies. If you need to use, you can proxy other domain names to 127.0.0.1 and then use other domain names for development </ Alert>
+<Alert> By default, 127.0.0.1 and localhost are not proxies. If you need to use, you can proxy other domain names to 127.0.0.1 and then use other domain names for development </Alert>
 
 ### Certificate error
 
 If you are prompted with a certificate error, you can use Help => Install Certificate & Helper in the LightProxy menu.
 
-<Alert> For Windows users, you may need to right click => properties => run as administrator. Then try the above actions again. </ Alert>
+<Alert> For Windows users, you may need to right click => properties => run as administrator. Then try the above actions again. </Alert>
 
 ### Windows users
 
--Chrome for Windows users If the proxy does not take effect, try restarting Chrome
--If a Windows user has a certificate error, you may need to right-click => Properties => Run as administrator, and then use Help => Install Certificate & Helper in the LightProxy menu.
+- Chrome for Windows users If the proxy does not take effect, try restarting Chrome
+- If a Windows user has a certificate error, you may need to right-click => Properties => Run as administrator, and then use Help => Install Certificate & Helper in the LightProxy menu.
 
 ## How to use with other proxy applications
 
