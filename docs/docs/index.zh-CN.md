@@ -5,7 +5,7 @@ hero:
   desc: 💎 跨平台 Web 代理调试工具
   actions:
     - text: 快速开始
-      link: ./doc/getting-started
+      link: /zh-CN/doc/getting-started
 
 features:
   - icon: https://gw.alipayobjects.com/zos/bmw-prod/881dc458-f20b-407b-947a-95104b5ec82b/k79dm8ih_w144_h144.png
