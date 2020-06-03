@@ -101,7 +101,14 @@ async function getBoradcastPort() {
 }
 
 async function treeKillProcess(pid: any) {
-    treeKill(pid);
+    return new Promise(resolve => {
+        treeKill(pid, 'SIGKILL', err => {
+            if (err) {
+                logger.error(err);
+            }
+            resolve();
+        });
+    });
 }
 
 async function getIp() {

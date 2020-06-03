@@ -8,12 +8,11 @@
     padding: 8px 15px 8px 15px;
     width: 160px;
     font-size: @rule-item-font-size;
-    font-weight: bold;
     background-color: @rule-item-bgcolor;
     position: relative;
     // border-bottom: solid 1px @rule-item-border-color;
 
-    color: @font-color;
+    color: @font-color-disable;
 
     &.enabled:before {
         content: ' \25CF';
@@ -30,6 +29,12 @@
         background-color: @rule-item-selected-bgcolor;
         border-bottom: none;
     }
+
+    &.enabled {
+        font-weight: bold;
+        color: @font-color;
+    }
+
 }
 
 .lightproxy-rule-actionbar {
