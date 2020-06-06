@@ -8,7 +8,7 @@ var events = require('./events');
 var createCgi = createCgiObj.createCgi;
 var MAX_INCLUDE_LEN = 5120;
 var MAX_EXCLUDE_LEN = 5120;
-var MAX_FRAMES_LENGTH = exports.MAX_FRAMES_LENGTH = 80;
+var MAX_FRAMES_LENGTH = exports.MAX_FRAMES_LENGTH = 120;
 var TIMEOUT = 20000;
 var dataCallbacks = [];
 var serverInfoCallbacks = [];
@@ -40,7 +40,7 @@ var MAX_WAIT_TIME = 1000 * 60 * 3;
 var onlyViewOwnData = storage.get('onlyViewOwnData') == 1;
 var pluginsMap = {};
 var disabledPlugins = {};
-var disabledAllPlugins, disabledAllRules;
+var disabledAllPlugins;
 var DEFAULT_CONF = {
   timeout: TIMEOUT,
   xhrFields: {
@@ -392,9 +392,7 @@ exports.rules = createCgiObj({
     mode: 'ignore',
     url: 'cgi-bin/rules/enable-back-rules-first'
   },
-  syncWithSysHosts: 'cgi-bin/rules/sync-with-sys-hosts',
-  setSysHosts: 'cgi-bin/rules/set-sys-hosts',
-  getSysHosts: 'cgi-bin/rules/get-sys-hosts'
+  setSysHosts: 'cgi-bin/rules/set-sys-hosts'
 }, POST_CONF);
 
 exports.log = createCgiObj({
@@ -613,7 +611,6 @@ function startLoadData() {
       pluginsMap = data.plugins || {};
       disabledPlugins = data.disabledPlugins || {};
       disabledAllPlugins = data.disabledAllPlugins;
-      disabledAllRules = data.disabledAllRules;
       if (len || svrLen) {
         if (len) {
           logList.push.apply(logList, data.log);
@@ -1035,7 +1032,7 @@ exports.stopServerLogRecord = function(stop) {
 };
 
 exports.getPlugin = function(name) {
-  if (disabledAllPlugins || disabledAllRules || disabledPlugins[name.slice(0, -1)]) {
+  if (disabledAllPlugins || disabledPlugins[name.slice(0, -1)]) {
     return;
   }
   return pluginsMap[name];
@@ -1043,7 +1040,7 @@ exports.getPlugin = function(name) {
 
 function getMenus(menuName) {
   var list = [];
-  if (disabledAllPlugins || disabledAllRules) {
+  if (disabledAllPlugins) {
     return list;
   }
   Object.keys(pluginsMap).forEach(function(name) {
