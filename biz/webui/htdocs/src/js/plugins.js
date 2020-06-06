@@ -106,8 +106,7 @@ var Home = React.createClass({
   },
   enableAllPlugins: function(e) {
     var data = this.props.data || {};
-    if ((!data.disabledAllRules && !data.disabledAllPlugins)
-        || !confirm('Do you want to enable all plugins?')) {
+    if (!data.disabledAllPlugins || !confirm('Do you want to enable all plugins?')) {
       return;
     }
     events.trigger('disableAllPlugins', e);
@@ -124,7 +123,8 @@ var Home = React.createClass({
     var cmdMsg = state.cmdMsg;
     var list = Object.keys(plugins);
     var disabledPlugins = data.disabledPlugins || {};
-    var disabled = data.disabledAllRules || data.disabledAllPlugins;
+    var disabled = data.disabledAllPlugins;
+    var ndp = data.ndp;
     self.hasNewPlugin = false;
 
     return (
@@ -162,8 +162,8 @@ var Home = React.createClass({
                     <tr key={name} className={((!disabled && checked) ? '' : 'w-plugins-disable') + (hasNew ? ' w-has-new-version' : '')}>
                       <th className="w-plugins-order" onDoubleClick={self.enableAllPlugins}>{i + 1}</th>
                       <td className="w-plugins-active" onDoubleClick={self.enableAllPlugins}>
-                        <input type="checkbox" title={disabled ? 'Disabled' : (checked ? 'Disable ' : 'Enable ') + name}
-                          data-name={name} checked={checked} disabled={disabled} onChange={self.props.onChange} />
+                        <input type="checkbox" title={ndp ? 'Not allowed disable plugins' : (disabled ? 'Disabled' : (checked ? 'Disable ' : 'Enable ') + name)}
+                          data-name={name} checked={ndp || checked} disabled={ndp || disabled} onChange={self.props.onChange} />
                       </td>
                       <td className="w-plugins-date">{new Date(plugin.mtime).toLocaleString()}</td>
                       <td className="w-plugins-name" title={plugin.moduleName}><a href={url} target="_blank" data-name={name} onClick={plugin.pluginHomepage ? null : self.onOpen}>{name}</a></td>
