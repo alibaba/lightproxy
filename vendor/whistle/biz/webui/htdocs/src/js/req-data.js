@@ -273,7 +273,7 @@ var ReqData = React.createClass({
       self.setState({ columns: settings.getSelectedColumns() });
     });
     events.on('onColumnTitleChange', function() {
-      this.setState({});
+      self.setState({});
     });
     var update = function() {
       self.setState({});
@@ -328,6 +328,9 @@ var ReqData = React.createClass({
       }else{
         self.scrollToRow(0);
       }
+    });
+    events.on('focusNetworkList', function() {
+      self.container.focus();
     });
     var wrapper = ReactDOM.findDOMNode(self.refs.wrapper);
     var updateTimer;
@@ -801,6 +804,20 @@ var ReqData = React.createClass({
   onMouseDown: function(e) {
     this.willResort = e.target.className !== 'w-header-drag-block';
   },
+  onReplay: function(e) {
+    if (!e.metaKey && !e.ctrlKey) {
+      return;
+    }
+    if (e.keyCode === 82) {
+      events.trigger('replaySessions', [null, e.shiftKey]);
+    } else if (e.keyCode === 65) {
+      e.preventDefault();
+      events.trigger('abortRequest');
+    } else if (e.keyCode === 69) {
+      e.preventDefault();
+      events.trigger('composer');
+    }
+  },
   renderColumn: function(col, i) {
     var name = col.name;
     var style = getColStyle(col);
@@ -862,7 +879,7 @@ var ReqData = React.createClass({
                   </thead>
                 </table>
             </div>
-            <div ref="container" tabIndex="0" onContextMenu={self.onContextMenu}
+            <div ref="container" tabIndex="0" onContextMenu={self.onContextMenu} onKeyDown={this.onReplay}
               style={{background: (dataCenter.hashFilterObj || filterText) ? 'lightyellow' : undefined}}
               className="w-req-data-list fill"  onDragStart={this.onDragStart}>
                 <RV.AutoSizer ref="content" >{function(size){

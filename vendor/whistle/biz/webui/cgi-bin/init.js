@@ -15,7 +15,7 @@ module.exports = function(req, res) {
   var lastLog = proxy.getLogs(0, 1)[0];
   var lastSvrLog = logger.getLogs(0, 1)[0];
 
-  res.json({
+  util.sendGzip(req, res, {
     version: config.version,
     custom1: properties.get('Custom1'),
     custom2: properties.get('Custom2'),
@@ -38,10 +38,10 @@ module.exports = function(req, res) {
     interceptHttpsConnects: properties.isEnableCapture(),
     enableHttp2: properties.isEnableHttp2(),
     plugins: pluginMgr.getPlugins(),
-    disabledAllRules: properties.get('disabledAllRules'),
-    disabledPlugins: properties.get('disabledPlugins') || {},
-    disabledPluginsRules: properties.get('disabledPluginsRules') || {},
-    disabledAllPlugins: properties.get('disabledAllPlugins'),
+    classic: config.classic,
+    disabledPlugins: !config.notAllowedDisablePlugins && properties.get('disabledPlugins') || {},
+    disabledAllPlugins: !config.notAllowedDisablePlugins && properties.get('disabledAllPlugins'),
+    disabledAllRules: !config.notAllowedDisableRules && properties.get('disabledAllRules'),
     localUIHost: config.localUIHost
   });
 };
