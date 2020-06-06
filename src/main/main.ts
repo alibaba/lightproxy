@@ -344,19 +344,23 @@ app.on('ready', async () => {
     const visitor = ua('UA-154996514-1', userid);
 
     // app-version
-    visitor.set('dimension1', version);
+    visitor.set('cd1', version);
     // os
-    visitor.set('dimension2', os.type());
+    visitor.set('cd2', os.type());
     visitor.set('os-version', os.release());
     // electron-version
-    visitor.set('dimension3', process.versions.electron);
-    visitor
-        .pageview('/', err => {
+    visitor.set('cd3', process.versions.electron);
+
+    const screenview = () => {
+        visitor.screenview('App', 'LightProxy', version, err => {
             console.error(err);
-        })
-        .send();
+        }).send();
+    }
+    
+    screenview();
 
     setInterval(() => {
         visitor.pageview('/').send();
-    }, 1000 * 60 * 30);
+        // 2 hour
+    }, 1000 * 60 * 60 * 2);
 });
