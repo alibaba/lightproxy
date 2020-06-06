@@ -9,15 +9,9 @@ import checkInstallStatus from './install';
 import treeKill from 'tree-kill';
 import ip from 'ip';
 import { checkUpdater } from './updater';
-import Koa from 'koa';
-import KoaStatic from 'koa-static';
-import electronIsDev from 'electron-is-dev';
 import path from 'path';
 import { LIGHTPROXY_FILES_DIR } from './const';
 import { app, nativeTheme, BrowserWindow } from 'electron';
-import Store from 'electron-store';
-
-const store = new Store();
 
 interface SwpanModuleProp {
     moduleId: string;
@@ -125,8 +119,6 @@ async function checkDarkMode(mainWindow: BrowserWindow) {
 async function update() {
     return checkUpdater();
 }
-
-let server: any;
 
 async function checkSystemProxy(props: any) {
     const { port, address } = props;

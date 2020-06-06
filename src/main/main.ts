@@ -352,11 +352,13 @@ app.on('ready', async () => {
     visitor.set('cd3', process.versions.electron);
 
     const screenview = () => {
-        visitor.screenview('App', 'LightProxy', version, err => {
-            console.error(err);
-        }).send();
-    }
-    
+        visitor
+            .screenview('App', 'LightProxy', version, err => {
+                console.error(err);
+            })
+            .send();
+    };
+
     screenview();
 
     setInterval(() => {

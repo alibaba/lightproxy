@@ -44,7 +44,7 @@ export async function checkSystemProxyWork(address: string, port: number) {
             reject();
             return;
         }
-        exec('scutil --proxy', (error, stdout, stderr) => {
+        exec('scutil --proxy', (error, stdout) => {
             const NO_NETWORK_OUTPUT = `<dictionary> {
 }
 `;
