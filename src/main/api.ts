@@ -101,7 +101,14 @@ async function getBoradcastPort() {
 }
 
 async function treeKillProcess(pid: any) {
-    treeKill(pid);
+    return new Promise(resolve => {
+        treeKill(pid, 'SIGKILL', err => {
+            if (err) {
+                logger.error(err);
+            }
+            resolve();
+        });
+    });
 }
 
 async function getIp() {
@@ -149,7 +156,6 @@ export async function initIPC(mainWindow: BrowserWindow) {
     await BoardcastManager.getInstance();
 
     exitHook(async () => {
-        const onlineStatus = store.get('onlineStatus', 'ready');
-        onlineStatus === 'online' && (await setSystemProxy(0));
+        await setSystemProxy(0);
     });
 }

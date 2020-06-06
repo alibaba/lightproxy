@@ -33,6 +33,7 @@
 <p align="center">
   <a href="https://lightproxy.org">
     <img src="https://img.alicdn.com/tfs/TB157bJF.T1gK0jSZFrXXcNCXXa-1393-921.png"></img>
+    <img src="https://img.alicdn.com/tfs/TB1vd0uGYj1gK0jSZFOXXc7GpXa-1549-1018.png"></img>
   </a>
 </p>
 

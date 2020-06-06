@@ -5,13 +5,13 @@ toc: menu
 order: 2
 ---
 
-LightProxy can also support wireless agent proxy packet capture and forwarding, click the tab of the mobile phone proxy on the right (it will automatically make the proxy visible on the LAN).
+LightProxy can also support wireless proxy proxy packet capture and forwarding, click the tab of the mobile phone proxy on the right (it will automatically make the proxy visible on the LAN).
 
 ![img](../imgs/wireless-tab.png)
 
 You can see a QR code (different machines have different QR codes, you need to scan your own QR code), scan the QR code to download the corresponding certificate, and install it.
 
-<Alert> Note: LightProxy is not visible in the LAN by default, you must click the mobile agent Tab to capture packets on the mobile to enable the LAN to be visible </Alert>
+<Alert> Note: LightProxy is not visible in the LAN by default, you must click the mobile proxy Tab to capture packets on the mobile to enable the LAN to be visible </Alert>
 
 ## Install Certificate
 

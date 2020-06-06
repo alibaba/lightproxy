@@ -1,1 +1,1 @@
-clang ./main.m -fobjc-arc -fmodules -mmacosx-version-min=10.10 -o ../static/proxy_conf_helper
+clang ./main.m -fobjc-arc -fmodules -mmacosx-version-min=10.10 -o ../files/proxy_conf_helper

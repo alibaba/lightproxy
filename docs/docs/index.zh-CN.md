@@ -5,7 +5,7 @@ hero:
   desc: 💎 跨平台 Web 代理调试工具
   actions:
     - text: 快速开始
-      link: ./doc/getting-started
+      link: /zh-CN/doc/getting-started
 
 features:
   - icon: https://gw.alipayobjects.com/zos/bmw-prod/881dc458-f20b-407b-947a-95104b5ec82b/k79dm8ih_w144_h144.png
@@ -22,6 +22,8 @@ footer: Open-source Apache Licensed | Copyright © 2020<br />Powered by [LightPr
 
 ## 预览
 <img className="preview lazyload" data-src="https://img.alicdn.com/tfs/TB1mCIVEYr1gK0jSZR0XXbP8XXa-1232-812.png" />
+
+<img className="preview lazyload" data-src="https://img.alicdn.com/tfs/TB1vd0uGYj1gK0jSZFOXXc7GpXa-1549-1018.png" />
 
 ## 预览 GIF
 <img className="preview lazyload" data-src="https://i.loli.net/2020/05/05/uRZMpi8rPDyQF6I.gif" />

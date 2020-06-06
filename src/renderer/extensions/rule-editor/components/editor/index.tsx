@@ -6,6 +6,7 @@ import { Card, Option } from '../card';
 
 import * as monaco from 'monaco-editor';
 import { AppContext } from '../../../../components/app/index';
+import { useKeepAliveEffect } from 'react-keep-alive';
 
 interface Props {
     content: string;
@@ -94,6 +95,10 @@ export const Editor = (props: Props) => {
         const editor = editorRef.current?.editor;
         editor?.focus();
     };
+
+    useKeepAliveEffect(() => {
+        window.dispatchEvent(new Event('resize'));
+    });
 
     return (
         <div className="lightproxy-rule-editor-container">
