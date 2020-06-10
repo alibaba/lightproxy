@@ -19,7 +19,7 @@ module.exports = function(req, res) {
   var clientIp = util.getClientIp(req);
   var stopRecordConsole = data.startLogTime == -3;
   var stopRecordSvrLog = data.startSvrLogTime == -3;
-  res.json({
+  util.sendGzip(req, res, {
     ec: 0,
     version: config.version,
     custom1: properties.get('Custom1'),
@@ -37,11 +37,11 @@ module.exports = function(req, res) {
     log: stopRecordConsole ? [] : proxy.getLogs(data.startLogTime, data.count, data.logId),
     svrLog: stopRecordSvrLog ? [] : logger.getLogs(data.startSvrLogTime, data.count),
     plugins: pluginMgr.getPlugins(),
-    disabledPlugins: properties.get('disabledPlugins') || {},
-    disabledPluginsRules: properties.get('disabledPluginsRules') || {},
+    disabledPlugins: !config.notAllowedDisablePlugins && properties.get('disabledPlugins') || {},
     allowMultipleChoice: properties.get('allowMultipleChoice'),
-    disabledAllPlugins: properties.get('disabledAllPlugins'),
-    disabledAllRules: properties.get('disabledAllRules'),
+    classic: config.classic,
+    disabledAllPlugins: !config.notAllowedDisablePlugins && properties.get('disabledAllPlugins'),
+    disabledAllRules: !config.notAllowedDisableRules && properties.get('disabledAllRules'),
     interceptHttpsConnects: properties.isEnableCapture(),
     enableHttp2: properties.isEnableHttp2(),
     defaultRulesIsDisabled: rules.defaultRulesIsDisabled(),

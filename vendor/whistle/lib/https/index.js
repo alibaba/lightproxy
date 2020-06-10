@@ -653,13 +653,20 @@ function resolveWebsocket(socket, wss) {
 function addReqInfo(req) {
   var socket = req.socket;
   var remoteData = socket._remoteDataInfo || tunnelTmplData.get(socket.remotePort + ':' + socket.localPort);
-  req.headers[config.HTTPS_FIELD] = 1;
+  var headers = req.headers;
+  headers[config.HTTPS_FIELD] = 1;
   if (remoteData) {
     socket._remoteDataInfo = remoteData;
-    req.headers[config.CLIENT_IP_HEAD] = remoteData.clientIp || LOCALHOST;
-    req.headers[config.CLIENT_PORT_HEAD] = remoteData.clientPort;
+    headers[config.CLIENT_IP_HEAD] = remoteData.clientIp || LOCALHOST;
+    headers[config.CLIENT_PORT_HEAD] = remoteData.clientPort;
     if (remoteData.clientId) {
-      req.headers[config.CLIENT_ID_HEADER] = remoteData.clientId;
+      headers[config.CLIENT_ID_HEADER] = remoteData.clientId;
+    }
+    if (remoteData.proxyAuth) {
+      headers['proxy-authorization'] = remoteData.proxyAuth;
+    }
+    if (remoteData.tunnelData) {
+      headers[config.TUNNEL_DATA_HEADER] = remoteData.tunnelData;
     }
   }
 }
@@ -796,6 +803,10 @@ function addClientInfo(socket, chunk, statusLine, clientIp, clientPort) {
   if (clientId) {
     statusLine += '\r\n' + config.TEMP_CLIENT_ID_HEADER + ': ' + clientId;
   }
+  var tunnelData = socket.headers[config.TUNNEL_DATA_HEADER];
+  if (tunnelData) {
+    statusLine += '\r\n' + config.TEMP_TUNNEL_DATA_HEADER + ': ' + tunnelData;
+  }
   return Buffer.concat([Buffer.from(statusLine), chunk]);
 }
 
@@ -901,11 +912,14 @@ module.exports = function(socket, next, isWebPort) {
           if (err || socket._hasError) {
             return destroy(err);
           }
+          var headers = socket.headers;
           tunnelTmplData.set(reqSocket.localPort + ':' + reqSocket.remotePort, {
             clientIp: clientIp,
             clientPort: clientPort,
             tunnelHost: tunnelHost,
-            clientId: socket.headers[config.CLIENT_ID_HEADER]
+            clientId: headers[config.CLIENT_ID_HEADER],
+            proxyAuth:headers['proxy-authorization'],
+            tunnelData: headers[config.TUNNEL_DATA_HEADER]
           });
           recieveData = function(data) {
             clearTimeout(authTimer);
