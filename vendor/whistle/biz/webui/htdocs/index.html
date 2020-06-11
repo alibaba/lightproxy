@@ -32,8 +32,55 @@
     .w-req-data-list .w-has-rules td, .w-req-data-list .w-has-rules th {
         color: #69c0ff !important;
     }
+
 }
 </style>
+
+<script>
+    const require = parent && parent.window && parent.window.require;
+    if (require) {
+        const originOpen = window.open;
+        window.open = (url) => {
+            if (url === 'editor.html') {
+                const container = document.createElement('iframe');
+                container.src = url;
+                container.style = `position: fixed; left: 10px; top: 50px; width: 90%; height: 80%; z-index: 1000`;
+                document.body.appendChild(container);
+
+                const closeBtn = document.createElement('div');
+                closeBtn.innerText = 'X';
+                closeBtn.style = `position: fixed;
+    left: 10px;
+    top: 30px;
+    display: inline-block;
+    background: black;
+    color: white;
+    z-index: 1000;
+    padding: 3px 20px;
+    border: solid 1px red !important;
+    cursor: pointer;`.replace('\n', '');
+
+                closeBtn.onclick = () => {
+                    container.remove();
+                    closeBtn.remove();
+                };
+
+                document.body.appendChild(closeBtn);
+
+                return {
+                    set setValue(val) {
+                        container.contentWindow.setValue = val;
+                    },
+                    set getValue(val) {
+                        container.contentWindow.getValue = val;
+                    }
+                }
+            } else {
+                require('electron').remote.shell.openExternal(url);
+            }
+        };
+    }
+</script>
 
 <title>Whistle Web Debugger</title>
 </head>
