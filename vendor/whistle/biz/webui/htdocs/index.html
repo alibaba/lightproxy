@@ -38,10 +38,18 @@
 
 <script>
     const require = parent && parent.window && parent.window.require;
+    let lastCleanup;
+
     if (require) {
         const originOpen = window.open;
         window.open = (url) => {
             if (url === 'editor.html') {
+
+                if (lastCleanup) {
+                    lastCleanup();
+                    lastCleanup = null;
+                }
+
                 const container = document.createElement('iframe');
                 container.src = url;
                 container.style = `position: fixed; left: 10px; top: 50px; width: 90%; height: 80%; z-index: 1000`;
@@ -60,10 +68,13 @@
     border: solid 1px red !important;
     cursor: pointer;`.replace('\n', '');
 
-                closeBtn.onclick = () => {
+                const cleanup = () => {
                     container.remove();
                     closeBtn.remove();
                 };
+
+                closeBtn.onclick = cleanup;
+                lastCleanup = cleanup;
 
                 document.body.appendChild(closeBtn);
 
