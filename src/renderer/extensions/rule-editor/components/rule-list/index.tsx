@@ -99,7 +99,7 @@ export const RuleList = (props: Props) => {
 
     const rule = ruleList[selected];
 
-    const switchRule = (index: number, isRemove: boolean = false) => {
+    const switchRule = (index: number, isRemove = false) => {
         const editor = editorRef.current;
         if (editor) {
             try {
@@ -173,6 +173,8 @@ export const RuleList = (props: Props) => {
             setRuleList(defaultRuleList);
 
             switchRule(0);
+        } else if (ruleList.length < selected) {
+            switchRule(0);
         }
 
         saveWithLimit(ruleList);
@@ -211,10 +213,18 @@ export const RuleList = (props: Props) => {
         const handler = (index: number) => {
             toggleRuleEnabledRef.current(index);
         };
+
+        const reloadRuleList = () => {
+            const rules = props.readRules() || defaultRuleList;
+            setRuleList(rules);
+        };
+
         CoreAPI.eventEmmitter.on('lightproxy-toggle-rule', handler);
+        CoreAPI.eventEmmitter.on('reload-store-config', reloadRuleList);
 
         return () => {
             CoreAPI.eventEmmitter.off('lightproxy-toggle-rule', handler);
+            CoreAPI.eventEmmitter.off('reload-store-config', reloadRuleList);
         };
     }, []);
 

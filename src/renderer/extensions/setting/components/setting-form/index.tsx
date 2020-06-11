@@ -49,6 +49,20 @@ class InnerSettingForm extends React.Component {
             });
         };
 
+        const exportConfig = async () => {
+            await CoreAPI.exportConfig({ title: t('Export config'), buttonLabel: t('Save') });
+            message.success(t('Export config succeed'));
+        };
+
+        const importConfig = async () => {
+            const cfg = await CoreAPI.importConfig({ title: t('Import config'), buttonLabel: t('Load') });
+            Object.entries(cfg).forEach(([key, value]) => {
+                CoreAPI.store.set(key, value);
+            });
+            CoreAPI.eventEmmitter.emit('reload-store-config');
+            message.success(t('Import config succeed'));
+        };
+
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -83,6 +97,14 @@ class InnerSettingForm extends React.Component {
                     {getFieldDecorator('defaultPort')(<InputNumber min={1024} max={65534} />)}
                 </Form.Item>
                 <Form.Item label={t('Copyright')}>Version {version} Made by IFE Team with love</Form.Item>
+                <Form.Item label={t('Config')}>
+                    <Button className="action-btn" onClick={exportConfig}>
+                        {t('Export config')}
+                    </Button>
+                    <Button className="action-btn" onClick={importConfig}>
+                        {t('Import config')}
+                    </Button>
+                </Form.Item>
                 <Form.Item label={t('Actions')}>
                     <Button className="action-btn" loading={this.state.isUpdating} onClick={checkUpdate} type="primary">
                         {t('Check Update')}

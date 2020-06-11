@@ -1,5 +1,5 @@
 import { Extension } from '../../extension';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SettingForm } from './components/setting-form';
 import { useTranslation } from 'react-i18next';
 import { CoreAPI } from '../../core-api';
@@ -18,26 +18,35 @@ export class Setting extends Extension {
     panelComponent() {
         const SettingPanelComponent = () => {
             const { t } = useTranslation();
-            const settings = CoreAPI.store.get('settings') || {};
+            const loadStoreSettings = () => {
+                const settings = CoreAPI.store.get('settings') || {};
+                const { updateChannel = 'stable', softwareWhiteList = true, defaultPort = 12888 } = settings;
+                return {
+                    updateChannel,
+                    softwareWhiteList,
+                    defaultPort,
+                };
+            };
+            const [settingState, setSettingState] = useState<Record<string, any>>(loadStoreSettings());
 
-            if (!settings.updateChannel) {
-                settings.updateChannel = 'stable';
-            }
+            useEffect(() => {
+                const refreshStoreSettings = () => {
+                    setSettingState(loadStoreSettings());
+                };
 
-            if (!(settings.softwareWhiteList === false)) {
-                settings.softwareWhiteList = true;
-            }
+                CoreAPI.eventEmmitter.on('reload-store-config', refreshStoreSettings);
 
-            if (!settings.defaultPort) {
-                settings.defaultPort = 12888;
-            }
+                return () => {
+                    CoreAPI.eventEmmitter.off('reload-store-config', refreshStoreSettings);
+                };
+            }, []);
 
             return (
                 <div className="lightproxy-setting no-drag">
                     {/* <p>LightProxy poweredby Whistle & Electron</p>
                     <p>Made with love by IFE</p>
                     <p>Version {version}</p> */}
-                    <SettingFormComponent t={t} settings={settings} />
+                    <SettingFormComponent t={t} settings={settingState} />
                 </div>
             );
         };

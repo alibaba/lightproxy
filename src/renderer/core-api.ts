@@ -69,6 +69,14 @@ export class CoreAPIClass {
             port,
         })) as boolean;
     }
+
+    async exportConfig(i18n: Record<string, string>) {
+        return (await ipcRenderer.callMain('exportConfig', i18n)) as boolean | undefined;
+    }
+
+    async importConfig(i18n: Record<string, string>) {
+        return (await ipcRenderer.callMain('importConfig', i18n)) as Record<string, any>;
+    }
 }
 
 export const CoreAPI = new CoreAPIClass();

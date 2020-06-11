@@ -2,6 +2,7 @@ import exitHook from 'exit-hook';
 import spwan from 'cross-spawn';
 import { ipcMain } from 'electron-better-ipc';
 import logger from 'electron-log';
+import fs from 'fs-extra';
 
 import { BoardcastManager } from './boradcast-manager';
 import { checkSystemProxyWork, setSystemProxy } from './platform';
@@ -10,8 +11,8 @@ import treeKill from 'tree-kill';
 import ip from 'ip';
 import { checkUpdater } from './updater';
 import path from 'path';
-import { LIGHTPROXY_FILES_DIR } from './const';
-import { app, nativeTheme, BrowserWindow } from 'electron';
+import { LIGHTPROXY_FILES_DIR, LIGHTPROXY_CFG_FILE_PATH } from './const';
+import { app, nativeTheme, BrowserWindow, dialog } from 'electron';
 
 interface SwpanModuleProp {
     moduleId: string;
@@ -125,6 +126,43 @@ async function checkSystemProxy(props: any) {
     return checkSystemProxyWork(address, port);
 }
 
+async function exportConfig(i18n: unknown) {
+    const { title, buttonLabel } = i18n as Record<string, string>;
+    const checkExists = await fs.pathExists(LIGHTPROXY_CFG_FILE_PATH);
+    if (!checkExists) {
+        throw Error('Config is not exists');
+    }
+    const cfg = (await fs.readFile(LIGHTPROXY_CFG_FILE_PATH)).toString();
+    const { canceled, filePath } = await dialog.showSaveDialog({
+        title,
+        buttonLabel,
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+    });
+    if (!canceled && filePath) {
+        await fs.writeFile(filePath, cfg);
+        return true;
+    }
+}
+
+async function importConfig(i18n: unknown) {
+    const { title, buttonLabel } = i18n as Record<string, string>;
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+        title,
+        buttonLabel,
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+    });
+
+    if (!canceled && filePaths[0]) {
+        const [path] = filePaths;
+        const checkExists = await fs.pathExists(path);
+        if (!checkExists) {
+            throw Error('Could not found config file.');
+        }
+        const fileBuffer = await fs.readFile(path as string);
+        return JSON.parse(fileBuffer.toString());
+    }
+}
+
 export async function initIPC(mainWindow: BrowserWindow) {
     // ipcMain
     ipcMain.answerRenderer('spawnModule', spawnModule);
@@ -143,6 +181,10 @@ export async function initIPC(mainWindow: BrowserWindow) {
     ipcMain.answerRenderer('update', update);
 
     ipcMain.answerRenderer('checkSystemProxy', checkSystemProxy);
+
+    ipcMain.answerRenderer('exportConfig', exportConfig);
+
+    ipcMain.answerRenderer('importConfig', importConfig);
 
     // start a socketIO server for extension background process
     await BoardcastManager.getInstance();

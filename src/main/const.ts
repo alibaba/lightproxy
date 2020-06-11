@@ -35,6 +35,9 @@ export const LIGHTPROXY_NODEJS_PATH = path.join(
     '/node/' + (SYSTEM_IS_MACOS ? 'lightproxy-node-macos' : 'lightproxy-node-win.exe'),
 );
 
+export const LIGHTPROXY_USERDATA_DIR = app.getPath('userData');
+export const LIGHTPROXY_CFG_FILE_PATH = path.join(LIGHTPROXY_USERDATA_DIR, './config.json');
+
 export const GITHUB_PROJECT_PAGE = 'https://github.com/alibaba/lightproxy';
 export const NEW_ISSUE_PAGE = 'https://github.com/alibaba/lightproxy/issues/new';
 
