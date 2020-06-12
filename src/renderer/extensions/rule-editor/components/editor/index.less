@@ -6,10 +6,10 @@
     width: calc(100% - 160px);
 
     .disabled-tip {
-        padding: 10px 20px 10px 20px;
-        font-weight: bold;
+        padding: 5px 20px 5px 20px;
+        font-size: 12px;
         font-style: oblique;
-        border: solid 1px @tip-border-color;
+        background-color: #fcf8e3;
     }
 
     .lightproxy-code-editor-container {
@@ -21,18 +21,15 @@
         text-align: right;
         background-color: @rule-list-bgcolor;
         padding-right: 5px;
-        height: 30px;
+        height: 35px;
         width: 100%;
 
         .tip {
-            font-size: 10px;
-            color: gray;
-            margin-top: 10px;
             display: inline-block;
-            vertical-align: middle;
-            margin-left: -50px;
+            color: #808080;
+            font-size: 12px;
+            line-height: 35px;
         }
-        
     }
 
     .monaco-editor {
@@ -44,4 +41,3 @@
         }
     }
 }
-
