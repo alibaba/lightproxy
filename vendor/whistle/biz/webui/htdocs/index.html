@@ -50,33 +50,64 @@
                     lastCleanup = null;
                 }
 
+                const floatLayer = document.createElement('div');
+                floatLayer.style = `
+                  position: fixed;
+                  width: 90%;
+                  height: 80%;
+                  left: 5%;
+                  top: 10%;
+                  z-index: 1000;
+                  display: flex;
+                  flex-direction: column;
+                  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, .1), 0 10px 10px -5px rgba(0, 0, 0, .04);
+                  border: 1px solid #c0c0c0;
+                  border-radius: 6px;
+                  overflow: hidden;
+                  background-color: #fff;
+                `.replace('\n', '');
+                const layerBar = document.createElement('div');
+                layerBar.style = `
+                  width: 100%;
+                  height: 0;
+                  flex: 0 0 28px;
+                  background-color: #f5f5f5;
+                  display: flex;
+                  align-items: center;
+                  padding: 0 10px;
+                `.replace('\n', '');
                 const container = document.createElement('iframe');
                 container.src = url;
-                container.style = `position: fixed; left: 10px; top: 50px; width: 90%; height: 80%; z-index: 1000`;
-                document.body.appendChild(container);
+                container.style = `
+                  width: 100%;
+                  flex: 1;
+                  border: 0;
+                `.replace('\n', '');
+                floatLayer.appendChild(layerBar);
+                floatLayer.appendChild(container);
+                document.body.appendChild(floatLayer);
 
                 const closeBtn = document.createElement('div');
-                closeBtn.innerText = 'X';
-                closeBtn.style = `position: fixed;
-    left: 10px;
-    top: 30px;
-    display: inline-block;
-    background: black;
-    color: white;
-    z-index: 1000;
-    padding: 3px 20px;
-    border: solid 1px red !important;
-    cursor: pointer;`.replace('\n', '');
+                closeBtn.style = `
+                  cursor: pointer;
+                  height: 13px;
+                  width: 13px;
+                  border-radius: 50%;
+                  border: 1px solid #e2463f;
+                  background-color: #ff5f57;
+                `.replace('\n', '');
 
                 const cleanup = () => {
-                    container.remove();
                     closeBtn.remove();
+                    layerBar.remove();
+                    container.remove();
+                    floatLayer.remove();
                 };
 
                 closeBtn.onclick = cleanup;
                 lastCleanup = cleanup;
 
-                document.body.appendChild(closeBtn);
+                layerBar.appendChild(closeBtn);
 
                 return {
                     set setValue(val) {
