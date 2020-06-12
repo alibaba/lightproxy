@@ -4,6 +4,7 @@ import path from 'path';
 import os from 'os';
 import { remote } from 'electron';
 import { CoreAPI } from '../../../../core-api';
+import { WHITELIST_DOMAINS } from '../../../../const';
 
 // some custom extend of whistle
 function extendRule(index: number, content: string) {
@@ -58,22 +59,15 @@ export function syncRuleToWhistle(rules: Rule[], port: number) {
     setHttps(port);
     disableHttp2(port);
     const RULE_SPLIT = "\n# ======== Generate by LightProxy, don't modify ========\n";
+
+    const WHITE_LIST_DOMAIN_STR = WHITELIST_DOMAINS.join(' ');
     const genRuleContent =
         (softwareWhiteList
             ? `
 # Daily software white list, can disable in setting
-# Alilang
-disable://intercept alilang-desktop-client.cn-hangzhou.log.aliyuncs.com s-api.alibaba-inc.com alilang.alibaba-inc.com auth-alilang.alibaba-inc.com mdm-alilang.alibaba-inc.com
-
-# Apple
-disable://intercept ***.apple.com *.mzstatic.com *.cdn-apple.com ***.apple-cloudkit.com ***.icloud.com ***.icloud-content.com ***.icloud.com.cn
-
-# bilibili
-disable://intercept txy.live-play.acgvideo.com
-
-# a link 502 which cause macos always popup 'Proxy Authentication Required'
-# just return empty
-http://lua-sh.hz.ali.com:7070/clu-prod/minitri.flg ()
+disable://intercept ${WHITE_LIST_DOMAIN_STR}
+enable://hide ${WHITE_LIST_DOMAIN_STR}
+ignore://*|!enable|!disable ${WHITE_LIST_DOMAIN_STR}
 `
             : '') +
         rules
