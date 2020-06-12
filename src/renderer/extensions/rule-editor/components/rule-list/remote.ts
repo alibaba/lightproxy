@@ -4,7 +4,7 @@ import path from 'path';
 import os from 'os';
 import { remote } from 'electron';
 import { CoreAPI } from '../../../../core-api';
-import { WHITELIST_DOMAINS } from './whitelist-domain';
+import { WHITELIST_DOMAINS } from '../../../../const';
 
 // some custom extend of whistle
 function extendRule(index: number, content: string) {
@@ -59,13 +59,15 @@ export function syncRuleToWhistle(rules: Rule[], port: number) {
     setHttps(port);
     disableHttp2(port);
     const RULE_SPLIT = "\n# ======== Generate by LightProxy, don't modify ========\n";
+
+    const WHITE_LIST_DOMAIN_STR = WHITELIST_DOMAINS.join(' ');
     const genRuleContent =
         (softwareWhiteList
             ? `
 # Daily software white list, can disable in setting
-disable://intercept ${WHITELIST_DOMAINS}
-enable://hide ${WHITELIST_DOMAINS}
-ignore://*|!enable|!disable ${WHITELIST_DOMAINS}
+disable://intercept ${WHITE_LIST_DOMAIN_STR}
+enable://hide ${WHITE_LIST_DOMAIN_STR}
+ignore://*|!enable|!disable ${WHITE_LIST_DOMAIN_STR}
 `
             : '') +
         rules
