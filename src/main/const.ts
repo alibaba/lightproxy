@@ -46,3 +46,8 @@ export const IS_BUILD_FOR_PR = __BUILD_FOR_TRAVIS_PR__ ? true : false;
 
 // @ts-ignore
 export const BUILD_FOR_TRAVIS_COMMIT = __BUILD_FOR_TRAVIS_COMMIT__;
+
+export const WINDOW_DEFAULT_WIDTH = 1100;
+export const WINDOW_DEFAULT_HEIGHT = 700;
+export const WINDOW_MIN_WIDTH = 640;
+export const WINDOW_MIN_HEIGHT = 375;

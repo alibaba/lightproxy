@@ -11,6 +11,10 @@ import { checkUpdater } from './updater';
 import { hideOrQuit } from './platform';
 import { installCertAndHelper } from './install';
 import {
+    WINDOW_DEFAULT_WIDTH,
+    WINDOW_DEFAULT_HEIGHT,
+    WINDOW_MIN_WIDTH,
+    WINDOW_MIN_HEIGHT,
     SYSTEM_IS_MACOS,
     NEW_ISSUE_PAGE,
     GITHUB_PROJECT_PAGE,
@@ -172,14 +176,14 @@ let forceQuit = false;
 
 function createMainWindow() {
     const mainWindowState = windowStateKeeper({
-        defaultWidth: 1100,
-        defaultHeight: 700,
+        defaultWidth: WINDOW_DEFAULT_WIDTH,
+        defaultHeight: WINDOW_DEFAULT_HEIGHT,
     });
     const window = new BrowserWindow({
         height: mainWindowState.height,
         width: mainWindowState.width,
-        minHeight: 700,
-        minWidth: 1100,
+        minWidth: WINDOW_MIN_WIDTH,
+        minHeight: WINDOW_MIN_HEIGHT,
         webPreferences: {
             nodeIntegration: true,
             webSecurity: false,
