@@ -1,7 +1,6 @@
 .lightproxy-rule-list {
     background-color: @rule-list-bgcolor;
     height: calc(100% + 3px);
-    padding-top: 5px;
     overflow: scroll;
 }
 .lightproxy-rule-list-item {
@@ -15,12 +14,13 @@
     color: @font-color-disable;
 
     &.enabled:before {
-        content: ' \25CF';
+        content: '\25CF';
         font-size: 12px;
-        vertical-align: middle;
         position: absolute;
-        left: 140px;
+        right: 15px;
+        top: 50%;
         color: #a7e1c4;
+        transform: translateY(-50%);
     }
 
     border-bottom: 1px thin @rule-item-border-color;
@@ -31,7 +31,6 @@
     }
 
     &.enabled {
-        font-weight: bold;
         color: @font-color;
     }
 
@@ -41,6 +40,7 @@
     text-align: right;
     background-color: @rule-list-bgcolor;
     width: 160px;
+    height: 35px;
 
     .lightproxy-add-rule-btn {
         height: auto;
