@@ -19,6 +19,7 @@ export function useThemeModeProvider(initialMode: ThemeModeEnum = ThemeModeEnum.
         const [themeMode, setThemeMode] = useState(initialMode);
 
         useEffect(() => {
+            // style-loader use/unuse: https://webpack.js.org/loaders/style-loader/#lazystyletag
             const applyThemeModeStyle = (isDarkMode: boolean) => {
                 if (isDarkMode) {
                     darkTheme.use();
