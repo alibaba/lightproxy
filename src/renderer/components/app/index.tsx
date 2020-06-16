@@ -1,29 +1,19 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { StatusBar } from '../status-bar';
 import { getAllExtensions } from '../../extensions';
-
 import { Icon } from 'antd';
-
 import classnames from 'classnames';
-
 import { useTranslation } from 'react-i18next';
 import { Provider, KeepAlive } from 'react-keep-alive';
-
 // @ts-ignore
 import { Titlebar } from 'react-titlebar-osx';
 import { remote } from 'electron';
+
+import { useThemeModeProvider } from '../../hooks/use-theme-mode';
 import { SYSTEM_IS_MACOS } from '../../const';
-import { CoreAPI } from '../../core-api';
-
-import darkTheme from '../../style/theme/dark.lazy.less';
-import defaultTheme from '../../style/theme/default.lazy.less';
-
-export const AppContext = React.createContext({
-    isDarkMode: false,
-});
 
 export const App = () => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const ThemeModeProvider = useThemeModeProvider();
     const [statusRightItems, setStatusRightItems] = useState([] as Function[]);
     const [panelItems, setPanelItems] = useState([] as Function[]);
     const [panelIcons, setPanelIcons] = useState([] as string[]);
@@ -33,22 +23,6 @@ export const App = () => {
     const statusRightItemsRef = useRef(statusRightItems);
 
     const { t } = useTranslation();
-
-    useEffect(() => {
-        // use and unuse api is from https://webpack.js.org/loaders/style-loader/#lazystyletag
-        defaultTheme.use();
-        function setDarkMode(isDarkMode: boolean) {
-            setIsDarkMode(isDarkMode);
-            if (isDarkMode) {
-                darkTheme.use();
-                defaultTheme.unuse();
-            } else {
-                defaultTheme.use();
-                darkTheme.unuse();
-            }
-        }
-        CoreAPI.checkDarkMode(setDarkMode);
-    }, []);
 
     useEffect(() => {
         const exntesions = getAllExtensions();
@@ -109,11 +83,7 @@ export const App = () => {
     };
 
     return (
-        <AppContext.Provider
-            value={{
-                isDarkMode,
-            }}
-        >
+        <ThemeModeProvider>
             <div className="lightproxy-app-container">
                 <Provider>
                     {SYSTEM_IS_MACOS ? (
@@ -148,6 +118,6 @@ export const App = () => {
                     <StatusBar rightItems={statusRightItems} />
                 </Provider>
             </div>
-        </AppContext.Provider>
+        </ThemeModeProvider>
     );
 };
