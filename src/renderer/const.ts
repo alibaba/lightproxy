@@ -37,4 +37,5 @@ export const WHITELIST_DOMAINS = [
     '***.icloud.com.cn',
     'txy.live-play.acgvideo.com',
     'ocs-oneagent-server.alibaba.com',
+    '*.jetbrains.com',
 ];
