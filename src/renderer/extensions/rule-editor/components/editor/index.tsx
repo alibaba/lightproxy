@@ -4,8 +4,8 @@ import { initRuleLanguage } from './rule-language/rule';
 import { useTranslation } from 'react-i18next';
 import { Card, Option } from '../card';
 
-import { useThemeMode } from '../../../../hooks/use-theme-mode'
 import * as monaco from 'monaco-editor';
+import { AppContext } from '../../../../components/app/index';
 import { useKeepAliveEffect } from 'react-keep-alive';
 
 interface Props {
@@ -20,12 +20,18 @@ initRuleLanguage(monaco);
 
 export const Editor = (props: Props) => {
     const { content, onChange, onSave, onMount, enabled } = props;
-    const { isDarkMode } = useThemeMode();
+
+    const { isDarkMode } = useContext(AppContext);
+
     const [showCardsPos, setShowCardsPos] = useState({ x: -1, y: -1 });
-    const { t } = useTranslation();
-    const editorRef = useRef(null as MonacoEditor | null);
+
     const onSaveRef = useRef(onSave);
+
     onSaveRef.current = onSave;
+
+    const editorRef = useRef(null as MonacoEditor | null);
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         const resizeEditor = () => {
