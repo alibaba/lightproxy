@@ -61,6 +61,7 @@
     "node-downloader-helper": "^1.0.11",
     "node-fetch": "^2.6.0",
     "node-gzip": "^1.1.2",
+    "portfinder": "^1.0.26",
     "qrcode.react": "^1.0.0",
     "react": "^16.12.0",
     "react-beautiful-dnd": "^12.2.0",
