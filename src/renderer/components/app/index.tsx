@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StatusBar } from '../status-bar';
 import { getAllExtensions } from '../../extensions';
 import { Icon } from 'antd';
@@ -16,7 +16,8 @@ import { SYSTEM_IS_MACOS } from '../../const';
 export const App = () => {
     const { t } = useTranslation();
     const ThemeModeProvider = useThemeModeProvider();
-    const { panels, rightStatusItems, activePanel, handleClickPanel } = useAppExtensionPanels(getAllExtensions());
+    const extensions = useMemo(() => getAllExtensions(), []);
+    const { panels, rightStatusItems, activePanel, handleClickPanel } = useAppExtensionPanels(extensions);
     const currentWindow = useCurrentWindow();
 
     const renderActivePanel = () => {
