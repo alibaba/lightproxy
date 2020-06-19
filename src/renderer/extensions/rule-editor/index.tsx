@@ -6,6 +6,7 @@ import { ICON_TEMPLATE_PATH, RULE_STORE_KEY, DOCUMENT_URL, GITHUB_PROJECT_PAGE }
 import { CoreAPI } from '../../core-api';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import { getWhistlePort } from '../../utils';
 
 let tray: Tray;
 let trayContextMenu;
@@ -39,12 +40,34 @@ async function buildTrayContextMenu() {
             },
         },
         { type: 'separator' },
-        ...(ruleListMenus as []),
+        {
+            label: t('Rule'),
+            submenu: [...(ruleListMenus as [])],
+        },
         { type: 'separator' },
         {
-            label: t('Exit App'),
+            label: t('Document'),
             click() {
-                remote.app.quit();
+                remote.shell.openExternal(DOCUMENT_URL);
+            },
+        },
+        {
+            label: t('Copy Proxy Shell Export Line'),
+            async click() {
+                const port = await getWhistlePort(CoreAPI);
+
+                remote.clipboard.writeText(
+                    `export https_proxy=http://127.0.0.1:${port}
+http_proxy=http://127.0.0.1:${port}
+all_proxy=socks5://127.0.0.1:${port + 1}
+`
+                        .split('\n')
+                        .join(' '),
+                );
+
+                new Notification('Proxy shell export copied', {
+                    body: t('Proxy shell export copied'),
+                });
             },
         },
         {
@@ -54,15 +77,15 @@ async function buildTrayContextMenu() {
             },
         },
         {
-            label: t('Document'),
-            click() {
-                remote.shell.openExternal(DOCUMENT_URL);
-            },
-        },
-        {
             label: t('Show Window'),
             click() {
                 remote.getCurrentWindow().show();
+            },
+        },
+        {
+            label: t('Exit App'),
+            click() {
+                remote.app.quit();
             },
         },
     ]);
