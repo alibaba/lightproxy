@@ -6,6 +6,7 @@ import { ICON_TEMPLATE_PATH, RULE_STORE_KEY, DOCUMENT_URL, GITHUB_PROJECT_PAGE }
 import { CoreAPI } from '../../core-api';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import { getWhistlePort, generateHTTPProxyUrl, generateSocksProxyUrl } from '../../utils';
 
 let tray: Tray;
 let trayContextMenu;
@@ -17,7 +18,7 @@ async function buildTrayContextMenu() {
     const rules: Rule[] = CoreAPI.store.get(RULE_STORE_KEY) || [];
     const ruleListMenus = rules.map((item, index) => {
         return {
-            type: 'checkbox',
+            type: 'checkbox' as 'checkbox',
             label: item.name,
             checked: item.enabled,
             async click() {
@@ -39,12 +40,34 @@ async function buildTrayContextMenu() {
             },
         },
         { type: 'separator' },
-        ...(ruleListMenus as []),
+        {
+            label: t('Rule'),
+            submenu: ruleListMenus,
+        },
         { type: 'separator' },
         {
-            label: t('Exit App'),
+            label: t('Document'),
             click() {
-                remote.app.quit();
+                remote.shell.openExternal(DOCUMENT_URL);
+            },
+        },
+        {
+            label: t('Copy Proxy Shell Export Line'),
+            async click() {
+                const port = await getWhistlePort(CoreAPI);
+
+                remote.clipboard.writeText(
+                    `export https_proxy=${generateHTTPProxyUrl(port)}
+http_proxy=${generateHTTPProxyUrl(port)}
+all_proxy=${generateSocksProxyUrl(port)}
+`
+                        .split('\n')
+                        .join(' '),
+                );
+
+                new Notification('Proxy shell export copied', {
+                    body: t('Proxy shell export copied'),
+                });
             },
         },
         {
@@ -54,15 +77,15 @@ async function buildTrayContextMenu() {
             },
         },
         {
-            label: t('Document'),
-            click() {
-                remote.shell.openExternal(DOCUMENT_URL);
-            },
-        },
-        {
             label: t('Show Window'),
             click() {
                 remote.getCurrentWindow().show();
+            },
+        },
+        {
+            label: t('Exit App'),
+            click() {
+                remote.app.quit();
             },
         },
     ]);

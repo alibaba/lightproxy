@@ -30,7 +30,7 @@ export const WHITELIST_DOMAINS = [
     'mdm-alilang.alibaba-inc.com',
     '***.apple.com',
     '*.mzstatic.com',
-    '*.cdn-apple.com', 
+    '*.cdn-apple.com',
     '***.apple-cloudkit.com',
     '***.icloud.com',
     '***.icloud-content.com',

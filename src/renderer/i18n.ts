@@ -67,6 +67,8 @@ export const i18nResources = {
             Proxy: '代理',
             'Show logs': '显示日志',
             'JS Console(with eruda)': 'JS Console 调试控制台（eruda）',
+            'Copy Proxy Shell Export Line': '复制 Shell 代理命令',
+            'Proxy shell export copied': 'Shell 代理命令已复制',
         },
     },
 };
