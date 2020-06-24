@@ -6,6 +6,9 @@ import { remote } from 'electron';
 import { CoreAPI } from '../../../../core-api';
 import { WHITELIST_DOMAINS } from '../../../../const';
 
+const MAGIC_RULE_DISABLE_HTTPS = '#LIGHTPROXY_MAGIC_DISABLE_HTTPS#';
+const MAGIC_RULE_DISABLE_HTTP2 = '#LIGHTPROXY_MAGIC_DISABLE_HTTP2#';
+
 // some custom extend of whistle
 function extendRule(index: number, content: string) {
     const extendContent = content.replace(/`([^]*?)`/g, (match, innerContent, offset) => {
@@ -31,10 +34,10 @@ function extendRule(index: number, content: string) {
         .join('\n');
 }
 
-function setHttps(port: number) {
+function setHttps(port: number, ruleContent: string) {
     const searchParams = new URLSearchParams();
     searchParams.set('clientId', '1');
-    searchParams.set('interceptHttpsConnects', '1');
+    searchParams.set('interceptHttpsConnects', ruleContent.indexOf(MAGIC_RULE_DISABLE_HTTPS) !== -1 ? '0' : '1');
     fetch(`http://127.0.0.1:${port}/cgi-bin/intercept-https-connects`, {
         body: searchParams,
         method: 'post',
@@ -43,10 +46,14 @@ function setHttps(port: number) {
 
 const electronVersion = Number.parseInt(remote.process.versions.electron);
 
-function disableHttp2(port: number) {
+function handleHttp2(port: number, ruleContent: string) {
     const searchParams = new URLSearchParams();
     searchParams.set('clientId', '1');
-    searchParams.set('enableHttp2', electronVersion >= 8 ? '1' : '0');
+    let enabled = ruleContent.indexOf(MAGIC_RULE_DISABLE_HTTP2) !== -1 ? '0' : '1';
+    if (electronVersion < 8) {
+        enabled = '0';
+    }
+    searchParams.set('enableHttp2', enabled);
     fetch(`http://127.0.0.1:${port}/cgi-bin/enable-http2`, {
         body: searchParams,
         method: 'post',
@@ -56,8 +63,7 @@ function disableHttp2(port: number) {
 export function syncRuleToWhistle(rules: Rule[], port: number) {
     const settings = CoreAPI.store.get('settings') || {};
     const softwareWhiteList = settings['softwareWhiteList'] === false ? false : true;
-    setHttps(port);
-    disableHttp2(port);
+  
     const RULE_SPLIT = "\n# ======== Generate by LightProxy, don't modify ========\n";
 
     const WHITE_LIST_DOMAIN_STR = WHITELIST_DOMAINS.join(' ');
@@ -90,6 +96,9 @@ ignore://*|!enable|!disable ${WHITE_LIST_DOMAIN_STR}
     searchParams.set('active', 'true');
     searchParams.set('changed', 'true');
     searchParams.set('value', RULE_SPLIT + genRuleContent);
+
+    setHttps(port, genRuleContent);
+    handleHttp2(port, genRuleContent);
 
     fetch(`http://127.0.0.1:${port}/cgi-bin/rules/enable-default`, {
         body: searchParams,
