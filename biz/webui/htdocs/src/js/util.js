@@ -458,6 +458,9 @@ function getContentEncoding(headers) {
 exports.getOriginalReqHeaders = function(item) {
   var req = item.req;
   var headers = $.extend({}, req.headers, item.rulesHeaders, true);
+  if (item.clientId && !headers['x-whistle-client-id']) {
+    headers['x-whistle-client-id'] = item.clientId;
+  }
   if (getContentEncoding(headers)) {
     delete headers['content-encoding'];
   }
@@ -1045,6 +1048,10 @@ function getHexFromBase64(base64) {
 
 exports.getHexFromBase64 = getHexFromBase64;
 
+function getClosedMsg(data) {
+  return 'Closed' + (data.code ? ' (' + data.code + ')' : '');
+}
+
 function initData(data, isReq) {
   if ((data[BODY_KEY] && data[HEX_KEY])) {
     return;
@@ -1052,7 +1059,7 @@ function initData(data, isReq) {
   if (!data.base64) {
     var body = data.body || data.text;
     if (data.closed || data.err) {
-      body = String(data.err || 'Closed');
+      body = String(data.err || getClosedMsg(data));
     }
     if (body) {
       try {
