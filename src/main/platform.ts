@@ -64,6 +64,15 @@ async function setupPacServer() {
         const app = new Koa();
         app.use(async ctx => {
             ctx.body = `function FindProxyForURL(url, host) {
+                var whitelist = [
+                    /lua-.*?\.hz\.ali\.com/,
+                    /it-sp\.alibaba\-inc\.com/,
+                ];
+                for (var i = 0; i < whitelist.length; i++) {
+                    if (whitelist[i].test(host)) {
+                        return "DIRECT";
+                    }
+                }
                 return "PROXY 127.0.0.1:${proxyPort}; DIRECT";
               }`;
             ctx.set('content-type', 'application/x-ns-proxy-autoconfig');
