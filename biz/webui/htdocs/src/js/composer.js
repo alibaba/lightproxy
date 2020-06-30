@@ -125,6 +125,7 @@ var Composer = React.createClass({
     }
     return {
       historyData: [],
+      disableBody: !!storage.get('disableComposerBody'),
       url: data.url,
       method: method,
       methodText: getCustomMethodText(),
@@ -509,7 +510,7 @@ var Composer = React.createClass({
     var self = this;
     var method = self.getMethod();
     var body, base64, isHexText;
-    if (hasReqBody(method, url, headersStr)) {
+    if (!self.state.disableBody && hasReqBody(method, url, headersStr)) {
       if (self.state.type === 'upload') {
         var fields = this.refs.uploadBody.getFields();
         var uploadData = util.getMultiBody(fields);
@@ -654,6 +655,11 @@ var Composer = React.createClass({
     }
     this.setState({ tabName: tabName, initedResponse: true });
   },
+  onBodyStateChange: function(e) {
+    var disableBody = !e.target.checked;
+    this.setState({ disableBody: disableBody });
+    storage.set('disableComposerBody', disableBody ? 1 : '');
+  },
   getCustomMethods: function() {
     var result = METHODS.slice();
     var methods = getCustomMethodText();
@@ -676,6 +682,10 @@ var Composer = React.createClass({
     var value = ReactDOM.findDOMNode(this.refs.newMethods).value.substring(0, 200);
     storage.set('customComposerMethods', value);
     this.setState({ methods: this.getCustomMethods(), methodText: value });
+  },
+  focusEnableBody: function() {
+    this.setState({ disableBody: false });
+    storage.set('disableComposerBody', '');
   },
   render: function() {
     var state = this.state;
@@ -700,6 +710,8 @@ var Composer = React.createClass({
     var disableComposerRules = isStrictMode || state.disableComposerRules;
     var isHexText = state.isHexText;
     var isCRLF = state.isCRLF;
+    var disableBody = state.disableBody;
+    var lockBody = pending || disableBody;
     self.hasBody = hasBody;
     
     return (
@@ -764,25 +776,27 @@ var Composer = React.createClass({
               </div>
               <div className="fill orient-vertical-box w-composer-body">
                 <div className="w-composer-bar">
-                  <label className="w-composer-label">Body</label>
-                  <label className={'w-composer-hex-text' + (isHexText ? ' w-checked' : '') + (showUpload ? ' hide' : '')}>
-                    <input disabled={pending} checked={isHexText} type="checkbox" onChange={this.onHexTextChange} />HexText
+                  <label className="w-composer-label">
+                    <input disabled={pending} checked={!disableBody} type="checkbox" onChange={this.onBodyStateChange} />
+                    Body
+                  </label>
+                  <label className={'w-composer-hex-text' + (isHexText ? ' w-checked' : '') + (showUpload ? ' hide' : '')} onDoubleClick={this.focusEnableBody}>
+                    <input disabled={lockBody} checked={isHexText} type="checkbox" onChange={this.onHexTextChange} />HexText
                   </label>
                   <label className={'w-composer-crlf' + (isHexText || showUpload ? ' hide' : '')
-                    + (isCRLF ? ' w-checked' : '')}>
-                    <input disabled={pending} checked={isCRLF} onChangeCapture={this.onCRLFChange} type="checkbox" />\r\n
+                    + (isCRLF ? ' w-checked' : '')} onDoubleClick={this.focusEnableBody}>
+                    <input disabled={lockBody} checked={isCRLF} onChangeCapture={this.onCRLFChange} type="checkbox" />\r\n
                   </label>
-                  {hasBody ? undefined : <span className="w-composer-tips" style={{ left: isHexText ? 165 : undefined }}>{method + ' operations cannot have a request body'}</span> }
-                  <button disabled={pending} className={'btn btn-default' + (showPrettyBody || isHexText || showUpload ? ' hide' : '')} onClick={this.formatJSON}>Format JSON</button>
-                  <button disabled={pending} className={'btn btn-primary' + (showPrettyBody && !isHexText || showUpload ? '' : ' hide')} onClick={showUpload ? this.addUploadFiled : this.addField}>Add field</button>
+                  <button disabled={lockBody} className={'btn btn-default' + (showPrettyBody || isHexText || showUpload ? ' hide' : '')} onClick={this.formatJSON}>Format JSON</button>
+                  <button disabled={lockBody} className={'btn btn-primary' + (showPrettyBody && !isHexText || showUpload ? '' : ' hide')} onClick={showUpload ? this.addUploadFiled : this.addField}>Add field</button>
                 </div>
-                <textarea readOnly={pending || !hasBody} defaultValue={state.body} onChange={this.onComposerChange} maxLength={MAX_BODY_SIZE}
+                <textarea readOnly={lockBody} defaultValue={state.body} onChange={this.onComposerChange} maxLength={MAX_BODY_SIZE} onDoubleClick={this.focusEnableBody}
+                  style={{background: hasBody && !disableBody ? 'lightyellow' : undefined, fontFamily: isHexText ? 'monospace' : undefined }}
                   onKeyDown={this.onKeyDown} ref="body" placeholder={hasBody ? 'Input the ' + (isHexText ? 'hex text' : 'body') : method + ' operations cannot have a request body'}
                   title={hasBody ? undefined : method + ' operations cannot have a request body'}
-                  style={{ fontFamily: isHexText ? 'monospace' : undefined }}
                   className={'fill orient-vertical-box' + (showPrettyBody && !isHexText || showUpload ? ' hide' : '')} />
-                <PropsEditor disabled={pending} ref="prettyBody" hide={!showPrettyBody || isHexText || showUpload} onChange={this.onFieldChange} />
-                <PropsEditor disabled={pending} ref="uploadBody" hide={!showUpload} onChange={this.onUploadFieldChange} allowUploadFile title={hasBody ? undefined : method + ' operations cannot have a request body'} />
+                <PropsEditor onDoubleClick={this.focusEnableBody} disabled={lockBody} ref="prettyBody" hide={!showPrettyBody || isHexText || showUpload} onChange={this.onFieldChange} />
+                <PropsEditor onDoubleClick={this.focusEnableBody} disabled={lockBody} ref="uploadBody" hide={!showUpload} onChange={this.onUploadFieldChange} allowUploadFile title={hasBody ? undefined : method + ' operations cannot have a request body'} />
               </div>
             </Divider>
             {state.initedResponse ? (
