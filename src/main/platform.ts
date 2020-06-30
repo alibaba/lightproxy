@@ -6,20 +6,36 @@ import { execSync, exec } from 'child_process';
 import { PROXY_CONF_HELPER_PATH, PROXY_REFRESH_WINDOWS_HELPER_PATH } from './const';
 import logger from 'electron-log';
 import globalProxy from '@xcodebuild/global-proxy';
-import Koa from 'koa';
-import portfinder from 'portfinder';
 
 const systemType = os.type();
 const SYSTEM_IS_MACOS = systemType === 'Darwin';
-
-let proxyPort = 0;
-let pacServerPort = 0;
 
 export function hideIconInDock() {
     if (SYSTEM_IS_MACOS) {
         app.hide();
         app.dock.hide();
     }
+}
+
+interface ProxyInfo {
+    HTTPEnable: string;
+    HTTPPort: string;
+    HTTPProxy: string;
+    HTTPSEnable: string;
+    HTTPSPort: string;
+    HTTPSProxy: string;
+    ProxyAutoConfigEnable: string;
+    SOCKSEnable: string;
+}
+
+function covertOutputToJSON(output: string) {
+    // @ts-ignore
+    const content = /{[^]*?}/.exec(output)[0];
+    const jsonContent = content
+        .replace(/([a-zA-Z0-9\.]+)/g, '"$1"')
+        .replace(/"\n/g, '",\n')
+        .replace(/,.*\n?}/, '}');
+    return jsonContent;
 }
 
 export async function checkSystemProxyWork(address: string, port: number) {
@@ -32,6 +48,20 @@ export async function checkSystemProxyWork(address: string, port: number) {
             const NO_NETWORK_OUTPUT = `<dictionary> {
 }
 `;
+
+            function checkProxyInfo(info: ProxyInfo, portStr: string) {
+                return (
+                    info.HTTPEnable === '1' &&
+                    info.HTTPPort === portStr &&
+                    info.HTTPProxy === address &&
+                    info.HTTPSEnable === '1' &&
+                    info.HTTPSPort === portStr &&
+                    info.HTTPSProxy === address &&
+                    info.ProxyAutoConfigEnable === '0' &&
+                    info.SOCKSEnable === '0'
+                );
+            }
+
             try {
                 const output = stdout.toString();
 
@@ -40,13 +70,18 @@ export async function checkSystemProxyWork(address: string, port: number) {
                     reject('no network');
                 }
 
-                if (output.indexOf(`http://127.0.0.1:${pacServerPort}`) !== -1) {
-                    return true;
+                // @ts-ignore
+                const jsonContent = covertOutputToJSON(output);
+
+                const info = JSON.parse(jsonContent) as ProxyInfo;
+                const portStr = '' + port;
+
+                if (checkProxyInfo(info, portStr)) {
+                    resolve(true);
                 } else {
-                    return false;
+                    resolve(false);
                 }
             } catch (e) {
-                logger.error(e);
                 if (stdout.toString().length > 0) {
                     // has output but can not parse
                     resolve(false);
@@ -58,25 +93,8 @@ export async function checkSystemProxyWork(address: string, port: number) {
     });
 }
 
-async function setupPacServer() {
-    if (pacServerPort === 0) {
-        pacServerPort = await portfinder.getPortPromise({ port: 11100 });
-        const app = new Koa();
-        app.use(async ctx => {
-            ctx.body = `function FindProxyForURL(url, host) {
-                return "PROXY 127.0.0.1:${proxyPort}; DIRECT";
-              }`;
-            ctx.set('content-type', 'application/x-ns-proxy-autoconfig');
-        });
-        app.listen(pacServerPort);
-    }
-}
-
 export async function setSystemProxy(port: number) {
     logger.info('try to set system proxy', PROXY_CONF_HELPER_PATH);
-    proxyPort = port;
-    setupPacServer();
-
     if (port === 0) {
         if (SYSTEM_IS_MACOS) {
             execSync(`'${PROXY_CONF_HELPER_PATH}' -m off`);
@@ -94,7 +112,7 @@ export async function setSystemProxy(port: number) {
         return;
     }
     if (SYSTEM_IS_MACOS) {
-        const output = execSync(`'${PROXY_CONF_HELPER_PATH}' -m auto -u http://127.0.0.1:${pacServerPort}`);
+        const output = execSync(`'${PROXY_CONF_HELPER_PATH}' -m global -p ${port} -r ${port} -s 127.0.0.1`);
         logger.info('stdout', output.toString());
     } else {
         return globalProxy
