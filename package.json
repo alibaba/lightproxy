@@ -40,6 +40,7 @@
     "compare-versions": "^3.5.1",
     "cross-spawn": "^7.0.1",
     "electron-better-ipc": "^0.7.0",
+    "electron-disable-file-drop": "^1.0.2",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^4.0.0",
     "electron-promise-ipc": "^2.0.1",

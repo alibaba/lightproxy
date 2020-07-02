@@ -12,6 +12,8 @@ import 'reset-css';
 import { App } from './components/app';
 import { i18nResources } from './i18n';
 
+import 'electron-disable-file-drop';
+
 // @ts-ignore
 window.monaco = monaco;
 
@@ -54,3 +56,21 @@ ReactDOM.render(
     </AppContainer>,
     document.getElementById('app'),
 );
+
+// fade in
+window.onload = () => {
+    const currentWindow = remote.getCurrentWindow();
+
+    const totalSteps = 20.0;
+    const totalTime = 400.0;
+
+    let currentOpacity = currentWindow.getOpacity();
+
+    const timerID = setInterval(() => {
+        currentOpacity = currentOpacity + 1.0 / totalSteps;
+        currentWindow.setOpacity(currentOpacity);
+        if (currentOpacity > 1.0) {
+            clearInterval(timerID);
+        }
+    }, totalTime / totalSteps);
+};
