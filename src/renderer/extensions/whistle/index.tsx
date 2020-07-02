@@ -18,6 +18,8 @@ import { getHelperMenus } from './helper-menus';
 
 let mHasWarned = false;
 
+const globalShortcut = remote.globalShortcut;
+
 const diableSystemProxy = async () => {
     console.log('disable system proxy');
     await CoreAPI.setSystemProxy(0);
@@ -43,15 +45,37 @@ const toggleSystemProxy = async (onlineStatus: string, port: number, coreAPI: an
     console.log('toggle proxy', { onlineStatus, port });
     if (onlineStatus === 'online') {
         await enableSystemProxy(port);
+        new Notification('LightProxy enabled', {
+            body: 'LightProxy enabled'
+        });
     } else if (onlineStatus === 'ready') {
         await diableSystemProxy();
+        new Notification('LightProxy disabled', {
+            body: 'LightProxy disabled'
+        });
     }
     coreAPI.store.set('onlineStatus', onlineStatus);
 };
 
+
 export class WhistleExntension extends Extension {
     private mDevtoolPort: null | number = null;
     private mPid: null | number = null;
+
+    async toggleSystemProxy() {
+        const onlineStatus = this.coreAPI.store.get('onlineStatus');
+        const port = await getWhistlePort(this.coreAPI);
+
+        // onlineStatus in store is not really current status, just resverse it
+        toggleSystemProxy(onlineStatus === 'online' ? 'ready' : 'online', port, this.coreAPI);
+                    
+    }
+
+    initGlobalKey() {
+        globalShortcut.register('CommandOrControl+Shift+P', () => {
+            this.toggleSystemProxy();
+        });
+    }
 
     constructor() {
         super('whistle');
@@ -94,15 +118,12 @@ export class WhistleExntension extends Extension {
                     onlineStatus === 'online' && toggleSystemProxy(onlineStatus, port, this.coreAPI);
 
                     this.coreAPI.eventEmmitter.on('lightproxy-toggle-system-proxy', async () => {
-                        const onlineStatus = this.coreAPI.store.get('onlineStatus');
-
-                        const port = await getWhistlePort(this.coreAPI);
-
-                        // onlineStatus in store is not really current status, just resverse it
-                        toggleSystemProxy(onlineStatus === 'online' ? 'ready' : 'online', port, this.coreAPI);
+                        this.toggleSystemProxy();
                     });
                 }
             };
+
+            this.initGlobalKey();
 
             client.onerror = err => {
                 logger.error(err);
@@ -176,6 +197,13 @@ export class WhistleExntension extends Extension {
             }, 3000);
 
             useEffect(() => {
+                setInterval(() => {
+                    this.startWhistle();
+                    // restart whistle every 12 hour to reduce memory leak
+                }, 1000 * 60 * 60 * 12);
+            }, []);
+
+            useEffect(() => {
                 let client: WebSocket;
                 (async () => {
                     client = await this.coreAPI.joinBoardcast();
@@ -246,12 +274,11 @@ export class WhistleExntension extends Extension {
             const menu = (
                 <Menu>
                     <Menu.Item
-                        onClick={() =>
-                            toggleSystemProxy(onlineState, (portRef.current as unknown) as number, this.coreAPI)
-                        }
+                        onClick={this.toggleSystemProxy.bind(this)}
                     >
                         <Icon type="desktop" />
                         {onlineState === 'ready' ? t('Disable system proxy') : t('Enable system proxy')}
+                        (Cmd/Ctrl+Shift+P)
                     </Menu.Item>
                     <Menu.Item onClick={() => this.startWhistle()}>
                         <Icon type="retweet"></Icon>

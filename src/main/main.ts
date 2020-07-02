@@ -1,6 +1,15 @@
 'use strict';
 
-import { app, BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, shell, dialog } from 'electron';
+import {
+    app,
+    BrowserWindow,
+    Menu,
+    MenuItem,
+    MenuItemConstructorOptions,
+    shell,
+    dialog,
+    globalShortcut,
+} from 'electron';
 import * as path from 'path';
 import { splash } from './splash';
 import electronIsDev from 'electron-is-dev';
@@ -10,6 +19,7 @@ import { initIPC } from './api';
 import { checkUpdater } from './updater';
 import { hideOrQuit } from './platform';
 import { installCertAndHelper } from './install';
+
 import {
     WINDOW_DEFAULT_WIDTH,
     WINDOW_DEFAULT_HEIGHT,
@@ -193,6 +203,8 @@ function createMainWindow() {
         frame: SYSTEM_IS_MACOS ? false : true,
         x: mainWindowState.x,
         y: mainWindowState.y,
+        show: false,
+        opacity: 0.0,
     });
     window.hide();
 
@@ -234,6 +246,22 @@ function createMainWindow() {
         });
     });
 
+    const REFRESH_KEYS = ['CommandOrControl+R', 'CommandOrControl+Shift+R', 'F5'];
+
+    window.on('focus', () => {
+        REFRESH_KEYS.forEach(key => {
+            globalShortcut.register(key, () => {
+                // pass
+            });
+        });
+    });
+
+    window.on('blur', () => {
+        REFRESH_KEYS.forEach(key => {
+            globalShortcut.unregister(key);
+        });
+    });
+
     return window;
 }
 
@@ -247,10 +275,15 @@ function setApplicationMenu() {
             return menu.role !== 'help';
         })
         .forEach(menu => {
-            if (menu.role === 'viewMenu') {
+            // @ts-ignore
+            if (menu.role === 'viewmenu') {
                 const subMenu = new Menu();
-                (menu.submenu?.items ?? []).forEach(item => subMenu.append(item));
-                menu.submenu = subMenu;
+                (menu.submenu?.items ?? []).forEach(item => {
+                    // @ts-ignore
+                    if (item.role !== 'reload' && item.role !== 'forcereload') {
+                        subMenu.append(item);
+                    }
+                });
                 applicationMenu.append(
                     new MenuItem({
                         type: menu.type,
@@ -307,6 +340,11 @@ function setApplicationMenu() {
 
 app.on('before-quit', function() {
     forceQuit = true;
+});
+
+app.on('will-quit', () => {
+    // 注销所有快捷键
+    globalShortcut.unregisterAll();
 });
 
 // quit application when all windows are closed
