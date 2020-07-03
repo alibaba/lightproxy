@@ -8,72 +8,30 @@
 
 <body>
     <style>
+.line-down {
+  background: linear-gradient(20deg, #3888c1, #49b3fe);
+  height: 490px;
+  width: 100px;
+  position: absolute;
+  left: 135px;
+  top: 8px;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.3) 3px 5px 15px;
+  transform: rotate(20deg);
+}
 
-        .bg {
-            background: none;
-            display: block;
-            width: 512px;
-            height: 512px;
-            border-radius: 50%;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-        }
-
-        .bg-inner {
-            background: linear-gradient(#12c4fb, #1d2fc3);
-            display: block;
-            width: 480px;
-            height: 480px;
-            border-radius: 50%;
-            position: absolute;
-            top: 15px;
-            left: 15px;
-        }
-
-        .bg-inner-inner {
-            background: linear-gradient(#15c1fa, #2363ef);
-            display: block;
-            width: 450px;
-            height: 450px;
-            border-radius: 50%;
-            position: absolute;
-            top: 15px;
-            left: 15px;
-        }
-
-        .line-down {
-            background: linear-gradient(#fffefe, #fdfcfd);
-            height: 300px;
-            width: 30px;
-            position: absolute;
-            left: 160px;
-            top: 70px;
-            border-radius: 5px;
-            box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px;
-            transform: rotate(9deg);
-        }
-
-        .line-right {
-            background: linear-gradient(#fefefe, #fdfcfd);
-            height: 30px;
-            width: 190px;
-            position: absolute;
-            left: 130px;
-            top: 345px;
-            border-radius: 5px;
-            opacity: 0.8;
-            box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px;
-        }
-
+.line-right {
+  background: linear-gradient(20deg, #1959bb, #164ea4);
+  height: 100px;
+  width: 380px;
+  position: absolute;
+  left: 65px;
+  top: 400px;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 5px 10px;
+}
     </style>
-    <div class="bg">
-        <div class="bg-inner">
-            <div class="bg-inner-inner">
-                <div class="line-down"></div>
-                <div class="line-right"></div>
-            </div>
-        </div>
-    </div>    
+   <div class="line-right"></div>
+   <div class="line-down"></div>
 </body>
 </html>
