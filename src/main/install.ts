@@ -177,6 +177,18 @@ export async function installCertAndHelper() {
     console.log('copy cert done');
 }
 
+export async function checkStartupPermission() {
+    if (!SYSTEM_IS_MACOS) {
+        try {
+            execSync('NET SESSION');
+        } catch (e) {
+            console.error(e);
+            alertAndQuit();
+            return;
+        }
+    }
+}
+
 async function checkCertInstall() {
     // 证书文件存在我就认为证书已经正确安装了
     // TODO: 也许可以做的更精准
