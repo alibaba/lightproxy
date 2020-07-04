@@ -239,9 +239,6 @@ export class WhistleExntension extends Extension {
                 };
 
                 const checkProxy = async () => {
-                    if (!SYSTEM_IS_MACOS) {
-                        return;
-                    }
                     if (onlineStateRef.current === 'ready' && !mHasWarned) {
                         try {
                             const proxyworking = await this.coreAPI.checkSystemProxy(
@@ -255,7 +252,7 @@ export class WhistleExntension extends Extension {
                                 showReEnableProxyModal();
                             }
                         } catch (e) {
-                            // console.log(e);
+                            console.log(e);
                         }
                     }
                 };
