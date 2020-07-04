@@ -4,7 +4,7 @@ import { initRuleLanguage } from './rule-language/rule';
 import { useTranslation } from 'react-i18next';
 import { Card, Option } from '../card';
 
-import { useThemeMode } from '../../../../hooks/use-theme-mode'
+import { useThemeMode } from '../../../../hooks/use-theme-mode';
 import * as monaco from 'monaco-editor';
 import { useKeepAliveEffect } from 'react-keep-alive';
 
