@@ -99,7 +99,7 @@ export const RuleList = (props: Props) => {
 
     const rule = ruleList[selected];
 
-    const switchRule = (index: number, isRemove: boolean = false) => {
+    const switchRule = (index: number, isRemove = false) => {
         const editor = editorRef.current;
         if (editor) {
             try {
