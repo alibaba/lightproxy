@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { syncRuleToWhistle } from '../rule-editor/components/rule-list/remote';
 import { CoreAPI } from '../../core-api';
 
-import { remote } from 'electron';
+import { remote, powerMonitor } from 'electron';
 import { SYSTEM_IS_MACOS } from '../../../renderer/const';
 import { getHelperMenus } from './helper-menus';
 
@@ -195,10 +195,9 @@ export class WhistleExntension extends Extension {
             }, 3000);
 
             useEffect(() => {
-                setInterval(() => {
+                powerMonitor.on('resume', () => {
                     this.startWhistle();
-                    // restart whistle every 12 hour to reduce memory leak
-                }, 1000 * 60 * 60 * 12);
+                });
             }, []);
 
             useEffect(() => {
