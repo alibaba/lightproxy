@@ -40,10 +40,7 @@ async function buildTrayContextMenu() {
             },
         },
         { type: 'separator' },
-        {
-            label: t('Rule'),
-            submenu: ruleListMenus,
-        },
+        ...ruleListMenus,
         { type: 'separator' },
         {
             label: t('Document'),

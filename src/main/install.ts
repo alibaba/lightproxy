@@ -178,15 +178,15 @@ export async function installCertAndHelper() {
 }
 
 export async function checkStartupPermission() {
-    if (!SYSTEM_IS_MACOS) {
-        try {
-            execSync('NET SESSION');
-        } catch (e) {
-            console.error(e);
-            alertAndQuit();
-            return;
-        }
-    }
+    // if (!SYSTEM_IS_MACOS) {
+    //     try {
+    //         execSync('NET SESSION');
+    //     } catch (e) {
+    //         console.error(e);
+    //         alertAndQuit();
+    //         return;
+    //     }
+    // }
 }
 
 async function checkCertInstall() {
