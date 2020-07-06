@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { syncRuleToWhistle } from '../rule-editor/components/rule-list/remote';
 import { CoreAPI } from '../../core-api';
 
-import { remote, powerMonitor } from 'electron';
+import { remote } from 'electron';
 import { SYSTEM_IS_MACOS } from '../../../renderer/const';
 import { getHelperMenus } from './helper-menus';
 
@@ -195,7 +195,7 @@ export class WhistleExntension extends Extension {
             }, 3000);
 
             useEffect(() => {
-                powerMonitor.on('resume', () => {
+                remote.powerMonitor.on('resume', () => {
                     this.startWhistle();
                 });
             }, []);

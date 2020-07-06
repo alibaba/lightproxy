@@ -13,6 +13,7 @@ import { App } from './components/app';
 import { i18nResources } from './i18n';
 
 import 'electron-disable-file-drop';
+import logger from 'electron-log';
 
 // @ts-ignore
 window.monaco = monaco;
@@ -59,6 +60,7 @@ ReactDOM.render(
 
 // fade in
 window.onload = () => {
+    logger.log('Window onload');
     const currentWindow = remote.getCurrentWindow();
 
     const totalSteps = 20.0;
