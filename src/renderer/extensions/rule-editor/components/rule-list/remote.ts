@@ -63,7 +63,7 @@ function handleHttp2(port: number, ruleContent: string) {
 export function syncRuleToWhistle(rules: Rule[], port: number) {
     const settings = CoreAPI.store.get('settings') || {};
     const softwareWhiteList = settings['softwareWhiteList'] === false ? false : true;
-  
+
     const RULE_SPLIT = "\n# ======== Generate by LightProxy, don't modify ========\n";
 
     const WHITE_LIST_DOMAIN_STR = WHITELIST_DOMAINS.join(' ');

@@ -46,17 +46,16 @@ const toggleSystemProxy = async (onlineStatus: string, port: number, coreAPI: an
     if (onlineStatus === 'online') {
         await enableSystemProxy(port);
         new Notification('LightProxy enabled', {
-            body: 'LightProxy enabled'
+            body: 'LightProxy enabled',
         });
     } else if (onlineStatus === 'ready') {
         await diableSystemProxy();
         new Notification('LightProxy disabled', {
-            body: 'LightProxy disabled'
+            body: 'LightProxy disabled',
         });
     }
     coreAPI.store.set('onlineStatus', onlineStatus);
 };
-
 
 export class WhistleExntension extends Extension {
     private mDevtoolPort: null | number = null;
@@ -68,7 +67,6 @@ export class WhistleExntension extends Extension {
 
         // onlineStatus in store is not really current status, just resverse it
         toggleSystemProxy(onlineStatus === 'online' ? 'ready' : 'online', port, this.coreAPI);
-                    
     }
 
     initGlobalKey() {
@@ -241,9 +239,6 @@ export class WhistleExntension extends Extension {
                 };
 
                 const checkProxy = async () => {
-                    if (!SYSTEM_IS_MACOS) {
-                        return;
-                    }
                     if (onlineStateRef.current === 'ready' && !mHasWarned) {
                         try {
                             const proxyworking = await this.coreAPI.checkSystemProxy(
@@ -257,7 +252,7 @@ export class WhistleExntension extends Extension {
                                 showReEnableProxyModal();
                             }
                         } catch (e) {
-                            // console.log(e);
+                            console.log(e);
                         }
                     }
                 };
@@ -273,9 +268,7 @@ export class WhistleExntension extends Extension {
 
             const menu = (
                 <Menu>
-                    <Menu.Item
-                        onClick={this.toggleSystemProxy.bind(this)}
-                    >
+                    <Menu.Item onClick={this.toggleSystemProxy.bind(this)}>
                         <Icon type="desktop" />
                         {onlineState === 'ready' ? t('Disable system proxy') : t('Enable system proxy')}
                         (Cmd/Ctrl+Shift+P)

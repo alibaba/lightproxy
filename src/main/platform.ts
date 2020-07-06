@@ -41,7 +41,20 @@ function covertOutputToJSON(output: string) {
 export async function checkSystemProxyWork(address: string, port: number) {
     return new Promise((resolve, reject) => {
         if (!SYSTEM_IS_MACOS) {
-            reject();
+            // Windows
+            const WINDOWS_QUERY_PROXY = `reg query "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"`;
+
+            const WINDOWS_PROXY_ENABLE_REGEX = /ProxyEnable\s+REG_DWORD\s+0x1/;
+            const currentProxyRegex = new RegExp(`ProxyServer\\s+REG_SZ\\s+${address}:${port}`);
+
+            exec(WINDOWS_QUERY_PROXY, (error, stdout) => {
+                if (error || !stdout.length) {
+                    reject(error);
+                } else if (WINDOWS_PROXY_ENABLE_REGEX.test(stdout) && currentProxyRegex.test(stdout)) {
+                    return resolve(true);
+                }
+                return resolve(false);
+            });
             return;
         }
         exec('scutil --proxy', (error, stdout) => {
