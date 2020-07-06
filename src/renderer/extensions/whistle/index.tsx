@@ -70,7 +70,7 @@ export class WhistleExntension extends Extension {
     }
 
     initGlobalKey() {
-        globalShortcut.register('CommandOrControl+Shift+P', () => {
+        globalShortcut.register('CommandOrControl+Shift+L', () => {
             this.toggleSystemProxy();
         });
     }
@@ -270,7 +270,7 @@ export class WhistleExntension extends Extension {
                     <Menu.Item onClick={this.toggleSystemProxy.bind(this)}>
                         <Icon type="desktop" />
                         {onlineState === 'ready' ? t('Disable system proxy') : t('Enable system proxy')}
-                        (Cmd/Ctrl+Shift+P)
+                        (Cmd/Ctrl+Shift+L)
                     </Menu.Item>
                     <Menu.Item onClick={() => this.startWhistle()}>
                         <Icon type="retweet"></Icon>

@@ -183,8 +183,12 @@ export async function checkStartupPermission() {
     //         execSync('NET SESSION');
     //     } catch (e) {
     //         console.error(e);
+    //         const whoaimContent = execSync('whoami /groups').toString();
+    //         if (whoaimContent.indexOf('S-1-16-12288') !== -1 || whoaimContent.indexOf('S-1-5-32-544') !== -1 || whoaimContent.indexOf('-512 ') !== -1) {
+    //             // see https://stackoverflow.com/questions/7985755/how-to-detect-if-cmd-is-running-as-administrator-has-elevated-privileges
+    //             return;
+    //         }
     //         alertAndQuit();
-    //         return;
     //     }
     // }
 }
