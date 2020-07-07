@@ -884,21 +884,24 @@ module.exports = function(req, res, next) {
                   }
                   const ruleRaw = req.rules && req.rules.rule && req.rules.rule.raw;
                   _res.headers['__lightproxy-host-ip__'] = req.hostIp || LOCALHOST;
-                  _res.headers['__lightproxy-rules__'] = JSON.stringify(ruleRaw) || 'none';
-                  _res.headers['__lightproxy-real-url__'] = req.realUrl;
+
+                  const strwrap = (str) => str.replace(/[^\x00-\x7F]/g, '_');
+
+                  _res.headers['__lightproxy-rules__'] = strwrap(JSON.stringify(ruleRaw) || 'none');
+                  _res.headers['__lightproxy-real-url__'] = strwrap(req.realUrl);
                   
                   _res.headers['__lightproxy-help__'] = 'See https://github.com/alibaba/lightproxy';
-                  clientReady.then(() => {
-                    wsClient.send(
-                      'whistle-hit'.padEnd(50, ' ') +
-                          JSON.stringify({
-                            method: 'match-rule',
-                            rule: ruleRaw,
-                            hostip: req.hostIp,
-                            host: req.get('host')
-                          })
-                    );
-                  })
+                  // clientReady.then(() => {
+                  //   wsClient.send(
+                  //     'whistle-hit'.padEnd(50, ' ') +
+                  //         JSON.stringify({
+                  //           method: 'match-rule',
+                  //           rule: ruleRaw,
+                  //           hostip: req.hostIp,
+                  //           host: req.get('host')
+                  //         })
+                  //   );
+                  // })
 
                   util.setResponseFor(resRules, _res.headers, req, req.hostIp);
                   pluginMgr.postStats(req, res);
