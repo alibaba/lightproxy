@@ -1,0 +1,12 @@
+.w-console-con { background: #002240; color: #fff; overflow-y: auto; }
+.w-console-con .w-fatal { color: magenta; }
+.w-console-con .w-error { color: red; }
+.w-console-con .w-warn { color: yellow; }
+.w-console-con .w-info { color: green; }
+.w-console-con .w-debug { color: cyan; }
+.w-console-con .w-trace { color: grey; }
+.w-console-con .w-log { color: #fff; }
+.w-console-con .w-log-list { padding: 0; margin: 0; list-style: none; }
+.w-console-con .w-log-list li { list-style: none; margin: 0; padding: 5px 20px; }
+.w-console-con .w-log-list li pre { padding: 0; margin: 0; color: inherit; font-size: inherit;
+  background: transparent; border: none; white-space: pre-wrap; }

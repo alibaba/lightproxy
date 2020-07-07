@@ -11,7 +11,7 @@ const handleGithub = () => remote.shell.openExternal('https://github.com/alibaba
 const handleShowLogs = () => {
     const logFile = logger.transports.file.file as string;
     const logDirectory = path.dirname(logFile);
-    remote.shell.openItem(logDirectory);
+    remote.shell.openPath(logDirectory);
 };
 
 export function getHelperMenus(t: Function) {

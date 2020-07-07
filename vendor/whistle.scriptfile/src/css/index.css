@@ -1,0 +1,35 @@
+.w-menu .w-menu-wrapper {display: inline-block; position: relative; height: 30px;}
+.w-import-menu-item, .w-exports-menu-item {left: 5px; display: none!important;}
+.w-menu .w-menu-wrapper:hover .w-import-menu-item, 
+.w-menu .w-menu-wrapper:hover .w-exports-menu-item {display: block!important;}
+
+.w-template-name {padding-bottom: 10px;}
+.w-template-name input {display: inline-block; width: 330px;}
+.w-template-name p {color: #aaa; font-size: 12px; padding-left: 60px;}
+.w-create-tpl .modal-content {width: 420px;}
+.w-create-tpl label {font-weight: normal;}
+.w-create-tpl .w-tpl-label {width: 60px; margin-right: 0;}
+.w-template-type .w-tpl-label {position: absolute;}
+.w-template-type  { position: relative; padding-left: 60px;}
+.w-template-type label {margin-right: 15px; white-space: nowrap; left: 0; top: 0;}
+.w-template-type label input {margin-right: 5px;}
+.w-template-type .w-vase-help {text-decoration: none;}
+
+.w-tpl-settings-dialog .modal-dialog {width: 300px;}
+.w-engine-name {position: absolute; right: 10px;}
+.w-engine-name a {margin: 0; padding: 0; color: #337ab7}
+.w-engine-name a:hover {text-decoration: underline!important;}
+
+.w-input-menu-item {display: block; position: absolute; background: #fff; border: 1px solid #ccc;
+  border-radius: 2px; z-index: 101; top: 30px; display: none; white-space: nowrap;}
+.w-input-menu-item input {width: 246px; height: 32px; border: 1px solid #ccc; border-radius: 2px;
+  padding: 0 5px; vertical-align: middle;}
+.w-input-menu-item .btn {height: 32px; padding: 0 12px; vertical-align: middle; border-radius: 0;
+  border-right-top-radius: 2px; border-right-bottom-radius: 2px;}
+
+.w-create-input { left: 160px; }
+.w-rename-input { left: 236px; }
+
+.w-console-menu { position: relative; }
+.w-has-new-logs { display: block; background: red; border-radius: 6px; width: 6px; height: 6px; 
+position: absolute; top: 2px; right: 2px; }

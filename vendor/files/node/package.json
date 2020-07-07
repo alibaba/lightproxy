@@ -2,7 +2,7 @@
   "dependencies": {
     "whistle": "../../whistle",
     "whistle-start": "../../whistle-start",
-    "whistle.scriptfile": "^0.3.3",
+    "whistle.scriptfile": "../../whistle.scriptfile",
     "whistle.vase": "^1.3.0"
   }
 }

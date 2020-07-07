@@ -1,6 +1,6 @@
 {
   "name": "LightProxy",
-"version": "1.1.26",
+"version": "1.1.27-beta-1",
   "license": "MIT",
   "main": "./dist/main.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "lint": "eslint ./src/**/*.ts ./src/**/*.tsx --fix",
     "upguard:whistle": "git subtree pull --prefix=vendor/whistle https://github.com/avwo/whistle master --squash && npm run update:node_modules",
-    "update:node_modules": "npx rimraf vendor/files/node/modules && cd vendor/files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle whistle.vase whistle.scriptfile && mv node_modules modules",
+    "update:node_modules": "npx rimraf vendor/files/node/modules && cd vendor/files/node && echo {} > package.json && yarn add ../../whistle-start ../../whistle whistle.vase ../../whistle.scriptfile && mv node_modules modules",
     "cleanbuild": "rm -rf node_modules && yarn install && yarn run dist",
     "build-doc": "cd docs && yarn install && yarn run build",
     "install-deps": "yarn install && yarn run update:node_modules",
@@ -113,7 +113,7 @@
     "copy-webpack-plugin": "^5.1.1",
     "cross-env": "^6.0.3",
     "css-loader": "^3.4.2",
-    "electron": "8.0.0",
+    "electron": "9.0.5",
     "electron-builder": "^22.2.0",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",

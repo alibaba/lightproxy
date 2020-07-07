@@ -1,0 +1,25 @@
+html, body, .main, .container {margin: 0; padding: 0; width: 100%; height: 100%;}
+.main {min-width: 960px; min-height: 360px;}
+::-webkit-scrollbar{ width:10px; height:10px; }
+::-webkit-scrollbar-button{ width:10px;height:1px; }
+::-webkit-scrollbar-thumb{ background-clip:padding-box; background-color:rgba(0,0,0,.5); border-radius:8px; min-height: 30px;}
+::-webkit-scrollbar-thumb:hover{ background-clip:padding-box; background-color:rgba(0,0,0,.7); border-radius:8px;}
+::-webkit-scrollbar-track,::-webkit-scrollbar-thumb { border-left:2px solid transparent; border-right:2px solid transparent;}
+::-webkit-scrollbar-track:hover{ background-clip:padding-box; background-color:rgba(0,0,0,.15);}
+
+.w-filter-input {width: 100%; background: rgba(0, 0, 0, 0.8); height: 30px; color: #fff; padding: 2px 5px; border: none; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;}
+.shadow {border: 1px solid rgba(0,0,0,.15)!important; -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175)!important; box-shadow: 0 6px 12px rgba(0,0,0,.175)!important;}
+textarea[readonly] {outline: none;}
+textarea {resize: none; display: block; font-size: 12px;}
+.hide {display: none!important;}
+.box {display:-webkit-box; display:-moz-box; display:box;}
+.orient-vertical-box {-moz-box-orient:vertical; -webkit-box-orient:vertical; box-orient:vertical; display:-moz-box; display:-webkit-box; display: box;}
+.fill {-moz-box-flex:1; -webkit-box-flex:1; box-flex:1;}
+.box>.fill {width: 0;}
+.orient-vertical-box>.fill {height: 0;} /**不加这个滚动会有问题**/
+.table {table-layout: fixed; margin: 0!important;}
+
+.modal-dialog .modal-body, .modal-dialog .modal-footer {padding: 10px;}
+.modal-dialog .btn {padding: 5px 10px;}
+
+.CodeMirror { font-family: "SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace!important; }
