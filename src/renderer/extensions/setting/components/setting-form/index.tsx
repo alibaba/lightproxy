@@ -1,4 +1,4 @@
-import { Form, Select, Button, Popover, Switch, InputNumber } from 'antd';
+import { Form, Select, Button, Popover, Switch, InputNumber, Icon } from 'antd';
 import React from 'react';
 import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
@@ -76,7 +76,20 @@ class InnerSettingForm extends React.Component {
                     {getFieldDecorator('softwareWhiteList', {
                         valuePropName: 'checked',
                         initalValue: true,
-                    })(<Switch />)}
+                    })(<Switch 
+                        checkedChildren={<Icon type="check" />}
+                        unCheckedChildren={<Icon type="close" />}
+                    />)}
+                </Form.Item>
+
+                 <Form.Item label={t('Enable hotkey')}>
+                    {getFieldDecorator('enableHotkeys', {
+                        valuePropName: 'checked',
+                        initalValue: true,
+                    })(<Switch 
+                        checkedChildren={<Icon type="check" />}
+                        unCheckedChildren={<Icon type="close" />}
+                    />)}
                 </Form.Item>
 
                 <Form.Item label={t('Default Port')}>
@@ -113,6 +126,7 @@ class InnerSettingForm extends React.Component {
 const saveSettings = debounce((props, changedValues, allValues) => {
     const { t } = props;
     CoreAPI.store.set('settings', allValues);
+    CoreAPI.eventEmmitter.emit('lightproxy-settings-changed');
     message.destroy();
     message.success(t('Saved'));
 }, 500);
@@ -121,6 +135,10 @@ export const SettingForm = Form.create({
     mapPropsToFields(props) {
         // @ts-ignore
         const { settings } = props;
+
+        if (typeof settings.enableHotkeys === 'undefined') {
+            settings.enableHotkeys = true;
+        }
 
         return {
             updateChannel: Form.createFormField({
@@ -131,6 +149,9 @@ export const SettingForm = Form.create({
             }),
             defaultPort: Form.createFormField({
                 value: settings.defaultPort,
+            }),
+            enableHotkeys: Form.createFormField({
+                value: settings.enableHotkeys,
             }),
         };
     },
