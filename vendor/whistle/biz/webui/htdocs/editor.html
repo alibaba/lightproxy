@@ -27,21 +27,5 @@ textarea {outline: none; resize: none; display: block; padding: 6px; font-size: 
 <div class="main">
 	<textarea id="editor"></textarea>
 </div>
-<script>
-	var editor = document.getElementById('editor');
-	if (window.getValue) {
-	  var value = getValue();
-	  if (value) {
-	    editor.value = window.name = value;
-    } else {
-      editor.value = window.name;
-    }
-	} else {
-	  editor.value = window.name;
-		window.setValue = function(value) {
-			editor.value = value;
-		};
-	}
-</script>
 </body>
 </html>

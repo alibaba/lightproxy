@@ -43,7 +43,8 @@
     if (require) {
         const originOpen = window.open;
         window.open = (url) => {
-            if (url === 'editor.html') {
+            console.log('url', url);
+            if (url === 'editor.html' || url === 'preview.html') {
 
                 if (lastCleanup) {
                     lastCleanup();
@@ -78,6 +79,7 @@
                 `.replace('\n', '');
                 const container = document.createElement('iframe');
                 container.src = url;
+                container.sandbox = '';
                 container.style = `
                   width: 100%;
                   flex: 1;
@@ -111,16 +113,32 @@
 
                 return {
                     set setValue(val) {
-                        container.contentWindow.setValue = val;
                     },
                     set getValue(val) {
-                        container.contentWindow.getValue = val;
+                        container.contentWindow.document.getElementById('editor').innerText = val();
                     }
                 }
             } else {
                 require('electron').remote.shell.openExternal(url);
             }
         };
+        function findParent (tagname, el) {
+            while (el){
+                if ((el.nodeName || el.tagName).toLowerCase()===tagname.toLowerCase()){
+                    return el;
+                }
+                // @ts-ignore
+                el = el.parentNode;
+            }
+            return null;
+        }
+        document.addEventListener('click', (e) => {
+            const link = findParent('a', e);
+            if (link.href) {
+                e.preventDefault();
+                window.open(link.href);
+            }
+        });
     }
 </script>
 

@@ -72,7 +72,9 @@ console.info('use custom cert:', options.certDir);
             storage: whistleStoragePath,
             certDir: options.certDir,
             pluginPaths: pluginPaths.filter(item => typeof item === 'string' && item !== 'undefined'),
-            mode: 'disableUpdateTips'
+            mode: 'disableUpdateTips',
+            username: process.env.WHISTLE_USERNAME,
+            password: process.env.WHISTLE_PASSWORD,
         })
             .then(() => {
                 console.info('Whistle for LightProxy start: http://127.0.0.1:' + port);
