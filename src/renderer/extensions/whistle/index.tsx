@@ -61,8 +61,6 @@ export class WhistleExntension extends Extension {
     private mDevtoolPort: null | number = null;
     private mPid: null | number = null;
 
-    private mLastHotKey = '';
-
     async toggleSystemProxy() {
         const onlineStatus = this.coreAPI.store.get('onlineStatus');
         const port = await getWhistlePort(this.coreAPI);
@@ -72,21 +70,9 @@ export class WhistleExntension extends Extension {
     }
 
     initGlobalKey() {
-        let hotkey = CoreAPI.store.get('settings').hotkeyToggleProxy;
-        if (typeof hotkey === 'undefined') {
-            hotkey = 'L';
-        }
-        hotkey = 'CommandOrControl+Shift+' + hotkey;
-        console.log('init hotkeys', hotkey, CoreAPI.store.get('settings'));
-        if (this.mLastHotKey) {
-            globalShortcut.unregister(this.mLastHotKey);
-        }
-        if (hotkey) {
-            globalShortcut.register(hotkey, () => {
-                this.toggleSystemProxy();
-            });
-            this.mLastHotKey = hotkey;
-        }
+        globalShortcut.register('CommandOrControl+Shift+L', () => {
+            this.toggleSystemProxy();
+        });
     }
 
     constructor() {
@@ -136,10 +122,6 @@ export class WhistleExntension extends Extension {
             };
 
             this.initGlobalKey();
-
-            CoreAPI.eventEmmitter.on('lightproxy-settings-changed', () => {
-                this.initGlobalKey();
-            });
 
             client.onerror = err => {
                 logger.error(err);
@@ -288,6 +270,7 @@ export class WhistleExntension extends Extension {
                     <Menu.Item onClick={this.toggleSystemProxy.bind(this)}>
                         <Icon type="desktop" />
                         {onlineState === 'ready' ? t('Disable system proxy') : t('Enable system proxy')}
+                        (Cmd/Ctrl+Shift+L)
                     </Menu.Item>
                     <Menu.Item onClick={() => this.startWhistle()}>
                         <Icon type="retweet"></Icon>

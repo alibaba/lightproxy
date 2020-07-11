@@ -33,7 +33,7 @@ async function buildTrayContextMenu() {
     trayContextMenu = remote.Menu.buildFromTemplate([
         {
             type: 'checkbox',
-            label: t('System Proxy'),
+            label: t('System Proxy') + '(Cmd/Ctrl+Shift+L)',
             checked: online,
             async click() {
                 CoreAPI.eventEmmitter.emit('lightproxy-toggle-system-proxy');

@@ -1,4 +1,4 @@
-import { Form, Select, Button, Popover, Switch, InputNumber, Input } from 'antd';
+import { Form, Select, Button, Popover, Switch, InputNumber } from 'antd';
 import React from 'react';
 import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
@@ -82,16 +82,6 @@ class InnerSettingForm extends React.Component {
                 <Form.Item label={t('Default Port')}>
                     {getFieldDecorator('defaultPort')(<InputNumber min={1024} max={65534} />)}
                 </Form.Item>
-
-                <Form.Item label={t('Hotkey to toggle proxy')}>
-                    <span>
-                    CommandOrControl+Shift+
-                    </span>
-                    {getFieldDecorator('hotkeyToggleProxy')(
-                        <Input style={{width: '10%'}} />
-                    )}
-                </Form.Item>
-
                 <Form.Item label={t('Copyright')}>Version {version} Made by IFE Team with love</Form.Item>
                 <Form.Item label={t('Actions')}>
                     <Button className="action-btn" loading={this.state.isUpdating} onClick={checkUpdate} type="primary">
@@ -123,7 +113,6 @@ class InnerSettingForm extends React.Component {
 const saveSettings = debounce((props, changedValues, allValues) => {
     const { t } = props;
     CoreAPI.store.set('settings', allValues);
-    CoreAPI.eventEmmitter.emit('lightproxy-settings-changed');
     message.destroy();
     message.success(t('Saved'));
 }, 500);
@@ -132,10 +121,6 @@ export const SettingForm = Form.create({
     mapPropsToFields(props) {
         // @ts-ignore
         const { settings } = props;
-
-        if (typeof settings.hotkeyToggleProxy === 'undefined') {
-            settings.hotkeyToggleProxy = 'L';
-        }
 
         return {
             updateChannel: Form.createFormField({
@@ -146,9 +131,6 @@ export const SettingForm = Form.create({
             }),
             defaultPort: Form.createFormField({
                 value: settings.defaultPort,
-            }),
-            hotkeyToggleProxy: Form.createFormField({
-                value: settings.hotkeyToggleProxy,
             }),
         };
     },
