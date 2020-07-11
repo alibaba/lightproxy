@@ -77,7 +77,10 @@ export class WhistleExntension extends Extension {
     }
 
     initGlobalKey() {
-        const enableHotkeys = CoreAPI.store.get('settings').enableHotkeys;
+        let enableHotkeys = CoreAPI.store.get('settings').enableHotkeys;
+        if (typeof enableHotkeys === 'undefined') {
+            enableHotkeys = true;
+        }
         const key = `CommandOrControl+Shift+Alt+l`;
         if (enableHotkeys) {
             globalShortcut.register(key, () => {
