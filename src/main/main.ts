@@ -18,7 +18,7 @@ import { format as formatUrl } from 'url';
 import { initIPC } from './api';
 import { checkUpdater } from './updater';
 import { hideOrQuit } from './platform';
-import { installCertAndHelper, checkStartupPermission } from './install';
+import { installCertAndHelper } from './install';
 
 import {
     WINDOW_DEFAULT_WIDTH,
@@ -140,8 +140,6 @@ async function initSplashScreen() {
         splashWindow.show();
     });
 }
-
-checkStartupPermission();
 
 function initCopyFiles() {
     try {

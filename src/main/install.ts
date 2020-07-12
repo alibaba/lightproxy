@@ -147,14 +147,17 @@ export async function installCertAndHelper() {
             fs.copyFileSync(PROXY_CONF_HELPER_FILE_PATH, PROXY_CONF_HELPER_PATH);
             const command = `certutil -enterprise -f -v -AddStore "Root" "${path.join(dir, CERT_FILE_NAME)}"`;
             console.log('run command', command);
-            try {
-                const output = execSync(command, {
-                    windowsHide: true,
-                });
-                console.log('certutil result', output.toString());
-            } catch (e) {
-                console.log('error', e.message, e.stderr.toString(), e.stdout.toString());
-            }
+
+            sudo.exec(
+                command,
+                sudoOptions,
+                (error, stdout) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(stdout);
+                },
+            );
 
             // windows dose not need install helper
             resolve();
@@ -175,22 +178,6 @@ export async function installCertAndHelper() {
     // 信任完成，把证书目录拷贝过去
     await fs.copyAsync(dir, LIGHTPROXY_CERT_DIR_PATH);
     console.log('copy cert done');
-}
-
-export async function checkStartupPermission() {
-    // if (!SYSTEM_IS_MACOS) {
-    //     try {
-    //         execSync('NET SESSION');
-    //     } catch (e) {
-    //         console.error(e);
-    //         const whoaimContent = execSync('whoami /groups').toString();
-    //         if (whoaimContent.indexOf('S-1-16-12288') !== -1 || whoaimContent.indexOf('S-1-5-32-544') !== -1 || whoaimContent.indexOf('-512 ') !== -1) {
-    //             // see https://stackoverflow.com/questions/7985755/how-to-detect-if-cmd-is-running-as-administrator-has-elevated-privileges
-    //             return;
-    //         }
-    //         alertAndQuit();
-    //     }
-    // }
 }
 
 async function checkCertInstall() {
