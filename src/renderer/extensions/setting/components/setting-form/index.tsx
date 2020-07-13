@@ -1,4 +1,4 @@
-import { Form, Select, Button, Popover, Switch, InputNumber, Icon } from 'antd';
+import { Form, Select, Button, Popover, Switch, InputNumber, Icon, Alert, Tooltip } from 'antd';
 import React from 'react';
 import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
@@ -85,11 +85,17 @@ class InnerSettingForm extends React.Component {
                  <Form.Item label={t('Enable hotkey')}>
                     {getFieldDecorator('enableHotkeys', {
                         valuePropName: 'checked',
-                        initalValue: true,
+                        initalValue: false,
                     })(<Switch 
                         checkedChildren={<Icon type="check" />}
                         unCheckedChildren={<Icon type="close" />}
                     />)}
+                    <Tooltip
+                        title={t('Toggle Proxy') + ' | Cmd/Ctrl+Shift+Alt+L'}
+                    >
+                        <Icon style={{marginLeft: '5px'}} type="question-circle">
+                        </Icon>
+                    </Tooltip>
                 </Form.Item>
 
                 <Form.Item label={t('Default Port')}>
@@ -135,10 +141,6 @@ export const SettingForm = Form.create({
     mapPropsToFields(props) {
         // @ts-ignore
         const { settings } = props;
-
-        if (typeof settings.enableHotkeys === 'undefined') {
-            settings.enableHotkeys = true;
-        }
 
         return {
             updateChannel: Form.createFormField({

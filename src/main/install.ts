@@ -148,16 +148,12 @@ export async function installCertAndHelper() {
             const command = `certutil -enterprise -f -v -AddStore "Root" "${path.join(dir, CERT_FILE_NAME)}"`;
             console.log('run command', command);
 
-            sudo.exec(
-                command,
-                sudoOptions,
-                (error, stdout) => {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve(stdout);
-                },
-            );
+            sudo.exec(command, sudoOptions, (error, stdout) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(stdout);
+            });
 
             // windows dose not need install helper
             resolve();

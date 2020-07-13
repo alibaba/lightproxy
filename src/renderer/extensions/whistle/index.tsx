@@ -79,9 +79,6 @@ export class WhistleExntension extends Extension {
     initGlobalKey() {
         let enableHotkeys = CoreAPI.store.get('settings').enableHotkeys;
         const key = `CommandOrControl+Shift+Alt+l`;
-        if (typeof enableHotkeys === 'undefined') {
-            enableHotkeys = true;
-        }
         if (enableHotkeys) {
             globalShortcut.register(key, () => {
                 this.toggleSystemProxy();
@@ -290,7 +287,6 @@ export class WhistleExntension extends Extension {
                     <Menu.Item onClick={this.toggleSystemProxy.bind(this)}>
                         <Icon type="desktop" />
                         {onlineState === 'ready' ? t('Disable system proxy') : t('Enable system proxy')}
-                        (CommandOrControl+Alt+Shift+L)
                     </Menu.Item>
                     <Menu.Item onClick={() => this.startWhistle()}>
                         <Icon type="retweet"></Icon>
