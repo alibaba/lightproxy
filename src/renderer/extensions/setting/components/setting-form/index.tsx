@@ -68,7 +68,7 @@ class InnerSettingForm extends React.Component {
                     )(
                         <Select>
                             <Select.Option value="stable">{t('Stable')}</Select.Option>
-                            <Select.Option value="beta">{t('Beta')}</Select.Option>
+                           <Select.Option value="beta">{t('Beta')}</Select.Option>
                         </Select>,
                     )}
                 </Form.Item>
@@ -76,17 +76,17 @@ class InnerSettingForm extends React.Component {
                     {getFieldDecorator('softwareWhiteList', {
                         valuePropName: 'checked',
                         initalValue: true,
-                    })(<Switch 
+                    })(<Switch
                         checkedChildren={<Icon type="check" />}
                         unCheckedChildren={<Icon type="close" />}
                     />)}
                 </Form.Item>
 
-                 <Form.Item label={t('Enable hotkey')}>
+                <Form.Item label={t('Enable hotkey')}>
                     {getFieldDecorator('enableHotkeys', {
                         valuePropName: 'checked',
                         initalValue: false,
-                    })(<Switch 
+                    })(<Switch
                         checkedChildren={<Icon type="check" />}
                         unCheckedChildren={<Icon type="close" />}
                     />)}
@@ -103,10 +103,10 @@ class InnerSettingForm extends React.Component {
                         valuePropName: 'checked',
                         initalValue: false,
                     })(
-                    <Switch 
-                        checkedChildren={<Icon type="check" />}
-                        unCheckedChildren={<Icon type="close" />}
-                    />
+                        <Switch
+                            checkedChildren={<Icon type="check" />}
+                            unCheckedChildren={<Icon type="close" />}
+                        />
                     )}
                     <Tooltip
                         title={t('Not Recommand for Security')}
