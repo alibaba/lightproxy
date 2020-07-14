@@ -98,6 +98,24 @@ class InnerSettingForm extends React.Component {
                     </Tooltip>
                 </Form.Item>
 
+                <Form.Item label={t('Disable TLS Check')}>
+                    {getFieldDecorator('disableTlsCheck', {
+                        valuePropName: 'checked',
+                        initalValue: false,
+                    })(
+                    <Switch 
+                        checkedChildren={<Icon type="check" />}
+                        unCheckedChildren={<Icon type="close" />}
+                    />
+                    )}
+                    <Tooltip
+                        title={t('Not Recommand for Security')}
+                    >
+                        <Icon style={{marginLeft: '5px'}} type="warning">
+                        </Icon>
+                    </Tooltip>
+                </Form.Item>
+
                 <Form.Item label={t('Default Port')}>
                     {getFieldDecorator('defaultPort')(<InputNumber min={1024} max={65534} />)}
                 </Form.Item>
@@ -113,7 +131,7 @@ class InnerSettingForm extends React.Component {
                         title={t('Use DingTalk scan to discuss')}
                         trigger="hover"
                     >
-                        <Button
+                       <Button
                             onClick={() => {
                                 shell.openExternal('https://github.com/alibaba/lightproxy');
                             }}
@@ -154,6 +172,9 @@ export const SettingForm = Form.create({
             }),
             enableHotkeys: Form.createFormField({
                 value: settings.enableHotkeys,
+            }),
+            disableTlsCheck: Form.createFormField({
+                value: settings.disableTlsCheck,
             }),
         };
     },

@@ -65,7 +65,7 @@ console.info('use custom cert:', options.certDir);
         // @ts-ignore
         process.env.WHISTLE_PORT = port;
 
-        start({
+        const opts = {
             host: process.env.WHISTLE_HOST || '127.0.0.1',
             port,
             socksPort,
@@ -75,7 +75,12 @@ console.info('use custom cert:', options.certDir);
             mode: 'disableUpdateTips',
             username: process.env.WHISTLE_USERNAME,
             password: process.env.WHISTLE_PASSWORD,
-        })
+            mode: 'classic|buildIn' + (process.env.WHISTLE_DISABLE_TLS_CHECK === '1' ? '': '|safe'),
+        };
+
+        console.log('opts', opts);
+
+        start(opts)
             .then(() => {
                 console.info('Whistle for LightProxy start: http://127.0.0.1:' + port);
                 console.info('Whistle start for socks port:' + socksPort);

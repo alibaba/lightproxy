@@ -71,6 +71,8 @@ export const i18nResources = {
             'Copy Proxy Shell Export Line': '复制 Shell 代理命令',
             'Proxy shell export copied': 'Shell 代理命令已复制',
             'Toggle Proxy': '切换代理',
+            'Disable TLS Check': '禁用 TLS 校验',
+            'Not Recommand for Security': '出于安全考虑不推荐使用',
         },
     },
 };
