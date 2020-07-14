@@ -147,13 +147,15 @@ export async function installCertAndHelper() {
             fs.copyFileSync(PROXY_CONF_HELPER_FILE_PATH, PROXY_CONF_HELPER_PATH);
             const command = `certutil -enterprise -f -v -AddStore "Root" "${path.join(dir, CERT_FILE_NAME)}"`;
             console.log('run command', command);
-
-            sudo.exec(command, sudoOptions, (error, stdout) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(stdout);
-            });
+            try {
+                const output = execSync(command, {
+                    windowsHide: true,
+                });
+                console.log('certutil result', output.toString());
+            } catch (e) {
+                console.log('error', e.message, e.stderr.toString(), e.stdout.toString());
+                reject(e);
+            }
 
             // windows dose not need install helper
             resolve();
