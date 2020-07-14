@@ -77,7 +77,7 @@ export class WhistleExntension extends Extension {
     }
 
     initGlobalKey() {
-        let enableHotkeys = CoreAPI.store.get('settings').enableHotkeys;
+        let enableHotkeys = CoreAPI.store.get('settings')?.enableHotkeys;
         const key = `CommandOrControl+Shift+Alt+l`;
         if (enableHotkeys) {
             globalShortcut.register(key, () => {
@@ -134,8 +134,9 @@ export class WhistleExntension extends Extension {
                 }
             };
 
-            this.initGlobalKey();
-
+	    setTimeout(() => {
+            	this.initGlobalKey();
+	    });
             CoreAPI.eventEmmitter.on('lightproxy-settings-changed', () => {
                 this.initGlobalKey();
             });
