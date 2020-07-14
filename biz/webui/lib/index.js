@@ -24,9 +24,8 @@ var uploadJsonParser = bodyParser.json(UPLOAD_PARSE_CONF);
 var GET_METHOD_RE = /^get$/i;
 var WEINRE_RE = /^\/weinre\/.*/;
 var ALLOW_PLUGIN_PATHS = ['/cgi-bin/rules/list2', '/cgi-bin/values/list2', '/cgi-bin/get-custom-certs-info'];
-var DONT_CHECK_PATHS = ['/cgi-bin/server-info', '/cgi-bin/show-host-ip-in-res-headers', '/cgi-bin/plugins/is-enable',
-                        '/cgi-bin/composer', '/cgi-bin/socket/data', '/preview.html',
-                        '/cgi-bin/socket/abort', '/cgi-bin/socket/change-status',
+var DONT_CHECK_PATHS = ['/cgi-bin/server-info', '/cgi-bin/plugins/is-enable', '/cgi-bin/composer', '/cgi-bin/socket/data',
+                        '/preview.html', '/cgi-bin/socket/abort', '/cgi-bin/socket/change-status',
                         '/cgi-bin/sessions/export', '/cgi-bin/sessions/import', '/cgi-bin/plugins/update-rules',
                         '/cgi-bin/rootca', '/cgi-bin/log/set'];
 var PLUGIN_PATH_RE = /^\/(whistle|plugin)\.([^/?#]+)(\/)?/;
@@ -286,6 +285,9 @@ app.all('/cgi-bin/*', function(req, res, next) {
 }, cgiHandler);
 
 app.use('/preview.html', function(req, res, next) {
+  if (req.headers[config.INTERNAL_ID_HEADER] !== config.INTERNAL_ID) {
+    return res.status(404).end('Not Found');
+  }
   next();
   var index = req.path.indexOf('=') + 1;
   if (index) {
