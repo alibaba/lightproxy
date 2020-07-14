@@ -13,6 +13,7 @@ export const i18nResources = {
             Setting: '设置',
             Rule: '规则',
             'New Rule': '新建规则',
+            'Enable hotkey': '启用全局快捷键',
             'Hosts bindings': 'Hosts 绑定',
             'IP address': 'IP 地址',
             'Domains, split by space': '域名，用空格分隔',
@@ -69,6 +70,7 @@ export const i18nResources = {
             'JS Console(with eruda)': 'JS Console 调试控制台（eruda）',
             'Copy Proxy Shell Export Line': '复制 Shell 代理命令',
             'Proxy shell export copied': 'Shell 代理命令已复制',
+            'Toggle Proxy': '切换代理',
         },
     },
 };

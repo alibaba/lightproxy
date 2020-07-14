@@ -41,18 +41,25 @@ const enableSystemProxy = async (port: number) => {
     });
 };
 
+let notifiction: Notification;
+
+function showNotification(title: string, content: string) {
+    if (notifiction) {
+        notifiction.close();
+    }
+    notifiction = new Notification(title, {
+        body: content,
+    });
+}
+
 const toggleSystemProxy = async (onlineStatus: string, port: number, coreAPI: any) => {
     console.log('toggle proxy', { onlineStatus, port });
     if (onlineStatus === 'online') {
         await enableSystemProxy(port);
-        new Notification('LightProxy enabled', {
-            body: 'LightProxy enabled',
-        });
+        showNotification('LightProxy enabled', 'LightProxy enabled');
     } else if (onlineStatus === 'ready') {
         await diableSystemProxy();
-        new Notification('LightProxy disabled', {
-            body: 'LightProxy disabled',
-        });
+        showNotification('LightProxy disabled', 'LightProxy disabled');
     }
     coreAPI.store.set('onlineStatus', onlineStatus);
 };
@@ -73,9 +80,15 @@ export class WhistleExntension extends Extension {
     }
 
     initGlobalKey() {
-        globalShortcut.register('CommandOrControl+Shift+L', () => {
-            this.toggleSystemProxy();
-        });
+        let enableHotkeys = CoreAPI.store.get('settings')?.enableHotkeys;
+        const key = `CommandOrControl+Shift+Alt+l`;
+        if (enableHotkeys) {
+            globalShortcut.register(key, () => {
+                this.toggleSystemProxy();
+            });
+        } else {
+             globalShortcut.unregister(key);
+        }
     }
 
     constructor() {
@@ -124,7 +137,12 @@ export class WhistleExntension extends Extension {
                 }
             };
 
-            this.initGlobalKey();
+	    setTimeout(() => {
+            	this.initGlobalKey();
+	    });
+            CoreAPI.eventEmmitter.on('lightproxy-settings-changed', () => {
+                this.initGlobalKey();
+            });
 
             client.onerror = err => {
                 logger.error(err);
@@ -294,7 +312,6 @@ export class WhistleExntension extends Extension {
                     <Menu.Item onClick={this.toggleSystemProxy.bind(this)}>
                         <Icon type="desktop" />
                         {onlineState === 'ready' ? t('Disable system proxy') : t('Enable system proxy')}
-                        (Cmd/Ctrl+Shift+L)
                     </Menu.Item>
                     <Menu.Item onClick={() => this.startWhistle()}>
                         <Icon type="retweet"></Icon>

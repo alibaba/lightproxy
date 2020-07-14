@@ -12,7 +12,8 @@ const handleShowLogs = () => {
     const logFile = logger.transports.file.file as string;
     const logDirectory = path.dirname(logFile);
     // @ts-ignore
-    remote.shell.openItem(logDirectory);
+    const openItem = remote.shell.openItem || remote.shell.openPath;
+    openItem(logDirectory);
 };
 
 export function getHelperMenus(t: Function) {

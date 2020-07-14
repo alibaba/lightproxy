@@ -79,7 +79,6 @@
                 `.replace('\n', '');
                 const container = document.createElement('iframe');
                 container.src = url;
-                container.sandbox = '';
                 container.style = `
                   width: 100%;
                   flex: 1;
@@ -113,9 +112,10 @@
 
                 return {
                     set setValue(val) {
+                        container.contentWindow.setValue = val;
                     },
                     set getValue(val) {
-                        container.contentWindow.document.getElementById('editor').innerText = val();
+                        container.contentWindow.getValue = val;
                     }
                 }
             } else {
@@ -133,7 +133,7 @@
             return null;
         }
         document.addEventListener('click', (e) => {
-            const link = findParent('a', e);
+            const link = findParent('a', e.target);
             if (link.href) {
                 e.preventDefault();
                 window.open(link.href);
