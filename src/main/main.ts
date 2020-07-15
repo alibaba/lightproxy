@@ -204,7 +204,7 @@ function createMainWindow() {
         x: mainWindowState.x,
         y: mainWindowState.y,
         show: false,
-        opacity: 0.05,
+        opacity: 0.5,
     });
     window.hide();
 
