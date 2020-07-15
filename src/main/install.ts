@@ -116,6 +116,13 @@ Application will quit
 }
 
 export async function installCertAndHelper() {
+    dialog.showMessageBoxSync({
+        type: 'info',
+        message: `The certificate is not installed or has expired. You need to install a trust certificate. You may need to enter the password of the login user.
+未安装证书或者已经过期，需要安装信任证书，可能会需要输入登录用户的密码。
+        `,
+    });
+
     console.log('Install cert');
     const certs = (await generateCert()) as {
         key: string;
