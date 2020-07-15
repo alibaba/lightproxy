@@ -16,3 +16,4 @@ docs/.vuepress/dist
 .tmp
 vendor/files/node/modules
 .umi
+*.swp

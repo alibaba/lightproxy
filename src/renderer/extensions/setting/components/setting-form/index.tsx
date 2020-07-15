@@ -68,7 +68,7 @@ class InnerSettingForm extends React.Component {
                     )(
                         <Select>
                             <Select.Option value="stable">{t('Stable')}</Select.Option>
-                            <Select.Option value="beta">{t('Beta')}</Select.Option>
+                           <Select.Option value="beta">{t('Beta')}</Select.Option>
                         </Select>,
                     )}
                 </Form.Item>
@@ -76,17 +76,17 @@ class InnerSettingForm extends React.Component {
                     {getFieldDecorator('softwareWhiteList', {
                         valuePropName: 'checked',
                         initalValue: true,
-                    })(<Switch 
+                    })(<Switch
                         checkedChildren={<Icon type="check" />}
                         unCheckedChildren={<Icon type="close" />}
                     />)}
                 </Form.Item>
 
-                 <Form.Item label={t('Enable hotkey')}>
+                <Form.Item label={t('Enable hotkey')}>
                     {getFieldDecorator('enableHotkeys', {
                         valuePropName: 'checked',
                         initalValue: false,
-                    })(<Switch 
+                    })(<Switch
                         checkedChildren={<Icon type="check" />}
                         unCheckedChildren={<Icon type="close" />}
                     />)}
@@ -94,6 +94,24 @@ class InnerSettingForm extends React.Component {
                         title={t('Toggle Proxy') + ' | Cmd/Ctrl+Shift+Alt+L'}
                     >
                         <Icon style={{marginLeft: '5px'}} type="question-circle">
+                        </Icon>
+                    </Tooltip>
+                </Form.Item>
+
+                <Form.Item label={t('Disable TLS Check')}>
+                    {getFieldDecorator('disableTlsCheck', {
+                        valuePropName: 'checked',
+                        initalValue: false,
+                    })(
+                        <Switch
+                            checkedChildren={<Icon type="check" />}
+                            unCheckedChildren={<Icon type="close" />}
+                        />
+                    )}
+                    <Tooltip
+                        title={t('Not Recommand for Security')}
+                    >
+                        <Icon style={{marginLeft: '5px'}} type="warning">
                         </Icon>
                     </Tooltip>
                 </Form.Item>
@@ -113,7 +131,7 @@ class InnerSettingForm extends React.Component {
                         title={t('Use DingTalk scan to discuss')}
                         trigger="hover"
                     >
-                        <Button
+                       <Button
                             onClick={() => {
                                 shell.openExternal('https://github.com/alibaba/lightproxy');
                             }}
@@ -154,6 +172,9 @@ export const SettingForm = Form.create({
             }),
             enableHotkeys: Form.createFormField({
                 value: settings.enableHotkeys,
+            }),
+            disableTlsCheck: Form.createFormField({
+                value: settings.disableTlsCheck,
             }),
         };
     },

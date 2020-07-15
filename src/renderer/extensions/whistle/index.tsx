@@ -2,7 +2,7 @@ import { Extension } from '../../extension';
 import logger from 'electron-log';
 import React, { useEffect, useRef, useState } from 'react';
 import { Icon, Dropdown, Menu, message } from 'antd';
-import { lazyParseData, getWhistlePort } from '../../utils';
+import { lazyParseData, getWhistlePort, uuidv4 } from '../../utils';
 import { Modal, Button } from 'antd';
 const confirm = Modal.confirm;
 
@@ -67,6 +67,9 @@ const toggleSystemProxy = async (onlineStatus: string, port: number, coreAPI: an
 export class WhistleExntension extends Extension {
     private mDevtoolPort: null | number = null;
     private mPid: null | number = null;
+
+    private mUserName: string = '';
+    private mPassword: string = '';
 
     async toggleSystemProxy() {
         const onlineStatus = this.coreAPI.store.get('onlineStatus');
@@ -148,6 +151,21 @@ export class WhistleExntension extends Extension {
 
             await this.coreAPI.checkInstall();
 
+            const filter = {
+                urls: ['*://127.0.0.1:*/*'],
+            };
+
+            remote.getCurrentWebContents().session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+                const base64encodedData = new Buffer(this.mUserName + ':' + this.mPassword).toString('base64');
+                callback({
+                    requestHeaders: {
+                        ...details.requestHeaders,
+                        Authorization: 'Basic ' + base64encodedData,
+                    },
+                    cancel: false,
+                });
+            });
+
             await this.startWhistle();
         })();
 
@@ -170,13 +188,22 @@ export class WhistleExntension extends Extension {
             await this.coreAPI.treeKillProcess(this.mPid);
             this.mPid = null;
         }
+
+        this.mUserName = uuidv4();
+        this.mPassword = uuidv4();
+
         const settings = this.coreAPI.store.get('settings') || {};
         const defaultPort = get(settings, 'defaultPort', 12888);
-        this.mPid = await this.coreAPI.spawnModule('whistle-start', true, {
+        const options = {
             // LIGHTPROXY_DEVTOOLS_PORT: '' + this.mDevtoolPort,
             DEFAULT_PORT: defaultPort,
             WHISTLE_HOST: visiableOnLan ? '0.0.0.0' : '127.0.0.1',
-        });
+            WHISTLE_USERNAME: this.mUserName,
+            WHISTLE_PASSWORD: this.mPassword,
+            WHISTLE_DISABLE_TLS_CHECK: this.coreAPI.store.get('settings')?.disableTlsCheck ? '1': '0',
+        };
+        logger.info('start whistle with opts', options);
+        this.mPid = await this.coreAPI.spawnModule('whistle-start', true, options);
     }
 
     statusbarRightComponent() {
