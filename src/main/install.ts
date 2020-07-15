@@ -24,6 +24,8 @@ import {
 import { dialog } from 'electron';
 import treeKill from 'tree-kill';
 
+import logger from 'electron-log';
+
 const pki = forge.pki;
 
 const sudoOptions = {
@@ -114,6 +116,14 @@ Application will quit
 }
 
 export async function installCertAndHelper() {
+    dialog.showMessageBoxSync({
+        type: 'info',
+        message: `The certificate is not installed or has expired. You need to install a trust certificate. You may need to enter the password of the login user.
+
+未安装证书或者已经过期，需要安装信任证书，可能会需要输入登录用户的密码。
+        `,
+    });
+
     console.log('Install cert');
     const certs = (await generateCert()) as {
         key: string;
@@ -179,11 +189,20 @@ export async function installCertAndHelper() {
 }
 
 async function checkCertInstall() {
-    // 证书文件存在我就认为证书已经正确安装了
-    // TODO: 也许可以做的更精准
     const certKeyExist = await fs.existsAsync(LIGHTPROXY_CERT_KEY_PATH);
-    console.log('Cert install status:', certKeyExist);
-    return certKeyExist;
+    if (!certKeyExist) {
+        return false
+    }
+    const {
+        ctimeMs,
+    } = await fs.statAsync(LIGHTPROXY_CERT_KEY_PATH);
+
+    // expire at 11 month(cert expire in 1 year in fact)
+    const expireTime = ctimeMs + 11 * 30 * 24 * 60 * 60 * 1000;
+    const currentTime = Date.now();
+    logger.info({ ctimeMs, certKeyExist, expireTime, currentTime });
+    
+    return currentTime < expireTime;
 }
 
 async function checkHelperInstall() {
