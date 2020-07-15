@@ -80,11 +80,13 @@ function addTransforms(req, res) {
       res._needGunzip = true;
       removeContentLength();
       res.add(function(src, next) {
-        var pipeIconvStream = util.getPipeIconvStream(res.headers);
         if (resIconvPipeStream) {
+          var pipeIconvStream = util.getPipeIconvStream(res.headers);
           pipeIconvStream.add(resIconvPipeStream);
+          next(src.pipe(pipeIconvStream));
+        } else {
+          next(src);
         }
-        next(src.pipe(pipeIconvStream));
       });
     }
   }
