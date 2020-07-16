@@ -127,9 +127,8 @@ async function initSplashScreen() {
             // modal: true,
             // transparent: true,
             autoHideMenuBar: true,
-            alwaysOnTop: true,
             resizable: false,
-            movable: false,
+            movable: true,
         });
 
         splashWindow.loadURL(splashContent);
