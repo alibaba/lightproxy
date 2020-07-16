@@ -164,7 +164,6 @@ export async function installCertAndHelper() {
                 console.log('certutil result', output.toString());
             } catch (e) {
                 console.log('error', e.message, e.stderr.toString(), e.stdout.toString());
-                reject(e);
             }
 
             // windows dose not need install helper
