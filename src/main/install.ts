@@ -191,17 +191,15 @@ export async function installCertAndHelper() {
 async function checkCertInstall() {
     const certKeyExist = await fs.existsAsync(LIGHTPROXY_CERT_KEY_PATH);
     if (!certKeyExist) {
-        return false
+        return false;
     }
-    const {
-        ctimeMs,
-    } = await fs.statAsync(LIGHTPROXY_CERT_KEY_PATH);
+    const { ctimeMs } = await fs.statAsync(LIGHTPROXY_CERT_KEY_PATH);
 
     // expire at 11 month(cert expire in 1 year in fact)
     const expireTime = ctimeMs + 11 * 30 * 24 * 60 * 60 * 1000;
     const currentTime = Date.now();
     logger.info({ ctimeMs, certKeyExist, expireTime, currentTime });
-    
+
     return currentTime < expireTime;
 }
 
