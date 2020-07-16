@@ -4,6 +4,7 @@ var dnsCacheTime = parseInt(require('../config').dnsCache, 10);
 var dnsCache = {};
 var callbacks = {};
 var TIMEOUT = 5000;
+
 var CACHE_TIME = dnsCacheTime >= 0 ? dnsCacheTime : 60000;
 var MAX_CACHE_TIME = Math.max(CACHE_TIME * 3, 600000);
 
@@ -39,22 +40,33 @@ function lookupDNS(hostname, callback) {
     });
   }
 
-  var timer = setTimeout(function() {
-    execCallback(new Error('Timeout'));
-  }, TIMEOUT);
+  var dnsLookup = function(execCallback) {
+    var timer = setTimeout(function() {
+      execCallback(new Error('Timeout'));
+    }, TIMEOUT);
 
-  try {
-    dns.lookup(hostname, function (err, ip, type) {
-      clearTimeout(timer);
-      if (err) {
-        execCallback(err);
-      } else {
-        execCallback(null, ip || getDefaultIp(type));
-      }
-    });
-  } catch(err) {//如果断网，可能直接抛异常，https代理没有用到error-handler
-    execCallback(err);
-  }
+    try {
+      dns.lookup(hostname, function (err, ip, type) {
+        clearTimeout(timer);
+        if (err) {
+          execCallback(err);
+        } else {
+          execCallback(null, ip || getDefaultIp(type));
+        }
+      });
+    } catch(err) {//如果断网，可能直接抛异常，https代理没有用到error-handler
+      execCallback(err);
+    }
+  };
+
+  dnsLookup(function(err, result) {
+    if (err) {
+      // try
+      dnsLookup(execCallback);
+    } else {
+      execCallback(null, result);
+    }
+  });
 }
 
 function getDefaultIp(type) {
