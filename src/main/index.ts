@@ -14,6 +14,7 @@ process.on('unhandledRejection', error => {
     logger.info(error);
     Sentry.captureException(error);
 });
+
 process.on('uncaughtException', err => {
     console.log(err);
     Sentry.captureException(err);
