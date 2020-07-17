@@ -22,7 +22,6 @@ jobs:
       - name: Install deps
         run: |
           rm .npmrc
-          npm install -g pnpm
           npm run install-deps
 
       - name: Build/release Electron app
