@@ -1,13 +1,73 @@
-import { Form, Select, Button, Popover, Switch, InputNumber, Icon, Alert, Tooltip } from 'antd';
-import React from 'react';
+import { Form, Select, Button, Popover, Switch, InputNumber, Icon, Alert, Tooltip, Table } from 'antd';
+import React, {useEffect, useState} from 'react';
 import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
 import { shell, remote } from 'electron';
 import { debounce } from 'lodash';
 import './index.less';
 import { APP_VERSION } from '../../../../const';
+import { useRequest } from '@umijs/hooks';
+import {getWhistlePort} from '../../../../utils';
+import {useTranslation} from 'react-i18next';
+import _ from 'lodash';
 
 const version = APP_VERSION;
+
+
+const PluginInfoCard = () => {
+    const [port, setPort] = useState(0);
+    const { t } = useTranslation();
+
+    const pluginDataRequest = useRequest(`http://127.0.0.1:${port}/cgi-bin/plugins/get-plugins`, {
+        manual: true,
+    });
+
+    useEffect(() => {
+        getWhistlePort(CoreAPI).then(port => {
+            setPort(port);
+            pluginDataRequest.run();
+        });
+    }, []);
+
+    const pluginCols = [{
+        title: t('Name'),
+        dataIndex: 'moduleName',
+        key: 'name',
+    }, {
+        title: t('Version'),
+        dataIndex: 'version',
+        key: 'version',
+    }, {
+        title: t('Modified time'),
+        dataIndex: 'mtime',
+        key: 'mtime',
+        render(time: number) {
+            return <span>{new Date(time).toLocaleString()}</span>;
+        }
+    }, {
+        title: t('Path'),
+        dataIndex: 'path',
+        key: 'path',
+        render(text: string) {
+            return <Popover title={text}>{text.slice(0, 10)}</Popover>;
+        }
+    }];
+
+    const data = _.values(pluginDataRequest?.data?.plugins || []);
+
+    const onRefresh = () => {
+        pluginDataRequest.refresh();
+    };
+
+    return <Table 
+        loading={pluginDataRequest.loading}
+        dataSource={data} 
+        columns={pluginCols}
+        footer={() => <Button loading={pluginDataRequest.loading} onClick={onRefresh}>{t('Refresh')}</Button>}
+    >
+    </Table>;
+};
+
 
 class InnerSettingForm extends React.Component {
     state = {
@@ -140,6 +200,9 @@ class InnerSettingForm extends React.Component {
                             {t('Get Help')}
                         </Button>
                     </Popover>
+                </Form.Item>
+                <Form.Item label={t('Plugins')}>
+                    <PluginInfoCard />
                 </Form.Item>
             </Form>
         );

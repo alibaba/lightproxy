@@ -1,6 +1,6 @@
 {
   "name": "LightProxy",
-  "version": "1.1.31",
+  "version": "1.1.32-beta-1",
   "license": "MIT",
   "main": "./dist/main.js",
   "scripts": {
@@ -33,6 +33,7 @@
     "@sentry/electron": "1.1.0",
     "@sentry/node": "5.10.2",
     "@timkendrick/monaco-editor": "^0.0.9",
+    "@umijs/hooks": "^1.9.3",
     "@xcodebuild/global-proxy": "^0.0.6",
     "antd": "^3.26.6",
     "bufferutil": "^4.0.1",
