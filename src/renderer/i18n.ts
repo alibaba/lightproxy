@@ -74,12 +74,12 @@ export const i18nResources = {
             'Disable TLS Check': '禁用 TLS 校验',
             'Not Recommand for Security': '出于安全考虑不推荐使用',
 
-            Plugins: '插件',
-            Refresh: '刷新',
-            Name: '名称',
-            Version: '版本',
+            'Plugins': '插件',
+            'Refresh': '刷新',
+            'Name': '名称',
+            'Version': '版本',
             'Modified time': '修改时间',
-            Path: '路径',
+            'Path': '路径',
         },
     },
 };
