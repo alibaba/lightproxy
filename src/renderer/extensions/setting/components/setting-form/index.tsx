@@ -217,6 +217,10 @@ export const SettingForm = Form.create({
         // @ts-ignore
         const { settings } = props;
 
+        if (settings.disableTlsCheck !== false) {
+            settings.disableTlsCheck = true;
+        }
+
         return {
             updateChannel: Form.createFormField({
                 value: settings.updateChannel,
