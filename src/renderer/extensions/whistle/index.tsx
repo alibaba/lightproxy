@@ -194,13 +194,19 @@ export class WhistleExntension extends Extension {
 
         const settings = this.coreAPI.store.get('settings') || {};
         const defaultPort = get(settings, 'defaultPort', 12888);
+
+        let disableTlsCheck = this.coreAPI.store.get('settings')?.disableTlsCheck;
+        if (disableTlsCheck !== false) {
+            disableTlsCheck = true;
+        }
+
         const options = {
             // LIGHTPROXY_DEVTOOLS_PORT: '' + this.mDevtoolPort,
             DEFAULT_PORT: defaultPort,
             WHISTLE_HOST: visiableOnLan ? '0.0.0.0' : '127.0.0.1',
             WHISTLE_USERNAME: this.mUserName,
             WHISTLE_PASSWORD: this.mPassword,
-            WHISTLE_DISABLE_TLS_CHECK: this.coreAPI.store.get('settings')?.disableTlsCheck ? '1': '0',
+            WHISTLE_DISABLE_TLS_CHECK: disableTlsCheck ? '1': '0',
         };
         logger.info('start whistle with opts', options);
         this.mPid = await this.coreAPI.spawnModule('whistle-start', true, options);

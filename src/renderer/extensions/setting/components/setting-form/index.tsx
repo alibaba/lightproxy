@@ -161,19 +161,13 @@ class InnerSettingForm extends React.Component {
                 <Form.Item label={t('Disable TLS Check')}>
                     {getFieldDecorator('disableTlsCheck', {
                         valuePropName: 'checked',
-                        initalValue: false,
+                        initalValue: true,
                     })(
                         <Switch
                             checkedChildren={<Icon type="check" />}
                             unCheckedChildren={<Icon type="close" />}
                         />
                     )}
-                    <Tooltip
-                        title={t('Not Recommand for Security')}
-                    >
-                        <Icon style={{marginLeft: '5px'}} type="warning">
-                        </Icon>
-                    </Tooltip>
                 </Form.Item>
 
                 <Form.Item label={t('Default Port')}>
