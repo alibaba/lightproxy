@@ -68,8 +68,8 @@ export class WhistleExntension extends Extension {
     private mDevtoolPort: null | number = null;
     private mPid: null | number = null;
 
-    private mUserName: string = '';
-    private mPassword: string = '';
+    private mUserName = '';
+    private mPassword = '';
 
     async toggleSystemProxy() {
         const onlineStatus = this.coreAPI.store.get('onlineStatus');
@@ -80,14 +80,14 @@ export class WhistleExntension extends Extension {
     }
 
     initGlobalKey() {
-        let enableHotkeys = CoreAPI.store.get('settings')?.enableHotkeys;
+        const enableHotkeys = CoreAPI.store.get('settings')?.enableHotkeys;
         const key = `CommandOrControl+Shift+Alt+l`;
         if (enableHotkeys) {
             globalShortcut.register(key, () => {
                 this.toggleSystemProxy();
             });
         } else {
-             globalShortcut.unregister(key);
+            globalShortcut.unregister(key);
         }
     }
 
@@ -137,9 +137,9 @@ export class WhistleExntension extends Extension {
                 }
             };
 
-	    setTimeout(() => {
-            	this.initGlobalKey();
-	    });
+            setTimeout(() => {
+                this.initGlobalKey();
+            });
             CoreAPI.eventEmmitter.on('lightproxy-settings-changed', () => {
                 this.initGlobalKey();
             });
@@ -206,7 +206,7 @@ export class WhistleExntension extends Extension {
             WHISTLE_HOST: visiableOnLan ? '0.0.0.0' : '127.0.0.1',
             WHISTLE_USERNAME: this.mUserName,
             WHISTLE_PASSWORD: this.mPassword,
-            WHISTLE_DISABLE_TLS_CHECK: disableTlsCheck ? '1': '0',
+            WHISTLE_DISABLE_TLS_CHECK: disableTlsCheck ? '1' : '0',
         };
         logger.info('start whistle with opts', options);
         this.mPid = await this.coreAPI.spawnModule('whistle-start', true, options);
@@ -247,8 +247,15 @@ export class WhistleExntension extends Extension {
 
             useEffect(() => {
                 remote.powerMonitor.on('resume', () => {
+                    logger.info('Restart whistle bacause resume');
                     this.startWhistle();
                 });
+
+                setInterval(() => {
+                    logger.info('Restart whistle bacause 12hour');
+                    this.startWhistle();
+                    // restart every 12 hour to reduce memory leak
+                }, 12 * 60 * 60 * 1000);
             }, []);
 
             useEffect(() => {
