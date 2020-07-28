@@ -57,7 +57,6 @@ require(decodeURIComponent('${modulePath}'));`;
                 '--tls-min-v1.0',
                 '--max-http-header-size=256000',
                 '--http-parser=legacy',
-                '--inspect',
             ],
             {
                 env: {
