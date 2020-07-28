@@ -21,6 +21,7 @@ interface SwpanModuleProp {
 async function checkInstall() {
     await checkInstallStatus();
 }
+
 async function spawnModule(props: any) {
     const { moduleId, env = {} } = props as SwpanModuleProp;
     logger.info('spawn module', moduleId);
@@ -56,6 +57,7 @@ require(decodeURIComponent('${modulePath}'));`;
                 '--tls-min-v1.0',
                 '--max-http-header-size=256000',
                 '--http-parser=legacy',
+                '--inspect',
             ],
             {
                 env: {
@@ -72,7 +74,7 @@ require(decodeURIComponent('${modulePath}'));`;
         logger.info('Spwaned process', process.execPath, child.pid);
 
         exitHook(() => {
-            child.kill();
+            child?.kill();
         });
 
         child?.stderr?.on('data', data => {
