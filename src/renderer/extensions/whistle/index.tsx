@@ -140,8 +140,13 @@ export class WhistleExntension extends Extension {
             setTimeout(() => {
                 this.initGlobalKey();
             });
-            CoreAPI.eventEmmitter.on('lightproxy-settings-changed', () => {
-                this.initGlobalKey();
+            CoreAPI.eventEmmitter.on('lightproxy-settings-changed', ({ changedValues }) => {
+                if ('enableHotkeys' in changedValues) {
+                    this.initGlobalKey();
+                }
+                if ('disableTlsCheck' in changedValues || 'enableGzip' in changedValues) {
+                    this.startWhistle();
+                }
             });
 
             client.onerror = err => {
@@ -195,6 +200,8 @@ export class WhistleExntension extends Extension {
         const settings = this.coreAPI.store.get('settings') || {};
         const defaultPort = get(settings, 'defaultPort', 12888);
 
+        const enableGzip = get(settings, 'enableGzip', false);
+
         let disableTlsCheck = this.coreAPI.store.get('settings')?.disableTlsCheck;
         if (disableTlsCheck !== false) {
             disableTlsCheck = true;
@@ -207,6 +214,7 @@ export class WhistleExntension extends Extension {
             WHISTLE_USERNAME: this.mUserName,
             WHISTLE_PASSWORD: this.mPassword,
             WHISTLE_DISABLE_TLS_CHECK: disableTlsCheck ? '1' : '0',
+            WHISTLE_ENABLE_GZIP: enableGzip ? '1' : '0',
         };
         logger.info('start whistle with opts', options);
         this.mPid = await this.coreAPI.spawnModule('whistle-start', true, options);

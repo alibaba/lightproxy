@@ -1,5 +1,5 @@
 import { Form, Select, Button, Popover, Switch, InputNumber, Icon, Alert, Tooltip, Table } from 'antd';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { CoreAPI } from '../../../../core-api';
 import { message } from 'antd';
 import { shell, remote } from 'electron';
@@ -7,12 +7,11 @@ import { debounce } from 'lodash';
 import './index.less';
 import { APP_VERSION } from '../../../../const';
 import { useRequest } from '@umijs/hooks';
-import {getWhistlePort} from '../../../../utils';
-import {useTranslation} from 'react-i18next';
+import { getWhistlePort } from '../../../../utils';
+import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
 
 const version = APP_VERSION;
-
 
 const PluginInfoCard = () => {
     const [port, setPort] = useState(0);
@@ -29,29 +28,34 @@ const PluginInfoCard = () => {
         });
     }, []);
 
-    const pluginCols = [{
-        title: t('Name'),
-        dataIndex: 'moduleName',
-        key: 'name',
-    }, {
-        title: t('Version'),
-        dataIndex: 'version',
-        key: 'version',
-    }, {
-        title: t('Modified time'),
-        dataIndex: 'mtime',
-        key: 'mtime',
-        render(time: number) {
-            return <span>{new Date(time).toLocaleString()}</span>;
-        }
-    }, {
-        title: t('Path'),
-        dataIndex: 'path',
-        key: 'path',
-        render(text: string) {
-            return <Popover title={text}>{text.slice(0, 10)}</Popover>;
-        }
-    }];
+    const pluginCols = [
+        {
+            title: t('Name'),
+            dataIndex: 'moduleName',
+            key: 'name',
+        },
+        {
+            title: t('Version'),
+            dataIndex: 'version',
+            key: 'version',
+        },
+        {
+            title: t('Modified time'),
+            dataIndex: 'mtime',
+            key: 'mtime',
+            render(time: number) {
+                return <span>{new Date(time).toLocaleString()}</span>;
+            },
+        },
+        {
+            title: t('Path'),
+            dataIndex: 'path',
+            key: 'path',
+            render(text: string) {
+                return <Popover title={text}>{text.slice(0, 10)}</Popover>;
+            },
+        },
+    ];
 
     const data = _.values(pluginDataRequest?.data?.plugins || []);
 
@@ -59,15 +63,19 @@ const PluginInfoCard = () => {
         pluginDataRequest.refresh();
     };
 
-    return <Table 
-        loading={pluginDataRequest.loading}
-        dataSource={data} 
-        columns={pluginCols}
-        footer={() => <Button loading={pluginDataRequest.loading} onClick={onRefresh}>{t('Refresh')}</Button>}
-    >
-    </Table>;
+    return (
+        <Table
+            loading={pluginDataRequest.loading}
+            dataSource={data}
+            columns={pluginCols}
+            footer={() => (
+                <Button loading={pluginDataRequest.loading} onClick={onRefresh}>
+                    {t('Refresh')}
+                </Button>
+            )}
+        ></Table>
+    );
 };
-
 
 class InnerSettingForm extends React.Component {
     state = {
@@ -128,7 +136,7 @@ class InnerSettingForm extends React.Component {
                     )(
                         <Select>
                             <Select.Option value="stable">{t('Stable')}</Select.Option>
-                           <Select.Option value="beta">{t('Beta')}</Select.Option>
+                            <Select.Option value="beta">{t('Beta')}</Select.Option>
                         </Select>,
                     )}
                 </Form.Item>
@@ -136,25 +144,16 @@ class InnerSettingForm extends React.Component {
                     {getFieldDecorator('softwareWhiteList', {
                         valuePropName: 'checked',
                         initalValue: true,
-                    })(<Switch
-                        checkedChildren={<Icon type="check" />}
-                        unCheckedChildren={<Icon type="close" />}
-                    />)}
+                    })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
                 </Form.Item>
 
                 <Form.Item label={t('Enable hotkey')}>
                     {getFieldDecorator('enableHotkeys', {
                         valuePropName: 'checked',
                         initalValue: false,
-                    })(<Switch
-                        checkedChildren={<Icon type="check" />}
-                        unCheckedChildren={<Icon type="close" />}
-                    />)}
-                    <Tooltip
-                        title={t('Toggle Proxy') + ' | Cmd/Ctrl+Shift+Alt+L'}
-                    >
-                        <Icon style={{marginLeft: '5px'}} type="question-circle">
-                        </Icon>
+                    })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
+                    <Tooltip title={t('Toggle Proxy') + ' | Cmd/Ctrl+Shift+Alt+L'}>
+                        <Icon style={{ marginLeft: '5px' }} type="question-circle"></Icon>
                     </Tooltip>
                 </Form.Item>
 
@@ -162,12 +161,17 @@ class InnerSettingForm extends React.Component {
                     {getFieldDecorator('disableTlsCheck', {
                         valuePropName: 'checked',
                         initalValue: true,
-                    })(
-                        <Switch
-                            checkedChildren={<Icon type="check" />}
-                            unCheckedChildren={<Icon type="close" />}
-                        />
-                    )}
+                    })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
+                </Form.Item>
+
+                <Form.Item label={t('Enable gzip')}>
+                    {getFieldDecorator('enableGzip', {
+                        valuePropName: 'checked',
+                        initalValue: false,
+                    })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
+                    <Tooltip title={t('There may be performance losses')}>
+                        <Icon style={{ marginLeft: '5px' }} type="question-circle"></Icon>
+                    </Tooltip>
                 </Form.Item>
 
                 <Form.Item label={t('Default Port')}>
@@ -185,7 +189,7 @@ class InnerSettingForm extends React.Component {
                         title={t('Use DingTalk scan to discuss')}
                         trigger="hover"
                     >
-                       <Button
+                        <Button
                             onClick={() => {
                                 shell.openExternal('https://github.com/alibaba/lightproxy');
                             }}
@@ -207,7 +211,7 @@ class InnerSettingForm extends React.Component {
 const saveSettings = debounce((props, changedValues, allValues) => {
     const { t } = props;
     CoreAPI.store.set('settings', allValues);
-    CoreAPI.eventEmmitter.emit('lightproxy-settings-changed');
+    CoreAPI.eventEmmitter.emit('lightproxy-settings-changed', { changedValues });
     message.destroy();
     message.success(t('Saved'));
 }, 500);
@@ -236,6 +240,9 @@ export const SettingForm = Form.create({
             }),
             disableTlsCheck: Form.createFormField({
                 value: settings.disableTlsCheck,
+            }),
+            enableGzip: Form.createFormField({
+                value: settings.enableGzip,
             }),
         };
     },

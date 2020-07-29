@@ -77,8 +77,9 @@ console.info('use custom cert:', options.certDir);
             mode: 'disableUpdateTips',
             username: process.env.WHISTLE_USERNAME,
             password: process.env.WHISTLE_PASSWORD,
-            noGzip: true,
-            mode: 'classic|buildIn|noGzip' + (process.env.WHISTLE_DISABLE_TLS_CHECK === '1' ? '': '|safe'),
+            mode: 'classic|buildIn'
+                    + (process.env.WHISTLE_DISABLE_TLS_CHECK === '1' ? '': '|safe')
+                    + (process.env.WHISTLE_ENABLE_GZIP === '1' ? '': '|noGzip'),
         };
 
         console.log('opts', opts);

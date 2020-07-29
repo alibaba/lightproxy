@@ -80,6 +80,8 @@ export const i18nResources = {
             Version: '版本',
             'Modified time': '修改时间',
             Path: '路径',
+            'There may be performance losses': '可能会有性能损耗',
+            'Enable gzip': '开启 gzip',
         },
     },
 };
