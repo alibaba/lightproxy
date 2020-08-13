@@ -374,6 +374,10 @@ module.exports = function(req, res, next) {
                 if (req.hasError || req._hasRespond) {
                   return;
                 }
+                if (err && isHttps && !options.ciphers && util.isCiphersError(err)) {
+                  options.ciphers = util.TLSV2_CIPHERS;
+                  return send();
+                }
                 if (retryCount >= maxRetryCount) {
                   var toHttp;
                   if (isHttps && (!piped || req.noReqBody) && util.checkTlsError(err) && util.checkAuto2Http(req, ip, proxyUrl)) {

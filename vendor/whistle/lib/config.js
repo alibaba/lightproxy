@@ -22,6 +22,7 @@ var emptyReq, customUIHost;
 var customHostPluginMap = {};
 var customPluginNameHost = {};
 var WHISLTE_PLUGIN_RE = /^(?:whistle\.)?([a-z\d_\-]+)$/;
+var CMD_RE = /^[\w]{1,12}(?:\s+-g)?$/;
 var httpsAgents = new LRU({max: 360});
 var socksAgents = new LRU({max: 100});
 var version = process.version.substring(1).split('.');
@@ -525,6 +526,17 @@ exports.extend = function(newConf) {
   if (newConf) {
     config.shadowRules = parseString(newConf.shadowRules).trim();
     config.uiMiddleware = newConf.uiMiddleware;
+    if (newConf.cmdName && CMD_RE.test(newConf.cmdName)) {
+      config.cmdName = newConf.cmdName;
+    }
+    var projPaths = newConf.projectPluginPaths || newConf.projectPluginPath;
+    if (Array.isArray(projPaths)) {
+      config.projectPluginPaths = projPaths;
+    }
+    var customPaths = newConf.customPluginPaths || newConf.customPluginPath;
+    if (Array.isArray(customPaths)) {
+      config.customPluginPaths = customPaths;
+    }
     if (newConf.inspect || newConf.inspectBrk) {
       config.inspectMode = true;
       process.env.PFORK_MODE = 'inline';
@@ -761,14 +773,6 @@ exports.extend = function(newConf) {
     agent = options.isHttps ? new socks.HttpsAgent(options) : new socks.HttpAgent(options);
     socksAgents.set(key, agent);
     agent.on('free', preventThrowOutError);
-    var createSocket = agent.createSocket;
-    agent.createSocket = function(req) {
-      var client = createSocket.apply(this, arguments);
-      client.on('error', function(err) {
-        req.emit('error', err);
-      });
-      return client;
-    };
     return agent;
   };
   var baseDir = config.baseDir ? path.resolve(config.baseDir, config.dataDirname) : getDataDir(config.dataDirname);
