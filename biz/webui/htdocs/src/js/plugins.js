@@ -5,7 +5,10 @@ var ReactDOM = require('react-dom');
 var events = require('./events');
 var Dialog = require('./dialog');
 var SyncDialog = require('./sync-dialog');
+var dataCenter = require('./data-center');
 var util = require('./util');
+
+var CMD_RE = /^([\w]{1,12})(\s+-g)?$/;
 
 function getPluginComparator(plugins) {
   return function(a, b) {
@@ -13,6 +16,18 @@ function getPluginComparator(plugins) {
     var p2 = plugins[b];
     return util.compare(p1.priority, p2.priority) || util.compare(p2.mtime, p1.mtime) || (a > b ? 1 : -1);
   };
+}
+
+function getCmd(uninstall) {
+  var cmdName = dataCenter.getServerInfo().cmdName;
+  var g = '';
+  if (cmdName && CMD_RE.test(cmdName)) {
+    cmdName = RegExp.$1 + ' ';
+    g = ' ' + RegExp.$2.trim();
+  } else {
+    cmdName = 'w2 ';
+  }
+  return cmdName + (uninstall ? 'uninstall' : 'install') + g + ' ';
 }
 
 var Home = React.createClass({
@@ -37,7 +52,7 @@ var Home = React.createClass({
       });
       var cmdMsg = Object.keys(newPlugins).map(function(registry) {
         var list = newPlugins[registry].join(' ');
-        return 'w2 install ' + list + registry;
+        return getCmd() + list + registry;
       }).join('\n\n');
       cmdMsg && self.setState({
         cmdMsg: cmdMsg,
@@ -85,7 +100,7 @@ var Home = React.createClass({
     var plugin = this.props.data.plugins[name + ':'];
     var registry = plugin.registry ? ' --registry=' + plugin.registry : '';
     this.setState({
-      cmdMsg: 'w2 install ' + plugin.moduleName + registry,
+      cmdMsg: getCmd() + plugin.moduleName + registry,
       isSys: plugin.isSys,
       uninstall: false
     }, this.showMsgDialog);
@@ -95,7 +110,7 @@ var Home = React.createClass({
     var plugin = this.props.data.plugins[name + ':'];
     var sudo = this.props.data.isWin ? '' : 'sudo ';
     var isSys = plugin.isSys;
-    var cmdMsg = isSys ? 'w2 uninstall ' : sudo + 'npm uninstall -g ';
+    var cmdMsg = isSys ? getCmd(true) : sudo + 'npm uninstall -g ';
     var registry = !isSys && plugin.registry ? ' --registry=' + plugin.registry : '';
     this.setState({
       cmdMsg: cmdMsg + plugin.moduleName + registry,
@@ -174,12 +189,12 @@ var Home = React.createClass({
                       </td>
                       <td className="w-plugins-operation">
                         <a href={url} target="_blank" data-name={name} className="w-plugin-btn" onClick={plugin.pluginHomepage ? null : self.onOpen}>Option</a>
-                        {(plugin.rules || plugin._rules || plugin.resRules) ? <a href="javascript:;" draggable="false" data-name={name} onClick={self.showRules}>Rules</a> : <span className="disabled">Rules</span>}
-                        <a href="javascript:;" draggable="false" className="w-plugin-btn w-plugin-update-btn"
-                          data-name={name} onClick={self.showUpdate}>Update</a>
-                        <a href="javascript:;" draggable="false" className="w-plugin-btn"
-                          data-name={name} onClick={self.showUninstall}>Uninstall</a>
-                        {(util.isString(plugin.rulesUrl) || util.isString(plugin.valuesUrl)) ? <a href="javascript:;" className="w-plugin-btn"
+                        {(plugin.rules || plugin._rules || plugin.resRules) ? <a draggable="false" data-name={name} onClick={self.showRules}>Rules</a> : <span className="disabled">Rules</span>}
+                        {plugin.isProj ? <span className="disabled">Update</span> : <a draggable="false" className="w-plugin-btn w-plugin-update-btn"
+                          data-name={name} onClick={self.showUpdate}>Update</a>}
+                        {plugin.isProj ? <span className="disabled">Uninstall</span> : <a draggable="false" className="w-plugin-btn"
+                          data-name={name} onClick={self.showUninstall}>Uninstall</a>}
+                        {(util.isString(plugin.rulesUrl) || util.isString(plugin.valuesUrl)) ? <a className="w-plugin-btn"
                           onClick={function() {
                             self.syncData(plugin);
                           }}>Sync</a> : undefined}
@@ -225,7 +240,7 @@ var Home = React.createClass({
             <div className="modal-body">
               <h5>
                 <a
-                  href="javascript:;"
+                 
                   data-dismiss="modal"
                   className="w-copy-text-with-tips"
                   data-clipboard-text={cmdMsg}
@@ -314,10 +329,10 @@ var Tabs = React.createClass({
     return (
       <div className="w-nav-tabs fill orient-vertical-box" style={{display: self.props.hide ? 'none' : ''}}>
          <ul className="nav nav-tabs">
-            <li className={'w-nav-home-tab' + (activeName == 'Home' ? ' active' : '')} data-name="Home"  onClick={self.props.onActive}><a href="javascript:;" draggable="false">Home</a></li>
+            <li className={'w-nav-home-tab' + (activeName == 'Home' ? ' active' : '')} data-name="Home"  onClick={self.props.onActive}><a draggable="false">Home</a></li>
             {tabs.map(function(tab) {
               return <li className={activeName == tab.name ? ' active' : ''}>
-                  <a data-name={tab.name}  onClick={self.props.onActive} href="javascript:;" draggable="false">
+                  <a data-name={tab.name}  onClick={self.props.onActive} draggable="false">
                     {tab.name}
                     <span data-name={tab.name} title="Close" onClick={self.onClose}>&times;</span>
                   </a>
