@@ -82,6 +82,7 @@ export const i18nResources = {
             Path: '路径',
             'There may be performance losses': '可能会有性能损耗',
             'Enable gzip': '开启 gzip',
+            'Whistle password': 'Whistle 密码',
         },
     },
 };

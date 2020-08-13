@@ -1,6 +1,6 @@
 {
   "name": "LightProxy",
-  "version": "1.1.33-beta-2",
+  "version": "1.1.33-beta-3",
   "license": "MIT",
   "main": "./dist/main.js",
   "scripts": {
@@ -126,6 +126,7 @@
     "image-to-icon-converter": "^1.0.1",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
+    "nanoid": "^3.1.12",
     "prettier": "^1.19.1",
     "raw-loader": "^4.0.0",
     "react-hot-loader": "^4.12.18",

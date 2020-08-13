@@ -2,7 +2,7 @@ import { Extension } from '../../extension';
 import logger from 'electron-log';
 import React, { useEffect, useRef, useState } from 'react';
 import { Icon, Dropdown, Menu, message } from 'antd';
-import { lazyParseData, getWhistlePort, uuidv4 } from '../../utils';
+import { lazyParseData, getWhistlePort } from '../../utils';
 import { Modal, Button } from 'antd';
 const confirm = Modal.confirm;
 
@@ -12,9 +12,11 @@ import { useTranslation } from 'react-i18next';
 import { syncRuleToWhistle } from '../rule-editor/components/rule-list/remote';
 import { CoreAPI } from '../../core-api';
 
-import { remote } from 'electron';
+import { remote, dialog } from 'electron';
 import { SYSTEM_IS_MACOS } from '../../../renderer/const';
 import { getHelperMenus } from './helper-menus';
+
+import { nanoid } from 'nanoid';
 
 let mHasWarned = false;
 
@@ -184,6 +186,24 @@ export class WhistleExntension extends Extension {
         });
     }
 
+    private showUserNamePassword() {
+        Modal.info({
+            title: 'Whistle password',
+            content: (
+                <div>
+                    <div>
+                        UserName:
+                        <span style={{ userSelect: 'all', marginLeft: '5px' }}>{this.mUserName}</span>
+                    </div>
+                    <div>
+                        Password:
+                        <span style={{ userSelect: 'all', marginLeft: '5px' }}>{this.mPassword}</span>
+                    </div>
+                </div>
+            ),
+        });
+    }
+
     /**
      *
      * @param visiableOnLan 在局域网是否可见
@@ -194,8 +214,8 @@ export class WhistleExntension extends Extension {
             this.mPid = null;
         }
 
-        this.mUserName = uuidv4();
-        this.mPassword = uuidv4();
+        this.mUserName = nanoid(8);
+        this.mPassword = nanoid(8);
 
         const settings = this.coreAPI.store.get('settings') || {};
         const defaultPort = get(settings, 'defaultPort', 12888);
@@ -342,6 +362,10 @@ export class WhistleExntension extends Extension {
                         {t('Restart proxy')}
                     </Menu.Item>
                     {getHelperMenus(t)}
+                    <Menu.Item onClick={this.showUserNamePassword.bind(this)}>
+                        <Icon type="key" />
+                        {t('Whistle password')}
+                    </Menu.Item>
                 </Menu>
             );
 
