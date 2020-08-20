@@ -163,17 +163,6 @@ class InnerSettingForm extends React.Component {
                         initalValue: true,
                     })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
                 </Form.Item>
-
-                <Form.Item label={t('Enable gzip')}>
-                    {getFieldDecorator('enableGzip', {
-                        valuePropName: 'checked',
-                        initalValue: false,
-                    })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
-                    <Tooltip title={t('There may be performance losses')}>
-                        <Icon style={{ marginLeft: '5px' }} type="question-circle"></Icon>
-                    </Tooltip>
-                </Form.Item>
-
                 <Form.Item label={t('Default Port')}>
                     {getFieldDecorator('defaultPort')(<InputNumber min={1024} max={65534} />)}
                 </Form.Item>
@@ -240,9 +229,6 @@ export const SettingForm = Form.create({
             }),
             disableTlsCheck: Form.createFormField({
                 value: settings.disableTlsCheck,
-            }),
-            enableGzip: Form.createFormField({
-                value: settings.enableGzip,
             }),
         };
     },

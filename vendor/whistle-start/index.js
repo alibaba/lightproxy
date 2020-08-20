@@ -78,8 +78,7 @@ console.info('use custom cert:', options.certDir);
             username: process.env.WHISTLE_USERNAME,
             password: process.env.WHISTLE_PASSWORD,
             mode: 'classic|buildIn'
-                    + (process.env.WHISTLE_DISABLE_TLS_CHECK === '1' ? '': '|safe')
-                    + (process.env.WHISTLE_ENABLE_GZIP === '1' ? '': '|noGzip'),
+                    + (process.env.WHISTLE_DISABLE_TLS_CHECK === '1' ? '': '|safe'),
         };
 
         console.log('opts', opts);
