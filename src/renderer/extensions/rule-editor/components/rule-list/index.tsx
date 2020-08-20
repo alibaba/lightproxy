@@ -5,14 +5,12 @@ import { Editor } from '../editor';
 import { Button, Icon, Popover, message, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { uuidv4 } from '../../../../utils';
-import fs from 'fs-extra';
 
 import { throttle } from 'lodash';
 
 import { remote } from 'electron';
 import * as monaco from 'monaco-editor';
 import { CoreAPI } from '../../../../core-api';
-import { TEMP_FILE_DIR } from '../../../../const';
 
 const { Menu, MenuItem } = remote;
 
@@ -146,24 +144,12 @@ export const RuleList = (props: Props) => {
         });
     };
 
-    const removeFileWithLimit = useCallback(
-        throttle(() => {
-            if (fs.existsSync(TEMP_FILE_DIR)) {
-                fs.removeSync(TEMP_FILE_DIR);
-            }
-        }, 1000 * 60),
-        [],
-    );
-
     const saveWithLimit = useCallback(
         throttle((rules: Rule[]) => {
-            removeFileWithLimit();
             saveRules(rules);
         }, 1000),
         [],
     );
-
-    saveWithLimit(ruleList);
 
     const onDragEnd = useMemo(() => {
         return (result: DropResult) => {

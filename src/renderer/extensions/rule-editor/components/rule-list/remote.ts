@@ -1,9 +1,10 @@
 import { Rule } from '.';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { remote } from 'electron';
 import { CoreAPI } from '../../../../core-api';
-import { WHITELIST_DOMAINS, TEMP_FILE_DIR } from '../../../../const';
+import { WHITELIST_DOMAINS } from '../../../../const';
 
 const MAGIC_RULE_DISABLE_HTTPS = '#LIGHTPROXY_MAGIC_DISABLE_HTTPS#';
 const MAGIC_RULE_DISABLE_HTTP2 = '#LIGHTPROXY_MAGIC_DISABLE_HTTP2#';
@@ -11,7 +12,7 @@ const MAGIC_RULE_DISABLE_HTTP2 = '#LIGHTPROXY_MAGIC_DISABLE_HTTP2#';
 // some custom extend of whistle
 function extendRule(index: number, content: string) {
     const extendContent = content.replace(/`([^]*?)`/g, (match, innerContent, offset) => {
-        const dir = TEMP_FILE_DIR;
+        const dir = path.join(os.tmpdir(), '/lightproxy');
         fs.mkdir(dir, () => {
             // pass
         });
@@ -19,7 +20,7 @@ function extendRule(index: number, content: string) {
         fs.writeFile(target, innerContent, 'utf-8', () => {
             // pass
         });
-        return `file://${encodeURIComponent(target)}`;
+        return target;
     });
     return extendContent
         .split('\n')
