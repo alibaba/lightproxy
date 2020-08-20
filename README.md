@@ -43,7 +43,7 @@
 
 :battery: Battery include, powerful `hosts/proxy/capture` based on `whistle`, what u need is just input `/`
 
-:electric_plug: Hackable, you colud write even Node.js for your proxy rule
+:electric_plug: Hackable, you could write even Node.js for your proxy rule
 
 --- 
 
