@@ -16,7 +16,10 @@ var iframes = require('./iframes');
 var rulesCtxMenuList = [
   { name: 'Copy' },
   { name: 'Enable', action: 'Save' },
-  { name: 'Create' },
+  {
+    name: 'Create',
+    action: 'Rule'
+  },
   { name: 'Rename' },
   { name: 'Delete' },
   { name: 'Export' },
@@ -31,7 +34,10 @@ var rulesCtxMenuList = [
 var valuesCtxMenuList = [
   { name: 'Copy' },
   { name: 'Save' },
-  { name: 'Create' },
+  {
+    name: 'Create',
+    action: 'Key'
+  },
   { name: 'Rename' },
   { name: 'Delete' },
   {
@@ -180,6 +186,16 @@ var List = React.createClass({
       self.setState({activeItem: item});
     }
   },
+  onClickGroup: function(e) {
+    var name = e.target.getAttribute('data-group');
+    var groups = this.props.modal.groups;
+    var group = groups[name];
+    if (!group) {
+      group = groups[name] = {};
+    }
+    group.expand = !group.expand;
+    this.setState({});
+  },
   onDoubleClick: function(item, okIcon) {
     item.selected && !item.changed || okIcon ? this.onUnselect(item) : this.onSelect(item);
     var onDoubleClick = this.props.onDoubleClick;
@@ -291,8 +307,17 @@ var List = React.createClass({
     case 'Delete':
       events.trigger('delete' + name, this.currentFocusItem);
       break;
-    case 'Create':
-      events.trigger('create' + name);
+    case 'Rule':
+      events.trigger('createRules');
+      break;
+    case 'Key':
+      events.trigger('createValues');
+      break;
+    case 'ruleGroup':
+      events.trigger('createRuleGroup');
+      break;
+    case 'valueGroup':
+      events.trigger('createValueGroup');
       break;
     case 'Export':
       events.trigger('export' + name);
