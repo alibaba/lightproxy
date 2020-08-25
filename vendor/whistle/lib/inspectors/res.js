@@ -22,6 +22,7 @@ var formatHeaders = hparser.formatHeaders;
 var getRawHeaderNames = hparser.getRawHeaderNames;
 
 var LOCALHOST = '127.0.0.1';
+var CHUNKED_RE = /^\s*chunked\s*$/i;
 var DOCTYPE = util.toBuffer('<!DOCTYPE html>\r\n');
 var CRLF = util.toBuffer('\r\n');
 var MAX_RES_SIZE = 512 * 1024;
@@ -74,7 +75,13 @@ function showDnsError(res, err) {
 
 function setCookies(headers, data) {
   var newCookies = data.headers['set-cookie'];
-  if (newCookies) {
+  if (!Array.isArray(newCookies)) {
+    if (!newCookies || typeof newCookies !== 'string') {
+      return;
+    }
+    newCookies = newCookies.split(',');
+  }
+  if (newCookies.length) {
     var cookies = headers['set-cookie'];
     var isArray = Array.isArray(cookies);
     if (!isArray && cookies) {
@@ -275,7 +282,7 @@ module.exports = function(req, res, next) {
                   var opts = {
                     isSocks: isSocks,
                     isHttps: isHttps,
-                    proxyServername: isHttpsProxy ? proxyOptions.hostname : null, 
+                    proxyServername: isHttpsProxy ? proxyOptions.hostname : null,
                     proxyHost: ip,
                     clientIp: proxyHeaders[config.CLIENT_IP_HEAD],
                     proxyPort: proxyPort,
@@ -303,12 +310,12 @@ module.exports = function(req, res, next) {
                 }
                 return;
               }
-    
+
               if (auth) {
                 headers['proxy-authorization'] = auth;
               }
             }
-    
+
             req.hostIp = util.getHostIp(ip, port);
             port = proxyOptions ? proxyOptions.port : (port || options.port);
             options.host = ip;//设置ip
@@ -350,7 +357,7 @@ module.exports = function(req, res, next) {
                   origPath = options.path || '';
                 }
               }
-    
+
               delete options.hostname; //防止自动dns
               delete options.protocol;
               if (isHttps) {
@@ -523,7 +530,7 @@ module.exports = function(req, res, next) {
                   headers[config.CLIENT_IP_HEAD] = req.clientIp;
                 }
               }
-    
+
               Object.keys(deleteHeaders.reqHeaders).forEach(function(prop) {
                 delete headers[prop];
               });
@@ -586,7 +593,6 @@ module.exports = function(req, res, next) {
       req.realUrl = res.realUrl = _res.realUrl;
     }
     res.headers = req.resHeaders = _res.headers;
-    res.trailers = _res.trailers;
     res._originEncoding = _res.headers['content-encoding'];
     req.statusCode = _res.statusCode;
     if (_res.rawHeaderNames) {
@@ -609,9 +615,9 @@ module.exports = function(req, res, next) {
           if (req.disable['301'] && _res.statusCode == 301) {
             res.statusCode = _res.statusCode = 302;
           }
-  
-          var ruleList = [resRules.resHeaders, resRules.resCookies, resRules.resCors, resRules.resReplace, resRules.resMerge];
-          util.parseRuleJson(ruleList, function(headers, cookies, cors, replacement, params) {
+
+          var ruleList = [resRules.resHeaders, resRules.resCookies, resRules.resCors, resRules.resReplace, resRules.resMerge, resRules.trailers];
+          util.parseRuleJson(ruleList, function(headers, cookies, cors, replacement, params, newTrailers) {
             var data = {};
             if (headers) {
               data.headers = extend(data.headers || {}, headers);
@@ -624,10 +630,10 @@ module.exports = function(req, res, next) {
             if (data.headers) {
               data.headers = util.lowerCaseify(data.headers, res.rawHeaderNames);
             }
-  
+
             util.setResCookies(data, cookies);
             util.setResCors(data, cors, req);
-  
+
             var cache = util.getMatcherValue(resRules.cache);
             if (cache === 'reserve') {
               req._customCache = true;
@@ -643,35 +649,35 @@ module.exports = function(req, res, next) {
                 });
               }
             }
-  
+
             if (resRules.attachment) {
               var attachment = util.getMatcherValue(resRules.attachment) || util.getFilename(req.fullUrl);
               util.setHeader(data, 'content-disposition', 'attachment; filename="' + util.encodeNonLatin1Char(attachment) + '"');
             }
-  
+
             if (resRules.resType) {
               var newType = util.getMatcherValue(resRules.resType).split(';');
               var type = newType[0];
               newType[0] = (!type || type.indexOf('/') != -1) ? type : mime.lookup(type, type);
               util.setHeader(data, 'content-type', newType.join(';'));
             }
-  
+
             if (resRules.resCharset) {
               data.charset = util.getMatcherValue(resRules.resCharset);
             }
-  
+
             var resDelay = util.getMatcherValue(resRules.resDelay);
             resDelay = resDelay && parseInt(resDelay, 10);
             if (resDelay > 0) {
               data.delay = resDelay;
             }
-  
+
             var resSpeed = util.getMatcherValue(resRules.resSpeed);
             resSpeed = resSpeed && parseFloat(resSpeed);
             if (resSpeed > 0) {
               data.speed = resSpeed;
             }
-  
+
             util.readInjectFiles(data, function(data) {
               var headers = _res.headers;
               var type, cusHeaders;
@@ -693,7 +699,7 @@ module.exports = function(req, res, next) {
                 cusHeaders = data.headers;
                 extend(headers, cusHeaders);
               }
-  
+
               if (data.charset && typeof data.charset == 'string') {
                 type = headers['content-type'];
                 type = typeof type == 'string' ? type.trim().split(';')[0] : '';
@@ -705,7 +711,8 @@ module.exports = function(req, res, next) {
               if (!headers.pragma) {
                 delete headers.pragma;
               }
-              util.handleResHeaderReplace(headers, resRules.headerReplace);
+              var hr = util.parseHeaderReplace(resRules.headerReplace);
+              util.handleHeaderReplace(headers, hr.res);
               if (headers.location) {
                 //nodejs的url只支持ascii，对非ascii的字符要encodeURIComponent，否则传到浏览器是乱码
                 headers.location = util.encodeNonLatin1Char(headers.location);
@@ -731,12 +738,12 @@ module.exports = function(req, res, next) {
                 if (resAppend) {
                   data.bottom = util.toBuffer(resAppend);
                 }
-  
+
                 var speedTransform = data.speed || data.delay ? new SpeedTransform(data) : null;
                 delete data.headers;
                 delete data.speed;
                 delete data.delay;
-  
+
                 isHtml = isHtml || !headers['content-type'];
                 if ((isHtml || type === 'JSON' || type === 'JS') && params && Object.keys(params).length) {
                   var transform = new Transform();
@@ -765,7 +772,7 @@ module.exports = function(req, res, next) {
                       } catch(e) {}
                       text = util.toBuffer(ctn);
                     }
-  
+
                     callback(null, text);
                   };
                   res.addTextTransform(transform);
@@ -788,7 +795,7 @@ module.exports = function(req, res, next) {
                     htmlAppend = util.toBuffer(htmlAppend, charset);
                     bottom = bottom ? Buffer.concat([bottom, htmlAppend]) : htmlAppend;
                   }
-  
+
                   if (jsPrepend) {
                     top = top ? Buffer.concat([top, jsPrepend]) : jsPrepend;
                   }
@@ -811,7 +818,7 @@ module.exports = function(req, res, next) {
                   bottom =  cssAppend;
                   break;
                 }
-  
+
                 if (top) {
                   top = util.toBuffer(top, charset);
                   data.top = data.top ? Buffer.concat([data.top, CRLF, top]) : Buffer.concat([top, CRLF]);
@@ -824,14 +831,14 @@ module.exports = function(req, res, next) {
                   bottom = util.toBuffer(bottom, charset);
                   data.bottom = data.bottom ? Buffer.concat([data.bottom, CRLF, bottom]) : Buffer.concat([CRLF, bottom]);
                 }
-  
+
                 var hasData = data.body || data.top || data.bottom;
                 if (hasData) {
-                  !req.enable.keepCSP && util.disableCSP(_res.headers);
-                  !req._customCache && util.disableResStore(_res.headers);
+                  !req.enable.keepCSP && util.disableCSP(headers);
+                  !req._customCache && util.disableResStore(headers);
                   extend(headers, cusHeaders);
                 }
-  
+
                 if (!hasResBody) {
                   delete data.speed;
                   delete data.body;
@@ -857,7 +864,7 @@ module.exports = function(req, res, next) {
                 if (speedTransform) {
                   res.add(speedTransform);
                 }
-  
+
                 var bodyFile = hasResBody ? getWriterFile(util.getRuleFile(resRules.resWrite), _res.statusCode) : null;
                 var rawFile = getWriterFile(util.getRuleFile(resRules.resWriteRaw), _res.statusCode);
                 util.getFileWriters([bodyFile, rawFile], function(writer, rawWriter) {
@@ -865,28 +872,55 @@ module.exports = function(req, res, next) {
                     if (writer) {
                       res.addZipTransform(new FileWriterTransform(writer, _res));
                     }
-  
+
                     if (rawWriter) {
                       res.addZipTransform(new FileWriterTransform(rawWriter, _res, true, req));
                     }
                   });
-                  var resHeaders = util.parseDeleteProperties(req).resHeaders;
+                  var delProps = util.parseDeleteProperties(req);
+                  var resHeaders = delProps.resHeaders;
+                  var hasNewTrailer = util.notEmptyObject(newTrailers);
                   Object.keys(resHeaders).forEach(function(prop) {
-                    delete _res.headers[prop];
+                    delete headers[prop];
+                  });
+                  _res.on('end', function() {
+                    if (!res.chunkedEncoding || req.disable.trailers || req.disable.trailer ||
+                      (!util.notEmptyObject(trailers) && !hasNewTrailer)) {
+                      return;
+                    }
+                    var trailers = _res.trailers;
+                    var rawHeaderNames = _res.rawTrailers ? getRawHeaderNames(_res.rawTrailers) : {};
+                    if (newTrailers) {
+                      newTrailers = util.lowerCaseify(newTrailers, rawHeaderNames);
+                      if (trailers) {
+                        extend(trailers, newTrailers);
+                      } else {
+                        trailers = newTrailers;
+                      }
+                    }
+                    var delTrailers = delProps.trailers;
+                    Object.keys(delTrailers).forEach(function(prop) {
+                      delete trailers[prop];
+                    });
+                    util.handleHeaderReplace(trailers, hr.trailer);
+                    res.setCurTrailers && res.setCurTrailers(trailers, rawHeaderNames);
+                    try {
+                      res.addTrailers(formatHeaders(trailers, rawHeaderNames));
+                    } catch (e) {}
                   });
                   res.src(_res, null, firstChunk);
                   var rawNames = res.rawHeaderNames || {};
-                  
+
                   if (req.enable.gzip) {
                     rawNames['content-encoding'] = rawNames['content-encoding'] || 'Content-Encoding';
-                    _res.headers['content-encoding'] = 'gzip';
-                    delete _res.headers['content-length'];
+                    headers['content-encoding'] = 'gzip';
+                    delete headers['content-length'];
                   } else if (req._pipePluginPorts.resReadPort || req._pipePluginPorts.resWritePort) {
                     delete req.headers['content-length'];
                   }
-                  util.disableResProps(req, _res.headers);
+                  util.disableResProps(req, headers);
                   if (req.filter.showHost || req.enable.showHost) {
-                    _res.headers['x-host-ip'] = req.hostIp || LOCALHOST;
+                    headers['x-host-ip'] = req.hostIp || LOCALHOST;
                   }
                   const ruleRaw = req.rules && req.rules.rule && req.rules.rule.raw;
                   _res.headers['__lightproxy-host-ip__'] = req.hostIp || LOCALHOST;
@@ -895,7 +929,7 @@ module.exports = function(req, res, next) {
 
                   _res.headers['__lightproxy-rules__'] = strwrap(JSON.stringify(ruleRaw) || 'none');
                   _res.headers['__lightproxy-real-url__'] = strwrap(req.realUrl);
-                  
+
                   _res.headers['__lightproxy-help__'] = 'See https://github.com/alibaba/lightproxy';
                   // clientReady.then(() => {
                   //   wsClient.send(
@@ -911,12 +945,34 @@ module.exports = function(req, res, next) {
 
                   util.setResponseFor(resRules, _res.headers, req, req.hostIp);
                   pluginMgr.postStats(req, res);
-                  if (!hasResBody && _res.headers['content-length'] > 0 && !util.isHead(req)) {
-                    delete _res.headers['content-length'];
+                  if (!hasResBody && headers['content-length'] > 0 && !util.isHead(req)) {
+                    delete headers['content-length'];
+                  }
+                  if (hasNewTrailer && !req.disable.trailerHeader &&
+                    (headers['content-length'] == null || CHUNKED_RE.test(headers['transfer-encoding']))) {
+                    var nameMap = {};
+                    var curTrailers = headers.trailer;
+                    if (curTrailers) {
+                      if (typeof curTrailers === 'string') {
+                        nameMap[curTrailers.toLowerCase()] = curTrailers;
+                      } else if (Array.isArray(curTrailers)) {
+                        curTrailers.forEach(function(key) {
+                          if (key && typeof key === 'string') {
+                            nameMap[key.toLowerCase()] = key;
+                          }
+                        });
+                      }
+                    }
+                    Object.keys(newTrailers).forEach(function(key) {
+                      nameMap[key.toLowerCase()] = key;
+                    });
+                    rawNames.trailer = 'Trailer';
+                    headers.trailer = Object.keys(nameMap).map(function(key) {
+                      return nameMap[key];
+                    });
                   }
                   try {
-                    res.writeHead(_res.statusCode, formatHeaders(_res.headers, rawNames));
-                    _res.trailers && res.addTrailers(_res.trailers);
+                    res.writeHead(_res.statusCode, formatHeaders(headers, rawNames));
                   } catch(e) {
                     e._resError = true;
                     util.emitError(res, e);

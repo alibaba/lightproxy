@@ -693,7 +693,7 @@ var Index = React.createClass({
       }
     }).on('keyup', function(e) {
       if (e.keyCode == 27) {
-        self.hideOptions();
+        self.setMenuOptionsState();
         var dialog = $('.modal');
         if (typeof dialog.modal == 'function') {
           dialog.modal('hide');
@@ -977,6 +977,8 @@ var Index = React.createClass({
     });
     events.on('createRules', self.showCreateRules);
     events.on('createValues', self.showCreateValues);
+    events.on('createRuleGroup', self.showCreateRuleGroup);
+    events.on('createValueGroup', self.showCreateValueGroup);
     events.on('exportRules', self.exportData);
     events.on('exportValues', self.exportData);
     events.on('importRules', self.importRules);
@@ -1630,6 +1632,16 @@ var Index = React.createClass({
       showAbortOptions: true
     });
   },
+  showCreateOptions: function() {
+    this.setState({
+      showCreateOptions: true
+    });
+  },
+  hideCreateOptions: function() {
+    this.setState({
+      showCreateOptions: false
+    });
+  },
   hideRemoveOptions: function() {
     this.setState({
       showRemoveOptions: false
@@ -1810,20 +1822,38 @@ var Index = React.createClass({
       showWeinreOptions: false
     });
   },
-  hideOptions: function() {
-    this.setMenuOptionsState();
-  },
   setMenuOptionsState: function(name, callback) {
     var state = {
       showCreateRules: false,
       showCreateValues: false,
+      showCreateRuleGroup: false,
+      showCreateValueGroup: false,
       showEditRules: false,
-      showEditValues: false
+      showEditValues: false,
+      showCreateOptions: false
     };
     if (name) {
       state[name] = true;
     }
     this.setState(state, callback);
+  },
+  hideRulesInput: function() {
+    this.setState({ showCreateRules: false });
+  },
+  hideValuesInput: function() {
+    this.setState({ showCreateValues: false });
+  },
+  hideRuleGroup: function() {
+    this.setState({ showCreateRuleGroup: false });
+  },
+  hideValueGroup: function() {
+    this.setState({ showCreateValueGroup: false });
+  },
+  hideRenameRuleInput: function() {
+    this.setState({ showEditRules: false });
+  },
+  hideRenameValueInput: function() {
+    this.setState({ showEditValues: false });
   },
   showCreateRules: function() {
     var createRulesInput = ReactDOM.findDOMNode(this.refs.createRulesInput);
@@ -1839,6 +1869,22 @@ var Index = React.createClass({
       showCreateValues: true
     }, function() {
       createValuesInput.focus();
+    });
+  },
+  showCreateRuleGroup: function() {
+    var createGroupInput = ReactDOM.findDOMNode(this.refs.createRuleGroupInput);
+    this.setState({
+      showCreateRuleGroup: true
+    }, function() {
+      createGroupInput.focus();
+    });
+  },
+  showCreateValueGroup: function() {
+    var createGroupInput = ReactDOM.findDOMNode(this.refs.createValueGroupInput);
+    this.setState({
+      showCreateValueGroup: true
+    }, function() {
+      createGroupInput.focus();
     });
   },
   showHttpsSettingsDialog: function() {
@@ -2288,14 +2334,15 @@ var Index = React.createClass({
     });
     storage.set('showLeftMenu', showLeftMenu ? 1 : '');
   },
+  handleCreate: function(item) {
+    this.state.name == 'rules' ? this.showCreateRules() : this.showCreateValues();
+  },
   onClickMenu: function(e) {
     var target = $(e.target).closest('a');
     var self = this;
     var list;
     var isRules = self.state.name == 'rules';
-    if (target.hasClass('w-create-menu')) {
-      isRules ? self.showCreateRules() : self.showCreateValues();
-    } else if (target.hasClass('w-edit-menu')) {
+    if (target.hasClass('w-edit-menu')) {
       isRules ? self.showEditRules() : self.showEditValues();
     } else if (target.hasClass('w-delete-menu')) {
       isRules ? self.removeRules() : self.removeValues();
@@ -2541,8 +2588,7 @@ var Index = React.createClass({
         size: rawReq.bodySize,
         headers: reqHeaders.headers,
         rawHeaderNames: reqHeaders.rawHeaderNames,
-        body: rawReq.postData && rawReq.postData.text || '',
-        trailers: {}
+        body: rawReq.postData && rawReq.postData.text || ''
       };
       var res = {
         httpVersion: '1.1',
@@ -2552,8 +2598,7 @@ var Index = React.createClass({
         headers: resHeaders.headers,
         rawHeaderNames: resHeaders.rawHeaderNames,
         ip: serverIp,
-        body: '',
-        trailers: {}
+        body: ''
       };
       var resCtn = rawRes.content;
       var text = resCtn && resCtn.text;
@@ -2802,7 +2847,7 @@ var Index = React.createClass({
           </div>
           <div style={{display: pluginsMode ? 'none' : undefined}} onMouseEnter={this.showValuesOptions} onMouseLeave={this.hideValuesOptions}
             className={'w-nav-menu w-menu-wrapper' + (showValuesOptions ? ' w-menu-wrapper-show' : '') + (isValues ? ' w-menu-auto' : '')}>
-            <a onClick={this.showValues} className="w-values-menu" style={{background: name == 'values' ? '#ddd' : null}} draggable="false"><span className="glyphicon glyphicon-folder-open"></span>Values</a>
+            <a onClick={this.showValues} className="w-values-menu" style={{background: name == 'values' ? '#ddd' : null}} draggable="false"><span className="glyphicon glyphicon-folder-close"></span>Values</a>
             <MenuItem ref="valuesMenuItem" name={name == 'values' ? null : 'Open'} options={state.valuesOptions} className="w-values-menu-item" onClick={this.showValues} onClickOption={this.showAndActiveValues} />
           </div>
           <div ref="pluginsMenu" onMouseEnter={this.showPluginsOptions} onMouseLeave={this.hidePluginsOptions} className={'w-nav-menu w-menu-wrapper' + (showPluginsOptions ? ' w-menu-wrapper-show' : '')}>
@@ -2841,13 +2886,18 @@ var Index = React.createClass({
             <MenuItem options={REMOVE_OPTIONS} className="w-remove-menu-item" onClickOption={this.handleNetwork} />
           </div>
           <a onClick={this.onClickMenu} className="w-save-menu" style={{display: (isNetwork || isPlugins) ? 'none' : ''}} draggable="false" title="Ctrl[Command] + S"><span className="glyphicon glyphicon-save-file"></span>Save</a>
-          <a onClick={this.onClickMenu} className="w-create-menu" style={{display: (isNetwork || isPlugins) ? 'none' : ''}} draggable="false"><span className="glyphicon glyphicon-plus"></span>Create</a>
+          <a className="w-create-menu"
+              style={{display: (isNetwork || isPlugins) ? 'none' : ''}}
+              draggable="false"
+              onClick={this.handleCreate}
+            >
+            <span className="glyphicon glyphicon-plus"></span>Create
+          </a>
           <a onClick={this.onClickMenu} className={'w-edit-menu' + (disabledEditBtn ? ' w-disabled' : '')} style={{display: (isNetwork || isPlugins) ? 'none' : ''}} draggable="false"><span className="glyphicon glyphicon-edit"></span>Rename</a>
           <div onMouseEnter={this.showAbortOptions} onMouseLeave={this.hideAbortOptions}
             style={{display: isNetwork ? '' : 'none'}}
             className={'w-menu-wrapper w-abort-menu-list w-menu-auto' + (state.showAbortOptions ? ' w-menu-wrapper-show' : '')}>
             <a onClick={this.clickReplay} className="w-replay-menu"
-              style={{display: isNetwork ? '' : 'none'}}
               draggable="false">
               <span className="glyphicon glyphicon-repeat"></span>Replay
             </a>
@@ -2882,10 +2932,12 @@ var Index = React.createClass({
               className="w-help-menu-item" />
           </div>
           <Online name={name} />
-          <div onMouseDown={this.preventBlur} style={{display: state.showCreateRules ? 'block' : 'none'}} className="shadow w-input-menu-item w-create-rules-input"><input ref="createRulesInput" onKeyDown={this.createRules} onBlur={this.hideOptions} type="text" maxLength="64" placeholder="Input the name" /><button type="button" onClick={this.createRules} className="btn btn-primary">OK</button></div>
-          <div onMouseDown={this.preventBlur} style={{display: state.showCreateValues ? 'block' : 'none'}} className="shadow w-input-menu-item w-create-values-input"><input ref="createValuesInput" onKeyDown={this.createValues} onBlur={this.hideOptions} type="text" maxLength="64" placeholder="Input the key" /><button type="button" onClick={this.createValues} className="btn btn-primary">OK</button></div>
-          <div onMouseDown={this.preventBlur} style={{display: state.showEditRules ? 'block' : 'none'}} className="shadow w-input-menu-item w-edit-rules-input"><input ref="editRulesInput" onKeyDown={this.editRules} onBlur={this.hideOptions} type="text" maxLength="64"  /><button type="button" onClick={this.editRules} className="btn btn-primary">OK</button></div>
-          <div onMouseDown={this.preventBlur} style={{display: state.showEditValues ? 'block' : 'none'}} className="shadow w-input-menu-item w-edit-values-input"><input ref="editValuesInput" onKeyDown={this.editValues} onBlur={this.hideOptions} type="text" maxLength="64" /><button type="button" onClick={this.editValues} className="btn btn-primary">OK</button></div>
+          <div onMouseDown={this.preventBlur} style={{display: state.showCreateRules ? 'block' : 'none'}} className="shadow w-input-menu-item w-create-rules-input"><input ref="createRulesInput" onKeyDown={this.createRules} onBlur={this.hideRulesInput} type="text" maxLength="64" placeholder="Input the name" /><button type="button" onClick={this.createRules} className="btn btn-primary">+Rule</button></div>
+          <div onMouseDown={this.preventBlur} style={{display: state.showCreateValues ? 'block' : 'none'}} className="shadow w-input-menu-item w-create-values-input"><input ref="createValuesInput" onKeyDown={this.createValues} onBlur={this.hideValuesInput} type="text" maxLength="64" placeholder="Input the key" /><button type="button" onClick={this.createValues} className="btn btn-primary">+Key</button></div>
+          <div onMouseDown={this.preventBlur} style={{display: state.showCreateRuleGroup ? 'block' : 'none'}} className="shadow w-input-menu-item w-create-rules-input"><input ref="createRuleGroupInput" onKeyDown={this.createRules} onBlur={this.hideRuleGroup} type="text" maxLength="64" placeholder="Input the group name" /><button type="button" onClick={this.createRuleGroup} className="btn btn-primary">+Group</button></div>
+          <div onMouseDown={this.preventBlur} style={{display: state.showCreateValueGroup ? 'block' : 'none'}} className="shadow w-input-menu-item w-create-values-input"><input ref="createValueGroupInput" onKeyDown={this.createValues} onBlur={this.hideValueGroup} type="text" maxLength="64" placeholder="Input the group name" /><button type="button" onClick={this.createValueGroup} className="btn btn-primary">+Group</button></div>
+          <div onMouseDown={this.preventBlur} style={{display: state.showEditRules ? 'block' : 'none'}} className="shadow w-input-menu-item w-edit-rules-input"><input ref="editRulesInput" onKeyDown={this.editRules} onBlur={this.hideRenameRuleInput} type="text" maxLength="64"  /><button type="button" onClick={this.editRules} className="btn btn-primary">OK</button></div>
+          <div onMouseDown={this.preventBlur} style={{display: state.showEditValues ? 'block' : 'none'}} className="shadow w-input-menu-item w-edit-values-input"><input ref="editValuesInput" onKeyDown={this.editValues} onBlur={this.hideRenameValueInput} type="text" maxLength="64" /><button type="button" onClick={this.editValues} className="btn btn-primary">OK</button></div>
         </div>
         <div className="w-container box fill">
           <div className="w-left-menu" style={{display: networkMode ? 'none' : undefined}}>
@@ -2918,7 +2970,7 @@ var Index = React.createClass({
                 background: name == 'values' ? '#ddd' : null,
                 display: pluginsMode ? 'none' : undefined
               }} draggable="false">
-              <span className="glyphicon glyphicon-folder-open"></span><i>Values</i>
+              <span className="glyphicon glyphicon-folder-close"></span><i>Values</i>
               <i className="w-menu-changed" style={{display: state.values.hasChanged() ? undefined : 'none'}}>*</i>
             </a>
             <a onClick={this.showPlugins} className="w-plugins-menu"
