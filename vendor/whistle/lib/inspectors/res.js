@@ -879,16 +879,16 @@ module.exports = function(req, res, next) {
                   });
                   var delProps = util.parseDeleteProperties(req);
                   var resHeaders = delProps.resHeaders;
-                  var hasNewTrailer = util.notEmptyObject(newTrailers);
+                  var hasNewTrailer = !util.isEmptyObject(newTrailers);
                   Object.keys(resHeaders).forEach(function(prop) {
                     delete headers[prop];
                   });
                   _res.on('end', function() {
+                    var trailers = _res.trailers;
                     if (!res.chunkedEncoding || req.disable.trailers || req.disable.trailer ||
-                      (!util.notEmptyObject(trailers) && !hasNewTrailer)) {
+                      (util.isEmptyObject(trailers) && !hasNewTrailer)) {
                       return;
                     }
-                    var trailers = _res.trailers;
                     var rawHeaderNames = _res.rawTrailers ? getRawHeaderNames(_res.rawTrailers) : {};
                     if (newTrailers) {
                       newTrailers = util.lowerCaseify(newTrailers, rawHeaderNames);
@@ -963,8 +963,12 @@ module.exports = function(req, res, next) {
                         });
                       }
                     }
+                    var delTrailers = delProps.trailers;
                     Object.keys(newTrailers).forEach(function(key) {
-                      nameMap[key.toLowerCase()] = key;
+                      var lkey = key.toLowerCase();
+                      if (!delTrailers[lkey]) {
+                        nameMap[lkey] = key;
+                      }
                     });
                     rawNames.trailer = 'Trailer';
                     headers.trailer = Object.keys(nameMap).map(function(key) {

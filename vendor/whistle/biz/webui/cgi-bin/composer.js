@@ -1,5 +1,7 @@
 var http = require('http');
 var gzip = require('zlib').gzip;
+var tls = require('tls');
+var Buffer = require('safe-buffer').Buffer;
 var config = require('../../../lib/config');
 var util = require('../../../lib/util');
 var zlib = require('../../../lib/util/zlib');
@@ -10,6 +12,7 @@ var hparser = require('hparser');
 var formatHeaders = hparser.formatHeaders;
 var getRawHeaders = hparser.getRawHeaders;
 var getRawHeaderNames = hparser.getRawHeaderNames;
+var BODY_SEP = Buffer.from('\r\n\r\n');
 var STATUS_CODE_RE = /^\S+\s+(\d+)/i;
 var MAX_LENGTH = 1024 * 512;
 var PROXY_OPTS = {
@@ -36,12 +39,14 @@ function isWebSocket(options) {
 }
 
 var crypto = require('crypto');
+var CONNECT_PROTOS = 'connect:,socket:,tunnel:,conn:,tls:,tcp:'.split(',');
+var TLS_PROTOS = 'https:,wss:,tls:'.split(',');
 function isConnect(options) {
   if (options.method === 'CONNECT') {
     return true;
   }
   var p = options.protocol;
-  return p === 'connect:' || p === 'socket:' || p === 'tunnel:' || p === 'conn:';
+  return CONNECT_PROTOS.indexOf(p) !== -1;
 }
 
 function drain(socket) {
@@ -58,18 +63,22 @@ function handleConnect(options, cb) {
     proxyPort: config.port,
     headers: options.headers
   }, function(socket, _, err) {
-    drain(socket);
-    var data = options.body;
-    if (data && data.length) {
-      socket.write(data);
-      options.body = data = null;
+    if (!err) {
+      if (TLS_PROTOS.indexOf(options.protocol) !== -1) {
+        socket = tls.connect({
+          rejectUnauthorized: config.rejectUnauthorized,
+          socket: socket,
+          servername: options.hostname
+        });
+      }
+      drain(socket);
+      var data = options.body;
+      if (data && data.length) {
+        socket.write(data);
+        options.body = data = null;
+      }
     }
-    if (cb) {
-      cb(err);
-      util.onSocketEnd(socket, function(err) {
-        cb(err || new Error('Closed'));
-      });
-    }
+    cb && cb(err);
   }).on('error', cb || util.noop);
 }
 
@@ -92,12 +101,11 @@ function handleWebSocket(options, cb) {
     } else {
       socket.write(getReqRaw(options));
       var handleResponse = function(resData) {
-        resData = resData + '';
-        var index = resData.indexOf('\r\n\r\n');
+        var index = util.indexOfList(resData, BODY_SEP);
         var body = '';
         if (index !== -1) {
           socket.removeListener('data', handleResponse);
-          socket.headers = parseHeaders(resData.slice(0, index));
+          socket.headers = parseHeaders(resData.slice(0, index) + '');
           body = resData.slice(index + 4);
           var sender = getSender(socket);
           var data = options.body;
@@ -160,9 +168,13 @@ function handleHttp(options, cb) {
       });
       res.on('end', function() {
         zlib.unzip(res.headers['content-encoding'], buffer, function(err, body) {
+          var headers = res.headers;
+          if (typeof headers.trailer === 'string' && headers.trailer.indexOf(',') !== -1) {
+            headers.trailer = headers.trailer.split(',');
+          }
           var result = {
             statusCode: res.statusCode,
-            headers: res.headers,
+            headers: headers,
             trailers: res.trailers,
             rawHeaderNames: getRawHeaderNames(res.rawHeaders),
             rawTrailerNames: getRawHeaderNames(res.rawTrailers)
