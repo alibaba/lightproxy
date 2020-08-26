@@ -67,6 +67,7 @@ var replacePattern = ReplacePatternTransform.replacePattern;
 var parseUrl = require('./parse-url');
 var TLSV2_CIPHERS = 'ECDHE-ECDSA-AES256-GCM-SHA384';
 var EMPTY_BUFFER = toBuffer('');
+var lowerCaseify = common.lowerCaseify;
 
 exports.TLSV2_CIPHERS = TLSV2_CIPHERS;
 // 避免属性被 stringify ，减少冗余数据传给前端
@@ -181,6 +182,8 @@ exports.getRegistry = getRegistry;
 exports.getLatestVersion = getLatestVersion;
 
 exports.isEmptyObject = common.isEmptyObject;
+
+exports.addTrailerNames = common.addTrailerNames;
 
 var ESTABLISHED_CTN = 'HTTP/1.1 200 Connection Established\r\nProxy-Agent: ' + config.name + '\r\n\r\n';
 exports.setEstablished = function(socket) {
@@ -993,25 +996,6 @@ function readInjectFiles(data, callback) {
 }
 
 exports.readInjectFiles = readInjectFiles;
-
-function lowerCaseify(obj, rawNames) {
-  var result = {};
-  if (!obj) {
-    return result;
-  }
-  Object.keys(obj).forEach(function(name) {
-    var value = obj[name];
-    if (value !== undefined) {
-      var key  = name.toLowerCase();
-      result[key] = Array.isArray(value) ? value : value + '';
-      if (rawNames) {
-        rawNames[key] = name;
-      }
-    }
-  });
-  return result;
-}
-
 exports.lowerCaseify = lowerCaseify;
 
 function parseHeaders(headers, rawNames) {
