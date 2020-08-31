@@ -881,7 +881,7 @@ module.exports = function(req, res, next) {
                   Object.keys(resHeaders).forEach(function(prop) {
                     delete headers[prop];
                   });
-                  _res.on('end', function() {
+                  _res.once('end', function() {
                     var trailers = _res.trailers;
                     if (!res.chunkedEncoding || req.disable.trailers || req.disable.trailer ||
                       (util.isEmptyObject(trailers) && util.isEmptyObject(newTrailers))) {
@@ -903,6 +903,7 @@ module.exports = function(req, res, next) {
                     util.handleHeaderReplace(trailers, hr.trailer);
                     res.setCurTrailers && res.setCurTrailers(trailers, rawHeaderNames);
                     try {
+                      util.removeIllegalTrailers(trailers);
                       res.addTrailers(formatHeaders(trailers, rawHeaderNames));
                     } catch (e) {}
                   });
@@ -947,7 +948,7 @@ module.exports = function(req, res, next) {
                     delete headers['content-length'];
                   }
                   if (!req.disable.trailerHeader) {
-                    util.addTrailerNames(headers, newTrailers, rawNames, delProps.trailers);
+                    util.addTrailerNames(_res, newTrailers, rawNames, delProps.trailers, req);
                   }
                   try {
                     res.writeHead(_res.statusCode, formatHeaders(headers, rawNames));
