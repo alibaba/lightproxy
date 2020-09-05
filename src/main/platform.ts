@@ -30,7 +30,7 @@ interface ProxyInfo {
 
 function covertOutputToJSON(output: string) {
     // @ts-ignore
-    const content = /{[^]*?}/.exec(output)[0];
+    const content = /{[^]*?}/.exec(output.replace(/ExceptionsList.*\n.*\n.*\n/, ''))[0];
     const jsonContent = content
         .replace(/([a-zA-Z0-9\.]+)/g, '"$1"')
         .replace(/"\n/g, '",\n')
@@ -125,7 +125,9 @@ export async function setSystemProxy(port: number) {
         return;
     }
     if (SYSTEM_IS_MACOS) {
-        const output = execSync(`'${PROXY_CONF_HELPER_PATH}' -m global -p ${port} -r ${port} -s 127.0.0.1`);
+        const output = execSync(
+            `'${PROXY_CONF_HELPER_PATH}' -m global -p ${port} -r ${port} -s 127.0.0.1 -x "*.lan, *.ali.com, *.hz.ali.com"`,
+        );
         logger.info('stdout', output.toString());
     } else {
         return globalProxy

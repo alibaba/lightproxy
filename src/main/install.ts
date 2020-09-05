@@ -118,9 +118,9 @@ Application will quit
 export async function installCertAndHelper() {
     dialog.showMessageBoxSync({
         type: 'info',
-        message: `The certificate is not installed or has expired. You need to install a trust certificate. You may need to enter the password of the login user.
+        message: `The certificate and proxy helper is not installed or has expired. You need to install. You may need to enter the password of the login user.
 
-未安装证书或者已经过期，需要安装信任证书，可能会需要输入登录用户的密码。
+未安装证书/代理helper或者已经过期，需要安装，可能会需要输入登录用户的密码。
         `,
     });
 
@@ -210,11 +210,18 @@ async function checkHelperInstall() {
         return false;
     }
     const info = await fs.statAsync(PROXY_CONF_HELPER_PATH);
-    if (info.uid === 0) {
-        // 已经安装
-        return true;
+    if (info.uid !== 0) {
+        // 权限不对
+        return false;
     }
-    return false;
+    const infoInFiles = await fs.statAsync(PROXY_CONF_HELPER_FILE_PATH);
+    console.log('file soze', info, infoInFiles);
+
+    if (info.size !== infoInFiles.size) {
+        // 大小不一样，说明要更新了
+        return false;
+    }
+    return true;
 }
 
 // 检查安装状态，如果没安装就安装一下
