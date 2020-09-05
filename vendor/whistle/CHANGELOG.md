@@ -1,3 +1,15 @@
+# v2.5.21
+1. style: Overview 规则列表 hover 上去可以点击查看帮助文档
+2. style: Network 搜索框添加历史记录功能
+
+# v2.5.20
+1. fix: `reqHeaders://cookie=xxx` 和 `reqCookies://test=123` 无法同时生效问题
+2. feat: 支持通过请求参数 `hideLeftMenu=true` 或启动参数 `-M hideLeftMenu` 隐藏左菜单
+
+# v2.5.19
+1. feat: 插件自动添加trailers，可以通过 `res.disableTrailer` 禁用
+2. refactor: 优化监听 `res.on('end', cb)` 事件，确保事件触发
+
 # v2.5.18
 1. feat: 支持传递 `trailers`
 2. feat: 支持通过 `delete://trailer.xxx|trailer.yyy` 删除指定tailer（如果存在）
