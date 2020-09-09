@@ -12,6 +12,7 @@ import { checkUpdater } from './updater';
 import path from 'path';
 import { LIGHTPROXY_FILES_DIR } from './const';
 import { app, nativeTheme, BrowserWindow } from 'electron';
+import http from 'http';
 
 interface SwpanModuleProp {
     moduleId: string;
@@ -126,6 +127,40 @@ async function checkSystemProxy(props: any) {
     return checkSystemProxyWork(address, port);
 }
 
+/**
+ *
+ * @param port 代理端口，不提供表示不通过代理
+ */
+async function checkDelay(props: any) {
+    const { port } = props;
+    const CHECK_API = 'http://www.msftconnecttest.com/connecttest.txt';
+    const CHECK_API_HEADER = 'www.msftconnecttest.com';
+
+    const result = await new Promise((resolve, reject) => {
+        const startTime = Date.now();
+        const options = {
+            path: CHECK_API,
+            headers: {
+                Host: CHECK_API_HEADER,
+            },
+            port: 80,
+            host: CHECK_API_HEADER,
+        } as any;
+        if (port) {
+            options.port = port;
+            options.host = '127.0.0.1';
+        }
+        http.get(options, function(res) {
+            if (res.statusCode === 200) {
+                resolve(Date.now() - startTime);
+            } else {
+                reject(res);
+            }
+        });
+    });
+    return result;
+}
+
 export async function initIPC(mainWindow: BrowserWindow) {
     // ipcMain
     ipcMain.answerRenderer('spawnModule', spawnModule);
@@ -144,6 +179,8 @@ export async function initIPC(mainWindow: BrowserWindow) {
     ipcMain.answerRenderer('update', update);
 
     ipcMain.answerRenderer('checkSystemProxy', checkSystemProxy);
+
+    ipcMain.answerRenderer('checkDelay', checkDelay);
 
     // start a socketIO server for extension background process
     await BoardcastManager.getInstance();

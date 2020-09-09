@@ -6,13 +6,13 @@ import { lazyParseData, getWhistlePort } from '../../utils';
 import { Modal, Button } from 'antd';
 const confirm = Modal.confirm;
 
-import { throttle, get } from 'lodash';
+import { throttle, get, debounce } from 'lodash';
 
 import { useTranslation } from 'react-i18next';
 import { syncRuleToWhistle } from '../rule-editor/components/rule-list/remote';
 import { CoreAPI } from '../../core-api';
 
-import { remote, dialog } from 'electron';
+import { remote, dialog, net } from 'electron';
 import { SYSTEM_IS_MACOS } from '../../../renderer/const';
 import { getHelperMenus } from './helper-menus';
 
@@ -72,6 +72,7 @@ export class WhistleExntension extends Extension {
 
     private mUserName = '';
     private mPassword = '';
+    private mVisiableOnLan = false;
 
     async toggleSystemProxy() {
         const onlineStatus = this.coreAPI.store.get('onlineStatus');
@@ -177,10 +178,12 @@ export class WhistleExntension extends Extension {
         })();
 
         this.coreAPI.eventEmmitter.on('lightproxy-restart-proxy-with-lan', () => {
+            this.mVisiableOnLan = true;
             this.startWhistle(true);
 
-            // 3 hour auto close
+            // 12 hour auto close
             setTimeout(() => {
+                this.mVisiableOnLan = false;
                 this.startWhistle(false);
             }, 3000 * 60 * 60);
         });
@@ -208,7 +211,7 @@ export class WhistleExntension extends Extension {
      *
      * @param visiableOnLan 在局域网是否可见
      */
-    private async startWhistle(visiableOnLan = false) {
+    private async startWhistle(visiableOnLan = this.mVisiableOnLan) {
         if (this.mPid) {
             await this.coreAPI.treeKillProcess(this.mPid);
             this.mPid = null;
@@ -272,6 +275,82 @@ export class WhistleExntension extends Extension {
             const hideHit = throttle(() => {
                 setHit(null);
             }, 3000);
+
+            const [delay, setDelay] = useState(0);
+            const [networkStatus, setNetworkStatus] = useState('INITAL' as 'NO_NETWORK' | 'INITAL' | 'NO_PROXY');
+
+            const networkStatusItems = {
+                INITAL: delay ? (
+                    <>
+                        {t('Network Delay')}: {'' + delay} ms
+                        <Icon
+                            style={{ marginRight: '10px', marginLeft: '5px' }}
+                            className="color-success"
+                            type="wifi"
+                        ></Icon>
+                    </>
+                ) : null,
+                NO_NETWORK: (
+                    <>
+                        {t('No Network')}
+                        <Icon
+                            style={{ marginRight: '10px', marginLeft: '5px' }}
+                            className="color-warn"
+                            type="disconnect"
+                        ></Icon>
+                    </>
+                ),
+                NO_PROXY: (
+                    <>
+                        {t('Proxy Invaild')}
+
+                        <Icon
+                            style={{ marginRight: '10px', marginLeft: '5px' }}
+                            className="color-warn"
+                            type="bulb"
+                        ></Icon>
+                    </>
+                ),
+            }[networkStatus];
+
+            useEffect(() => {
+                if (networkStatus === 'NO_NETWORK') {
+                    showNotification(t('Network disconnected'), t('Network disconnected'));
+                } else if (networkStatus === 'NO_PROXY') {
+                    this.startWhistle();
+                }
+            }, [networkStatus]);
+
+            useEffect(() => {
+                const timer = setInterval(async () => {
+                    if (portRef.current) {
+                        const networkDelay = CoreAPI.checkDelay();
+                        const proxyDelay = CoreAPI.checkDelay(portRef.current);
+                        try {
+                            const delay = await new Promise((resolve, reject) => {
+                                setTimeout(reject, 2000);
+                                proxyDelay.then(resolve);
+                            });
+                            if (delay) {
+                                setNetworkStatus('INITAL');
+                                setDelay(delay as number);
+                            }
+                        } catch (e) {
+                            // timeout
+                            const networkDelayMs = await Promise.race([networkDelay, Promise.resolve('TIMEOUT')]);
+                            if (networkDelayMs !== 'TIMEOUT') {
+                                setNetworkStatus('NO_PROXY');
+                                console.log('reconnect');
+                            } else {
+                                setNetworkStatus('NO_NETWORK');
+                            }
+                        }
+                    }
+                }, 1000 * 10);
+                return function() {
+                    clearInterval(timer);
+                };
+            });
 
             useEffect(() => {
                 remote.powerMonitor.on('resume', () => {
@@ -408,26 +487,27 @@ export class WhistleExntension extends Extension {
                 });
             }, []);
             return (
-                <Dropdown overlay={menu}>
-                    <div className="whistle-status-bar-item">
-                        {/* {hit ? 'hit ' + hit + '  ' : null}  */}
-                        {/* {t(info.title)} */}
-                        {t('Proxy')}
-                        {port ? `: [HTTP ${port}/SOCKS5 ${((port as unknown) as number) + 1}]` : null}{' '}
-                        <Icon
-                            style={{ marginRight: '10px', marginLeft: '5px' }}
-                            className={info.proxyClassName}
-                            type={info.proxyIcon}
-                        />
-                        {t('System Proxy')}
-                        <Icon
-                            style={{ marginLeft: '5px' }}
-                            className={info.systemProxyClassName}
-                            type={info.systemProxyIcon}
-                        />
-                        <Icon style={{ marginLeft: '10px' }} type="menu" />
-                    </div>
-                </Dropdown>
+                <>
+                    <Dropdown overlay={menu}>
+                        <div className="whistle-status-bar-item">
+                            {networkStatusItems}
+                            {t('Proxy')}
+                            {port ? `: [HTTP ${port}/SOCKS5 ${((port as unknown) as number) + 1}]` : null}{' '}
+                            <Icon
+                                style={{ marginRight: '10px', marginLeft: '5px' }}
+                                className={info.proxyClassName}
+                                type={info.proxyIcon}
+                            />
+                            {t('System Proxy')}
+                            <Icon
+                                style={{ marginLeft: '5px' }}
+                                className={info.systemProxyClassName}
+                                type={info.systemProxyIcon}
+                            />
+                            <Icon style={{ marginLeft: '10px' }} type="menu" />
+                        </div>
+                    </Dropdown>
+                </>
             );
         };
 

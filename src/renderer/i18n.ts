@@ -83,6 +83,10 @@ export const i18nResources = {
             'There may be performance losses': '可能会有性能损耗',
             'Enable gzip': '开启 gzip',
             'Whistle password': 'Whistle 密码',
+            'Network Delay': '网络延迟',
+            'Network disconnected': '网络连接断开',
+            'No Network': '没有网络',
+            'Proxy Invaild': '代理异常',
         },
     },
 };

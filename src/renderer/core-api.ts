@@ -69,6 +69,12 @@ export class CoreAPIClass {
             port,
         })) as boolean;
     }
+
+    async checkDelay(port?: number) {
+        return (await ipcRenderer.callMain('checkDelay', {
+            port,
+        })) as number;
+    }
 }
 
 export const CoreAPI = new CoreAPIClass();
