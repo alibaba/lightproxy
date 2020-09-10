@@ -17,14 +17,18 @@ const sagaMiddleware = createSagaMiddleware();
 
 function sagaDispatchReducer(state = initialState, action: Action & Record<string, any>) {
     if (effects[action.type]) {
-        sagaMiddleware.run(effects[action.type] as any);
+        sagaMiddleware.run(effects[action.type] as any).toPromise().then(() => {
+            action.__resolve__ && action.__resolve__();
+        });
     }
     return state;
 }
 
 function reducer(state = initialState, action: Action & Record<string, any>) {
     if (reducers[action.type]) {
-        return reducers[action.type](state, action);
+        const r = reducers[action.type](state, action);
+        action.__resolve__ && action.__resolve__();
+        return r;
     }
     return state;
 };
@@ -48,7 +52,10 @@ export const store = createStore(finalReducers, initialState, applyMiddleware(
 ));
 
 promiseIpc.on(REDUX_CLINET_DISPATCH_TO_MASTER, (action: any) => {
-    store.dispatch(action);
+    return new Promise(resolve => {
+        action.__resolve__ = resolve;
+        store.dispatch(action);
+    });
 });
 
 promiseIpc.on(REDUX_MASTER_SYNC_TO_CLIENT, (action: any) => {

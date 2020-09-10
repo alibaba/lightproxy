@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev:renderer": "snowpack dev",
+    "dev:renderer": "snowpack dev --reload",
     "dev:main": "wait-on http://127.0.0.1:8080 && electron -r ts-node/register main/index.ts",
     "start": "run-p dev:**",
     "build": "snowpack build",

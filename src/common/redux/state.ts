@@ -6,7 +6,8 @@ export const initialState = {
             helper: false,
             cert: false,
         },
-    }
+    },
+    __loading__: {} as Record<string, boolean>,
 };
 
 export type State = typeof initialState;

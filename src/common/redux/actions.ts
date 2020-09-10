@@ -4,6 +4,17 @@ export type Action = {
 
 export const REDUX_CLINET_DISPATCH_TO_MASTER = 'REDUX_CLINET_DISPATCH_TO_MASTER';
 export const REDUX_MASTER_SYNC_TO_CLIENT = 'REDUX_MASTER_SYNC_TO_CLIENT';
+
+export const REDUX_CLIENT_INTERNAL_LOADING = 'REDUX_CLIENT_INTERNAL_LOADING';
+
+export function reduxClientInternalLoading(action: Action, status: boolean) {
+    return {
+        type: REDUX_CLIENT_INTERNAL_LOADING,
+        action,
+        status,
+    }
+}
+
 export const ADD_TODO = 'ADD_TODO';
 export const DELAY_ADD_TODO = 'DELAY_ADD_TODO';
 
