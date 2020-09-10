@@ -1,12 +1,10 @@
-import React from 'react';
-import logo from './logo.svg';
-import './app.css';
+import React, { useEffect, useState, FunctionComponent } from 'react';
+import { useSelector, Provider } from 'react-redux';
+
 import { store } from '../redux-client';
-import { useSelector, Provider, useDispatch } from 'react-redux';
-import type { initialState, State } from '../common/redux/state';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import type { State } from '../common/redux/state';
 import { InstallGuide } from './install-guide';
+import './app.css';
 
 function Home() {
   const helperInstalled = useSelector((state: State) => {
@@ -28,13 +26,13 @@ function Home() {
   return showInstallGuide ? <InstallGuide /> : null;
 }
 
-function App() {
+const App: FunctionComponent = () => {
   return (
     <Provider store={store}>
       <Home></Home>
       123
     </Provider>
   );
-}
+};
 
 export default App;

@@ -1,33 +1,36 @@
-import * as sagaEffects from 'redux-saga/effects';
-import { DELAY_ADD_TODO, ADD_TODO, addTodo, APP_INIT, APP_INSTALL_HELPER, appUpdateHelperInstalled, APP_UPDATE_HELPER_INSTALLED } from '../../src/common/redux/actions';
-import { initialState } from '../../src/common/redux/state';
-import { Action } from 'redux';
-import { put, delay } from 'redux-saga/effects';
+import {
+  Action,
+  ACTION_TYPES,
+  appUpdateHelperInstalled,
+} from '../../src/common/redux/actions';
+import { State } from '../../src/common/redux/state';
+import { put, delay, CallEffect, PutEffect } from 'redux-saga/effects';
 
 const effects = {
-    *[APP_INSTALL_HELPER]() {
-        yield delay(500);
-        yield put(appUpdateHelperInstalled(true));
-    }
-} as Record<string, (state: typeof initialState, action: Action & Record<string, any>) => any>;
+  *[ACTION_TYPES.APP_INSTALL_HELPER](): Generator<
+    CallEffect<true> | PutEffect<Action>
+  > {
+    yield delay(500);
+    yield put(appUpdateHelperInstalled(true));
+  },
+};
 
 const reducers = {
-    [APP_UPDATE_HELPER_INSTALLED]: (state, action) => {
-        return {
-            ...state,
-            app: {
-                ...state.app,
-                installed: {
-                    ...state.app.installed,
-                    helper: true,
-                }
-            }
-        }
-    }
-} as Record<string, (state: typeof initialState, action: Action & Record<string, any>) => typeof initialState>;
-
+  [ACTION_TYPES.APP_UPDATE_HELPER_INSTALLED]: (state: State): State => {
+    return {
+      ...state,
+      app: {
+        ...state.app,
+        installed: {
+          ...state.app.installed,
+          helper: true,
+        },
+      },
+    };
+  },
+};
 
 export default {
-    effects,
-    reducers,
+  effects,
+  reducers,
 };

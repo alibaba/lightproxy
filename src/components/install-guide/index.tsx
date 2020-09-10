@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../common/redux/state';
 import {
@@ -6,7 +6,7 @@ import {
   APP_INSTALL_HELPER,
 } from '../../common/redux/actions';
 
-export const InstallGuide = () => {
+export const InstallGuide: FunctionComponent = () => {
   const helperInstalled = useSelector((state: State) => {
     return state.app.installed.helper;
   });

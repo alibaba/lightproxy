@@ -1,71 +1,76 @@
 export type Action = {
+  [key: string]: unknown;
   type: string;
-} & Record<string, any>;
+};
 
-export const REDUX_CLINET_DISPATCH_TO_MASTER =
-  'REDUX_CLINET_DISPATCH_TO_MASTER';
-export const REDUX_MASTER_SYNC_TO_CLIENT = 'REDUX_MASTER_SYNC_TO_CLIENT';
+export enum ACTION_TYPES {
+  REDUX_CLINET_DISPATCH_TO_MASTER = 'REDUX_CLINET_DISPATCH_TO_MASTER',
+  REDUX_MASTER_SYNC_TO_CLIENT = 'REDUX_MASTER_SYNC_TO_CLIENT',
+  REDUX_CLIENT_INTERNAL_LOADING = 'REDUX_CLIENT_INTERNAL_LOADING',
 
-export const REDUX_CLIENT_INTERNAL_LOADING = 'REDUX_CLIENT_INTERNAL_LOADING';
+  APP_INIT = 'APP_INIT',
 
-export function reduxClientInternalLoading(action: Action, status: boolean) {
+  APP_INSTALL_HELPER = 'APP_INSTALL_HELPER',
+  APP_UPDATE_HELPER_INSTALLED = 'APP_UPDATED_HELPER_INSTALLED',
+
+  // need to remove
+  ADD_TODO = 'ADD_TODO',
+  DELAY_ADD_TODO = 'DELAY_ADD_TODO',
+}
+
+export function reduxClientDispatchToMaster(action: Action): Action {
   return {
-    type: REDUX_CLIENT_INTERNAL_LOADING,
+    type: ACTION_TYPES.REDUX_CLINET_DISPATCH_TO_MASTER,
+    action,
+  };
+}
+
+export function reduxMasterSyncToClient(state: unknown): Action {
+  return {
+    type: ACTION_TYPES.REDUX_MASTER_SYNC_TO_CLIENT,
+    state,
+  };
+}
+
+export function reduxClientInternalLoading(
+  action: Action,
+  status: boolean,
+): Action {
+  return {
+    type: ACTION_TYPES.REDUX_CLIENT_INTERNAL_LOADING,
     action,
     status,
   };
 }
 
-export const ADD_TODO = 'ADD_TODO';
-export const DELAY_ADD_TODO = 'DELAY_ADD_TODO';
-
-export const APP_INIT = 'APP_INIT';
-
-export const APP_INSTALL_HELPER = 'APP_INSTALL_HELPER';
-export const APP_UPDATE_HELPER_INSTALLED = 'APP_UPDATED_HELPER_INSTALLED';
-
-export function appUpdateHelperInstalled(installed: boolean) {
+export function appInit(): Action {
   return {
-    type: APP_UPDATE_HELPER_INSTALLED,
+    type: ACTION_TYPES.APP_INIT,
+  };
+}
+
+export function appUpdateHelperInstalled(installed: boolean): Action {
+  return {
+    type: ACTION_TYPES.APP_UPDATE_HELPER_INSTALLED,
     installed,
   };
 }
-export function appInstallHelper() {
+export function appInstallHelper(): Action {
   return {
-    type: APP_INSTALL_HELPER,
+    type: ACTION_TYPES.APP_INSTALL_HELPER,
   };
 }
 
-export function appInit() {
+export function addTodo(text: string): Action {
   return {
-    type: APP_INIT,
-  };
-}
-
-export function addTodo(text: string) {
-  return {
-    type: ADD_TODO,
+    type: ACTION_TYPES.ADD_TODO,
     text,
   };
 }
 
-export function delayAddTodo(text: string) {
+export function delayAddTodo(text: string): Action {
   return {
-    type: DELAY_ADD_TODO,
+    type: ACTION_TYPES.DELAY_ADD_TODO,
     text,
-  };
-}
-
-export function reduxClientDispatchToMaster(action: Action) {
-  return {
-    type: REDUX_CLINET_DISPATCH_TO_MASTER,
-    action,
-  };
-}
-
-export function reduxMasterSyncToClient(state: any) {
-  return {
-    type: REDUX_MASTER_SYNC_TO_CLIENT,
-    state,
   };
 }

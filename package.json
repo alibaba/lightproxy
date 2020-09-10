@@ -8,9 +8,16 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\""
   },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run format"
+      "pre-commit": "lint-staged"
     }
   },
   "dependencies": {
@@ -36,11 +43,16 @@
     "@types/redux-logger": "^3.0.8",
     "@types/snowpack-env": "^2.3.0",
     "@types/uuid": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "autoprefixer": "^9.8.6",
     "electron": "10.1.1",
     "electron-watch": "^1.0.9",
+    "eslint": "^7.8.1",
+    "eslint-plugin-react": "^7.20.6",
     "husky": "^4.3.0",
     "jest": "^26.2.2",
+    "lint-staged": "^10.3.0",
     "npm-run-all": "^4.1.5",
     "postcss": "^7.0.32",
     "postcss-cli": "^7.1.2",

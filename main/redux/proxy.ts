@@ -1,26 +1,27 @@
-import * as sagaEffects from 'redux-saga/effects';
-import { DELAY_ADD_TODO, ADD_TODO, addTodo } from '../../src/common/redux/actions';
-import { initialState } from '../../src/common/redux/state';
-import { Action } from 'redux';
+import { delay, put, CallEffect, PutEffect } from 'redux-saga/effects';
+
+import { Action, ACTION_TYPES, addTodo } from '../../src/common/redux/actions';
+import { initialState, State } from '../../src/common/redux/state';
 
 const effects = {
-    *[DELAY_ADD_TODO]() {
-        yield sagaEffects.delay(1000);
-        yield sagaEffects.put(addTodo('delay item'));
-    }
-} as Record<string, (state: typeof initialState, action: Action & Record<string, any>) => any>;
+  *[ACTION_TYPES.DELAY_ADD_TODO](): Generator<
+    CallEffect<true> | PutEffect<Action>
+  > {
+    yield delay(1000);
+    yield put(addTodo('delay item'));
+  },
+};
 
 const reducers = {
-    [ADD_TODO](state = initialState, action) {
-        return {
-            ...state,
-            todos: state.todos.concat(action.text),
-        }
-    },
-} as Record<string, (state: typeof initialState, action: Action & Record<string, any>) => typeof initialState>;
-
+  [ACTION_TYPES.ADD_TODO](state: State = initialState, action: Action): State {
+    return {
+      ...state,
+      todos: state.todos.concat(action.text),
+    };
+  },
+};
 
 export default {
-    effects,
-    reducers,
+  effects,
+  reducers,
 };
