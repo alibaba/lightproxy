@@ -25,8 +25,7 @@ function Home() {
     }
   }, [helperInstalled, certInstalled]);
 
-
-  return showInstallGuide ? <InstallGuide />: null;
+  return showInstallGuide ? <InstallGuide /> : null;
 }
 
 function App() {
