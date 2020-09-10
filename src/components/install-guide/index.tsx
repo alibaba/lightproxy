@@ -6,11 +6,11 @@ import { appInstallHelper, APP_INSTALL_HELPER } from '../../common/redux/actions
 export const InstallGuide = () => {
     const helperInstalled = useSelector((state: State) => {
         return state.app.installed.helper;
-    }) as boolean;
+    });
     
     const appInstallHelperLoading = useSelector((state: State) => {
         return state.__loading__[APP_INSTALL_HELPER];
-    }) as boolean;
+    });
 
     const dispatch = useDispatch();
 
