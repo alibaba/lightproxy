@@ -25,6 +25,7 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^2.3.0",
     "@snowpack/app-scripts-react": "^1.10.0",
     "@snowpack/plugin-postcss": "^1.0.3",
     "@testing-library/jest-dom": "^5.5.0",
@@ -35,6 +36,7 @@
     "@types/redux-logger": "^3.0.8",
     "@types/snowpack-env": "^2.3.0",
     "@types/uuid": "^8.3.0",
+    "autoprefixer": "^9.8.6",
     "electron": "10.1.1",
     "electron-watch": "^1.0.9",
     "husky": "^4.3.0",
