@@ -24,3 +24,12 @@ app.on('ready', () => {
 
     console.log(store);
 });
+
+if (process.env.NODE_ENV === 'development') {
+    require('electron-watch')(
+        __dirname,
+        'dev:main',
+        path.join(__dirname, './'),      // cwd
+        2000,                            // debounce delay
+    );
+}

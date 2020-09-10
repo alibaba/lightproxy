@@ -15,5 +15,6 @@
     "esModuleInterop": true,    
     // Feel free to add/edit new config options below:
     // ...
-  }
+    "importsNotUsedAsValues": "remove"
+  },
 }

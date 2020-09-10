@@ -6,24 +6,14 @@ import promiseIpc from 'electron-promise-ipc';
 import { initialState } from '../src/common/redux/state';
 import logger from 'redux-logger';
 import { webContents } from 'electron';
+import reduxModels from './redux';
+
+const {
+    effects,
+    reducers,
+} = reduxModels;
 
 const sagaMiddleware = createSagaMiddleware();
-
-const effects = {
-    *[DELAY_ADD_TODO]() {
-        yield sagaEffects.delay(1000);
-        yield sagaEffects.put(addTodo('delay item'));
-    }
-} as Record<string, (state: typeof initialState, action: Action & Record<string, any>) => any>;
-
-const reducers = {
-    [ADD_TODO](state = initialState, action) {
-        return {
-            ...state,
-            todos: state.todos.concat(action.text),
-        }
-    },
-} as Record<string, (state: typeof initialState, action: Action & Record<string, any>) => typeof initialState>;
 
 function sagaDispatchReducer(state = initialState, action: Action & Record<string, any>) {
     if (effects[action.type]) {
