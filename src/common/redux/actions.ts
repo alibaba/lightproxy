@@ -19,19 +19,23 @@ export enum ACTION_TYPES {
 }
 
 interface ActionType {
-    [ACTION_TYPES.APP_UPDATE_HELPER_INSTALLED]: {
-        installed: boolean,
-    }
+  [ACTION_TYPES.APP_UPDATE_HELPER_INSTALLED]: {
+    installed: boolean;
+  };
 
-    // need to remove
-    [ACTION_TYPES.ADD_TODO]: {
-        text: string,
-    },
+  [ACTION_TYPES.APP_INSTALL_HELPER]: {
+    forceInstall: boolean;
+  };
+
+  // need to remove
+  [ACTION_TYPES.ADD_TODO]: {
+    text: string;
+  };
 }
 
 export type ActionTypeOf<T extends keyof ActionType> = ActionType[T] & {
-    type: ACTION_TYPES,
-}
+  type: ACTION_TYPES;
+};
 
 export type ActionArgTypeOf<T extends keyof ActionType> = ActionType[T];
 
@@ -66,15 +70,20 @@ export function appInit(): Action {
   };
 }
 
-export function appUpdateHelperInstalled({ installed }: ActionArgTypeOf<ACTION_TYPES.APP_UPDATE_HELPER_INSTALLED>): Action {
+export function appUpdateHelperInstalled({
+  installed,
+}: ActionArgTypeOf<ACTION_TYPES.APP_UPDATE_HELPER_INSTALLED>): Action {
   return {
     type: ACTION_TYPES.APP_UPDATE_HELPER_INSTALLED,
     installed,
   };
 }
-export function appInstallHelper(): Action {
+export function appInstallHelper({
+  forceInstall,
+}: ActionArgTypeOf<ACTION_TYPES.APP_INSTALL_HELPER>): Action {
   return {
     type: ACTION_TYPES.APP_INSTALL_HELPER,
+    forceInstall,
   };
 }
 
