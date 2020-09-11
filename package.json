@@ -1,8 +1,8 @@
 {
   "name": "LightProxy",
   "scripts": {
-    "dev:renderer": "snowpack dev --reload --polyfill-node",
-    "dev:main": "wait-on http://127.0.0.1:8080 && nodemon -e ts --watch main --watch src/common --exec \"env TS_NODE_DISABLE_EXIT=1 electron --inspect -r ts-node/register main/index.ts\"",
+    "dev:renderer": "snowpack dev --polyfill-node",
+    "dev:main": "wait-on http://127.0.0.1:8080 && nodemon -e ts --watch main --watch src/common --exec \"env TS_NODE_DISABLE_EXIT=1 electron -r ts-node/register main/index.ts\"",
     "start": "env NODE_ENV=development run-p dev:**",
     "build": "snowpack build",
     "test": "jest",
@@ -31,6 +31,10 @@
     "fs-extra-promise": "^1.0.1",
     "immutability-helper": "^3.1.1",
     "monaco-editor": "^0.20.0",
+    "electron-log": "^4.2.4",
+    "electron-promise-ipc": "^2.2.1",
+    "fs-extra": "^9.0.1",
+    "fs-extra-promise": "^1.0.1",
     "node-forge": "^0.10.0",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",

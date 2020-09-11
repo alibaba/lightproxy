@@ -37,75 +37,73 @@ export async function checkCertInstalled() {
   return currentTime < expireTime;
 }
 
+function getDateAfterYears(years: number) {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() + years);
+  return date;
+}
+
 async function generateCert(): Promise<{ key: string; cert: string }> {
-  return new Promise((resolve) => {
-    const keys = pki.rsa.generateKeyPair(2048);
-    const cert = pki.createCertificate();
-    cert.publicKey = keys.publicKey;
-    cert.serialNumber = new Date().getTime() + '';
-    cert.validity.notBefore = new Date();
-    cert.validity.notBefore.setFullYear(
-      cert.validity.notBefore.getFullYear() - 10,
-    );
-    cert.validity.notAfter = new Date();
-    cert.validity.notAfter.setFullYear(
-      cert.validity.notAfter.getFullYear() + 10,
-    );
+  const keys = pki.rsa.generateKeyPair(2048);
+  const cert = pki.createCertificate();
+  cert.publicKey = keys.publicKey;
+  cert.serialNumber = new Date().getTime() + '';
+  cert.validity.notBefore = getDateAfterYears(-10);
+  cert.validity.notAfter = getDateAfterYears(10);
 
-    const attrs = [
-      {
-        name: 'commonName',
-        value:
-          LIGHTPROXY_CERT_NAME_PREFIX + new Date().toISOString().slice(0, 10),
-      },
-      {
-        name: 'countryName',
-        value: 'CN',
-      },
-      {
-        shortName: 'ST',
-        value: 'Hangzhou',
-      },
-      {
-        name: 'localityName',
-        value: 'Hangzhou',
-      },
-      {
-        name: 'organizationName',
-        value: 'LightProxy',
-      },
-      {
-        shortName: 'OU',
-        value: 'https://github.com/alibaba/lightproxy',
-      },
-    ];
+  const attrs = [
+    {
+      name: 'commonName',
+      value:
+        LIGHTPROXY_CERT_NAME_PREFIX + new Date().toISOString().slice(0, 10),
+    },
+    {
+      name: 'countryName',
+      value: 'CN',
+    },
+    {
+      shortName: 'ST',
+      value: 'Hangzhou',
+    },
+    {
+      name: 'localityName',
+      value: 'Hangzhou',
+    },
+    {
+      name: 'organizationName',
+      value: 'LightProxy',
+    },
+    {
+      shortName: 'OU',
+      value: 'https://github.com/alibaba/lightproxy',
+    },
+  ];
 
-    cert.setSubject(attrs);
-    cert.setIssuer(attrs);
-    cert.setExtensions([
-      {
-        name: 'basicConstraints',
-        critical: true,
-        cA: true,
-      },
-      {
-        name: 'keyUsage',
-        critical: true,
-        keyCertSign: true,
-      },
-      {
-        name: 'subjectKeyIdentifier',
-      },
-    ]);
-    cert.sign(keys.privateKey, forge.md.sha256.create());
-    const certPem = pki.certificateToPem(cert);
-    const keyPem = pki.privateKeyToPem(keys.privateKey);
+  cert.setSubject(attrs);
+  cert.setIssuer(attrs);
+  cert.setExtensions([
+    {
+      name: 'basicConstraints',
+      critical: true,
+      cA: true,
+    },
+    {
+      name: 'keyUsage',
+      critical: true,
+      keyCertSign: true,
+    },
+    {
+      name: 'subjectKeyIdentifier',
+    },
+  ]);
+  cert.sign(keys.privateKey, forge.md.sha256.create());
+  const certPem = pki.certificateToPem(cert);
+  const keyPem = pki.privateKeyToPem(keys.privateKey);
 
-    resolve({
-      key: keyPem,
-      cert: certPem,
-    });
-  });
+  return {
+    key: keyPem,
+    cert: certPem,
+  };
 }
 
 // remove all lightproxy related cert
