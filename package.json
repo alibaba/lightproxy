@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "dev:renderer": "snowpack dev --reload",
-    "dev:main": "wait-on http://127.0.0.1:8080 && electron -r ts-node/register main/index.ts",
-    "start": "run-p dev:**",
+    "dev:renderer": "snowpack dev --polyfill-node",
+    "dev:main": "wait-on http://127.0.0.1:8080 && env TS_NODE_DISABLE_EXIT=1 electron -r ts-node/register main/index.ts",
+    "start": "env NODE_ENV=development run-p dev:**",
     "build": "snowpack build",
     "test": "jest",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",

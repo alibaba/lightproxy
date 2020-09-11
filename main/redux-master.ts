@@ -4,7 +4,7 @@ import promiseIpc from 'electron-promise-ipc';
 import logger from 'redux-logger';
 import { webContents } from 'electron';
 
-import { ACTION_TYPES, Action } from '../src/common/redux/actions';
+import { ACTION_TYPES } from '../src/common/redux/actions';
 import { initialState } from '../src/common/redux/state';
 import reduxModels from './redux';
 
@@ -12,7 +12,17 @@ const { effects, reducers } = reduxModels;
 
 const sagaMiddleware = createSagaMiddleware();
 
-function sagaDispatchReducer(state = initialState, action: Action) {
+type DefinedReducersAction = {
+    type: keyof(typeof reducers),
+    __resolve__?: () => void,
+}
+
+type DefinedEffectAction = {
+    type: keyof(typeof effects),
+    __resolve__?: () => void,
+}
+
+function sagaDispatchReducer(state = initialState, action: DefinedEffectAction) {
   if (effects[action.type]) {
     sagaMiddleware
       .run(effects[action.type] as any)
@@ -26,9 +36,9 @@ function sagaDispatchReducer(state = initialState, action: Action) {
   return state;
 }
 
-function reducer(state = initialState, action: Action & Record<string, any>) {
-  if (reducers[action.type]) {
-    const r = reducers[action.type](state, action);
+function reducer(state = initialState, action: DefinedReducersAction) {
+  if (action.type in reducers) {
+    const r = reducers[action.type](state, action as any);
     action.__resolve__ && action.__resolve__();
     return r;
   }

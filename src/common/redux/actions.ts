@@ -18,6 +18,23 @@ export enum ACTION_TYPES {
   DELAY_ADD_TODO = 'DELAY_ADD_TODO',
 }
 
+interface ActionType {
+    [ACTION_TYPES.APP_UPDATE_HELPER_INSTALLED]: {
+        installed: boolean,
+    }
+
+    // need to remove
+    [ACTION_TYPES.ADD_TODO]: {
+        text: string,
+    },
+}
+
+export type ActionTypeOf<T extends keyof ActionType> = ActionType[T] & {
+    type: ACTION_TYPES,
+}
+
+export type ActionArgTypeOf<T extends keyof ActionType> = ActionType[T];
+
 export function reduxClientDispatchToMaster(action: Action): Action {
   return {
     type: ACTION_TYPES.REDUX_CLINET_DISPATCH_TO_MASTER,
@@ -49,7 +66,7 @@ export function appInit(): Action {
   };
 }
 
-export function appUpdateHelperInstalled(installed: boolean): Action {
+export function appUpdateHelperInstalled({ installed }: ActionArgTypeOf<ACTION_TYPES.APP_UPDATE_HELPER_INSTALLED>): Action {
   return {
     type: ACTION_TYPES.APP_UPDATE_HELPER_INSTALLED,
     installed,

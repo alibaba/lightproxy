@@ -6,8 +6,8 @@
     "baseUrl": "./",
     "isolatedModules": true,
     "paths": { "*": ["web_modules/.types/*"] },
-    "module": "ESNext",
     "esModuleInterop": true,
-    "importsNotUsedAsValues": "remove"
-  }
+    "importsNotUsedAsValues": "remove",
+    "module": "commonjs",
+  },
 }

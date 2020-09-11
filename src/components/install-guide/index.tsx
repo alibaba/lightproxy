@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../common/redux/state';
 import {
   appInstallHelper,
-  APP_INSTALL_HELPER,
+  ACTION_TYPES,
 } from '../../common/redux/actions';
 
 export const InstallGuide: FunctionComponent = () => {
@@ -12,7 +12,7 @@ export const InstallGuide: FunctionComponent = () => {
   });
 
   const appInstallHelperLoading = useSelector((state: State) => {
-    return state.__loading__[APP_INSTALL_HELPER];
+    return state.__loading__[ACTION_TYPES.APP_INSTALL_HELPER];
   });
 
   const dispatch = useDispatch();
