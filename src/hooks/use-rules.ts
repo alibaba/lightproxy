@@ -4,21 +4,43 @@
 
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../common/redux/state';
-import { useMemo } from 'react';
-import { rulesReorder } from '../common/redux/actions';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import update from 'immutability-helper';
+import { Rule } from '../components/rule-list';
 
 export function useRules() {
-  const rules = useSelector((state: State) => {
+  const remoteRules = useSelector((state: State) => {
     return state.rules;
   });
 
-  const dispatch = useDispatch();
+  const [rules, setRules] = useState<Rule[]>(remoteRules);
 
-  const reorder = (fromIndex: number, toIndex: number) => {
-    dispatch(
-      rulesReorder({
-        fromIndex,
-        toIndex,
+  useEffect(() => {
+    setRules(remoteRules);
+  }, [remoteRules]);
+
+  const reorder = useCallback(
+    (fromIndex: number, toIndex: number) => {
+      const from = rules[fromIndex];
+      const newList = update(rules, {
+        $splice: [
+          [fromIndex, 1],
+          [toIndex, 0, from],
+        ],
+      });
+      setRules(newList);
+    },
+    [rules],
+  );
+
+  const updateRule = (index: number, content: string) => {
+    setRules(
+      update(rules, {
+        [index]: {
+          content: {
+            $set: content,
+          },
+        },
       }),
     );
   };
@@ -26,5 +48,6 @@ export function useRules() {
   return {
     ruleList: rules,
     reorder,
+    updateRule,
   };
 }

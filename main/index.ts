@@ -2,11 +2,33 @@ process.on('uncaughtException', (err) => {
   console.error(err);
 });
 
-import { app, BrowserWindow } from 'electron';
+import defaultMenu from 'electron-default-menu';
+import { app, BrowserWindow, Menu, dialog, shell } from 'electron';
 import path from 'path';
 import { initApp } from './init';
 
 let win;
+
+function initMenu() {
+  // Get default menu template
+  const menu = defaultMenu(app, shell);
+
+  // Add custom menu
+  menu.splice(4, 0, {
+    label: 'Custom',
+    submenu: [
+      {
+        label: 'Do something',
+        click: (item, focusedWindow) => {
+          dialog.showMessageBox({ message: 'Do something', buttons: ['OK'] });
+        },
+      },
+    ],
+  });
+
+  // Set application menu
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
+}
 
 function createMainWindow() {
   win = new BrowserWindow({
@@ -26,6 +48,7 @@ function createMainWindow() {
 const initAppPomise = initApp();
 
 app.on('ready', async () => {
+  initMenu();
   await initAppPomise;
   createMainWindow();
 });

@@ -16,29 +16,30 @@ export interface Rule {
   rename?: boolean;
 }
 
-export const RuleList = () => {
-  const rules = useRules();
+interface RuleListProps {
+  rules: Rule[];
+  reorder: (fromIndex: number, toIndex: number) => void;
+  selected: number;
+  onSelected: (index: number) => void;
+}
 
-  const [selected, setSelected] = useState(0);
+export const RuleList = (props: RuleListProps) => {
+  const { rules, reorder, selected, onSelected } = props;
+
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
     }
-    rules.reorder(result.source.index, result.destination.index);
+    reorder(result.source.index, result.destination.index);
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
         {(provided) => (
-          <div
-            className="lightproxy-rule-list no-drag"
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-          >
-            {rules.ruleList.map((item, index) => {
+          <div {...provided.droppableProps} ref={provided.innerRef}>
+            {rules.map((item, index) => {
               const className = classnames({
-                'lightproxy-rule-list-item': true,
                 selected: index === selected,
                 enabled: !item.rename && item.enabled,
               });
@@ -56,6 +57,7 @@ export const RuleList = () => {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         className={className}
+                        onClick={() => onSelected(index)}
                       >
                         {item.name}
                       </div>
