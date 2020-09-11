@@ -9,11 +9,11 @@ import './app.css';
 function Home() {
   const helperInstalled = useSelector((state: State) => {
     return state.app.installed.helper;
-  }) as boolean;
+  });
 
   const certInstalled = useSelector((state: State) => {
     return state.app.installed.cert;
-  }) as boolean;
+  });
 
   const [showInstallGuide, setShowInstallGuide] = useState(false);
 
@@ -23,14 +23,32 @@ function Home() {
     }
   }, [helperInstalled, certInstalled]);
 
-  return showInstallGuide ? <InstallGuide /> : null;
+  return showInstallGuide ? (
+    <>
+      <InstallGuide />
+      <button
+        className="bg-blue-500 block hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={() => setShowInstallGuide(false)}
+      >
+        Hide
+      </button>
+    </>
+  ) : (
+    <div>
+      <button
+        className="bg-blue-500 block hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={() => setShowInstallGuide(true)}
+      >
+        InstallGuide
+      </button>
+    </div>
+  );
 }
 
 const App: FunctionComponent = () => {
   return (
     <Provider store={store}>
       <Home></Home>
-      123
     </Provider>
   );
 };
