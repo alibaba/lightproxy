@@ -1,3 +1,7 @@
+process.on('uncaughtException', (err) => {
+  console.error(err);
+});
+
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { store } from './redux-master';
