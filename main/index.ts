@@ -4,7 +4,7 @@ process.on('uncaughtException', (err) => {
 
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
-import { store } from './redux-master';
+import { initApp } from './init';
 
 let win;
 
@@ -23,10 +23,11 @@ function createMainWindow() {
   win.show();
 }
 
-app.on('ready', () => {
-  createMainWindow();
+const initAppPomise = initApp();
 
-  console.log(store);
+app.on('ready', async () => {
+  await initAppPomise;
+  createMainWindow();
 });
 
 if (process.env.NODE_ENV === 'development') {
@@ -35,6 +36,6 @@ if (process.env.NODE_ENV === 'development') {
     __dirname,
     'dev:main',
     path.join(__dirname, './'), // cwd
-    2000, // debounce delay
+    1000, // debounce delay
   );
 }

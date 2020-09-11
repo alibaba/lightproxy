@@ -5,7 +5,7 @@ import logger from 'redux-logger';
 import { webContents } from 'electron';
 
 import { ACTION_TYPES } from '../src/common/redux/actions';
-import { initialState } from '../src/common/redux/state';
+import { initialState, State } from '../src/common/redux/state';
 import reduxModels from './redux';
 
 const { effects, reducers } = reduxModels;
@@ -13,19 +13,22 @@ const { effects, reducers } = reduxModels;
 const sagaMiddleware = createSagaMiddleware();
 
 type DefinedReducersAction = {
-    type: keyof(typeof reducers),
-    __resolve__?: () => void,
-}
+  type: keyof typeof reducers;
+  __resolve__?: () => void;
+};
 
 type DefinedEffectAction = {
-    type: keyof(typeof effects),
-    __resolve__?: () => void,
-}
+  type: keyof typeof effects;
+  __resolve__?: () => void;
+};
 
-function sagaDispatchReducer(state = initialState, action: DefinedEffectAction) {
+function sagaDispatchReducer(
+  state = initialState,
+  action: DefinedEffectAction,
+) {
   if (effects[action.type]) {
     sagaMiddleware
-      .run(effects[action.type] as any)
+      .run(effects[action.type], state as any, action as any)
       .toPromise()
       .then(() => {
         if (typeof action.__resolve__ === 'function') {
@@ -61,19 +64,23 @@ const finalReducers = (state: any, action: any) => {
   return r;
 };
 
-export const store = createStore(
-  finalReducers,
-  initialState,
-  applyMiddleware(logger, sagaMiddleware, syncStateMiddleware),
-);
+export function initStore(initialState: State) {
+  const store = createStore(
+    finalReducers,
+    initialState,
+    applyMiddleware(logger, sagaMiddleware, syncStateMiddleware),
+  );
 
-promiseIpc.on(ACTION_TYPES.REDUX_CLINET_DISPATCH_TO_MASTER, (action: any) => {
-  return new Promise((resolve) => {
-    action.__resolve__ = resolve;
-    store.dispatch(action);
+  promiseIpc.on(ACTION_TYPES.REDUX_CLINET_DISPATCH_TO_MASTER, (action: any) => {
+    return new Promise((resolve) => {
+      action.__resolve__ = resolve;
+      store.dispatch(action);
+    });
   });
-});
 
-promiseIpc.on(ACTION_TYPES.REDUX_MASTER_SYNC_TO_CLIENT, () => {
-  return store.getState() || initialState;
-});
+  promiseIpc.on(ACTION_TYPES.REDUX_MASTER_SYNC_TO_CLIENT, () => {
+    return store.getState() || initialState;
+  });
+
+  return store;
+}
