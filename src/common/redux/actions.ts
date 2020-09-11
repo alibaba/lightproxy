@@ -16,6 +16,8 @@ export enum ACTION_TYPES {
   APP_INSTALL_CERT = 'APP_INSTALL_CERT',
   APP_UPDATE_CERT_INSTALLED = 'APP_UPDATE_CERT_INSTALLED',
 
+  RULES_REORDER = 'RULE_REORDER',
+
   // need to remove
   ADD_TODO = 'ADD_TODO',
   DELAY_ADD_TODO = 'DELAY_ADD_TODO',
@@ -38,6 +40,15 @@ interface ActionType {
     forceInstall: boolean;
   };
 
+  [ACTION_TYPES.RULES_REORDER]: {
+    fromIndex: number;
+    toIndex: number;
+  };
+
+  [ACTION_TYPES.REDUX_CLINET_DISPATCH_TO_MASTER]: {
+    action: Action;
+  };
+
   // need to remove
   [ACTION_TYPES.ADD_TODO]: {
     text: string;
@@ -50,10 +61,21 @@ export type ActionTypeOf<T extends keyof ActionType> = ActionType[T] & {
 
 export type ActionArgTypeOf<T extends keyof ActionType> = ActionType[T];
 
-export function reduxClientDispatchToMaster(action: Action): Action {
+export function reduxClientDispatchToMaster({
+  action,
+}: ActionArgTypeOf<ACTION_TYPES.REDUX_CLINET_DISPATCH_TO_MASTER>): Action {
   return {
     type: ACTION_TYPES.REDUX_CLINET_DISPATCH_TO_MASTER,
     action,
+  };
+}
+
+export function rulesReorder(
+  action: ActionArgTypeOf<ACTION_TYPES.RULES_REORDER>,
+) {
+  return {
+    type: ACTION_TYPES.RULES_REORDER,
+    ...action,
   };
 }
 

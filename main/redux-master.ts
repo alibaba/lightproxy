@@ -4,9 +4,14 @@ import promiseIpc from 'electron-promise-ipc';
 import logger from 'redux-logger';
 import { webContents } from 'electron';
 
-import { ACTION_TYPES } from '../src/common/redux/actions';
+import {
+  ACTION_TYPES,
+  ActionTypeOf,
+  Action,
+} from '../src/common/redux/actions';
 import { initialState, State } from '../src/common/redux/state';
 import reduxModels from './redux';
+import { assert } from 'console';
 
 const { effects, reducers } = reduxModels;
 

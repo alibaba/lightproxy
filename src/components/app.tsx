@@ -5,8 +5,9 @@ import { store } from '../redux-client';
 import type { State } from '../common/redux/state';
 import { InstallGuide } from './install-guide';
 import './app.css';
+import { Rule } from './rule';
 
-function Home() {
+function GuideHome() {
   const helperInstalled = useSelector((state: State) => {
     return state.app.installed.helper;
   });
@@ -44,6 +45,15 @@ function Home() {
     </div>
   );
 }
+
+const Home = () => {
+  return (
+    <>
+      <GuideHome />
+      <Rule />
+    </>
+  );
+};
 
 const App: FunctionComponent = () => {
   return (

@@ -34,3 +34,4 @@ export const CERT_KEY_PATH = path.join(CERT_PATH, CERT_KEY_FILE_NAME);
 export const CERT_FILE_PATH = path.join(CERT_PATH, CERT_FILE_NAME);
 
 export const LIGHTPROXY_TEMP_PATH = path.join(LIGHTPROXY_HOME_PATH, 'temp');
+export const RULE_STORE_KEY = 'lightproxy-rule';
