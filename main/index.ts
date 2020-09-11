@@ -29,13 +29,3 @@ app.on('ready', async () => {
   await initAppPomise;
   createMainWindow();
 });
-
-if (process.env.NODE_ENV === 'development') {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  require('electron-watch')(
-    __dirname,
-    'dev:main',
-    path.join(__dirname, './'), // cwd
-    1000, // debounce delay
-  );
-}
