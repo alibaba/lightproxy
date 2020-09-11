@@ -11,7 +11,10 @@ export enum ACTION_TYPES {
   APP_INIT = 'APP_INIT',
 
   APP_INSTALL_HELPER = 'APP_INSTALL_HELPER',
-  APP_UPDATE_HELPER_INSTALLED = 'APP_UPDATED_HELPER_INSTALLED',
+  APP_UPDATE_HELPER_INSTALLED = 'APP_UPDATE_HELPER_INSTALLED',
+
+  APP_INSTALL_CERT = 'APP_INSTALL_CERT',
+  APP_UPDATE_CERT_INSTALLED = 'APP_UPDATE_CERT_INSTALLED',
 
   // need to remove
   ADD_TODO = 'ADD_TODO',
@@ -23,7 +26,15 @@ interface ActionType {
     installed: boolean;
   };
 
+  [ACTION_TYPES.APP_UPDATE_CERT_INSTALLED]: {
+    installed: boolean;
+  };
+
   [ACTION_TYPES.APP_INSTALL_HELPER]: {
+    forceInstall: boolean;
+  };
+
+  [ACTION_TYPES.APP_INSTALL_CERT]: {
     forceInstall: boolean;
   };
 
@@ -78,11 +89,30 @@ export function appUpdateHelperInstalled({
     installed,
   };
 }
+
+export function appUpdateCertInstalled({
+  installed,
+}: ActionArgTypeOf<ACTION_TYPES.APP_UPDATE_CERT_INSTALLED>): Action {
+  return {
+    type: ACTION_TYPES.APP_UPDATE_CERT_INSTALLED,
+    installed,
+  };
+}
+
 export function appInstallHelper({
   forceInstall,
 }: ActionArgTypeOf<ACTION_TYPES.APP_INSTALL_HELPER>): Action {
   return {
     type: ACTION_TYPES.APP_INSTALL_HELPER,
+    forceInstall,
+  };
+}
+
+export function appInstallCert({
+  forceInstall,
+}: ActionArgTypeOf<ACTION_TYPES.APP_INSTALL_CERT>): Action {
+  return {
+    type: ACTION_TYPES.APP_INSTALL_CERT,
     forceInstall,
   };
 }

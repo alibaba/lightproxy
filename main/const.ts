@@ -26,3 +26,11 @@ export const LIGHTPROXY_ICON_PATH = path.join(
   LIGHTPROXY_FILES_PATH,
   SYSTEM_TYPE === 'MacOS' ? 'icon.icns' : 'icon.png',
 );
+
+export const CERT_FILE_NAME = 'root.crt';
+export const CERT_KEY_FILE_NAME = 'root.key';
+export const CERT_PATH = path.join(LIGHTPROXY_HOME_PATH, 'certificates');
+export const CERT_KEY_PATH = path.join(CERT_PATH, CERT_KEY_FILE_NAME);
+export const CERT_FILE_PATH = path.join(CERT_PATH, CERT_FILE_NAME);
+
+export const LIGHTPROXY_TEMP_PATH = path.join(LIGHTPROXY_HOME_PATH, 'temp');

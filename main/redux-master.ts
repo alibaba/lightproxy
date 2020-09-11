@@ -34,6 +34,11 @@ function sagaDispatchReducer(
         if (typeof action.__resolve__ === 'function') {
           action.__resolve__();
         }
+      })
+      .catch(() => {
+        if (typeof action.__resolve__ === 'function') {
+          action.__resolve__();
+        }
       });
   }
   return state;

@@ -3,9 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../common/redux/state';
 import { appInstallHelper, ACTION_TYPES } from '../../common/redux/actions';
 import { useProxyHelperInstall } from '../../hooks/use-helper-install';
+import { useCertInstall } from '../../hooks/use-cert-install';
 
 export const InstallGuide: FunctionComponent = () => {
   const helperInstaller = useProxyHelperInstall();
+  const certInstaller = useCertInstall();
 
   return (
     <div className="max-w-sm rounded overflow-hidden shadow-lg">
@@ -23,6 +25,19 @@ export const InstallGuide: FunctionComponent = () => {
               ></svg>
             ) : null}
             Install Helper {helperInstaller.installed ? 'DONE' : ''}
+          </button>
+
+          <button
+            onClick={certInstaller.install}
+            className="bg-blue-500 mt-4 block hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            {certInstaller.loading ? (
+              <svg
+                className="animate-spin h-5 w-5 mr-3 ..."
+                viewBox="0 0 24 24"
+              ></svg>
+            ) : null}
+            Install Cert {certInstaller.installed ? 'DONE' : ''}
           </button>
         </div>
       </div>
