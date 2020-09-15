@@ -45,9 +45,14 @@ export function useRules() {
     );
   };
 
+  const [selected, setSelected] = useState(0);
+
   return {
     ruleList: rules,
     reorder,
     updateRule,
+
+    selected,
+    onSelected: setSelected,
   };
 }
