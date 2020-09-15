@@ -214,13 +214,6 @@ async function checkHelperInstall() {
         // 权限不对
         return false;
     }
-    const infoInFiles = await fs.statAsync(PROXY_CONF_HELPER_FILE_PATH);
-    console.log('file soze', info, infoInFiles);
-
-    if (info.size !== infoInFiles.size) {
-        // 大小不一样，说明要更新了
-        return false;
-    }
     return true;
 }
 

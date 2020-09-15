@@ -74,7 +74,7 @@
     "reset-css": "^5.0.1",
     "shelljs": "^0.8.3",
     "source-map-support": "^0.5.12",
-    "sudo-prompt": "^9.1.1",
+    "sudo-prompt": "^9.2.1",
     "tempdir": "^2.0.0",
     "tree-kill": "^1.2.2",
     "universal-analytics": "^0.4.20",
