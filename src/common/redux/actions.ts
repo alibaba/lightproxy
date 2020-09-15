@@ -38,6 +38,10 @@ interface ActionType {
     forceInstall: boolean;
   };
 
+  [ACTION_TYPES.REDUX_CLINET_DISPATCH_TO_MASTER]: {
+    action: Action;
+  };
+
   // need to remove
   [ACTION_TYPES.ADD_TODO]: {
     text: string;
@@ -50,7 +54,9 @@ export type ActionTypeOf<T extends keyof ActionType> = ActionType[T] & {
 
 export type ActionArgTypeOf<T extends keyof ActionType> = ActionType[T];
 
-export function reduxClientDispatchToMaster(action: Action): Action {
+export function reduxClientDispatchToMaster({
+  action,
+}: ActionArgTypeOf<ACTION_TYPES.REDUX_CLINET_DISPATCH_TO_MASTER>): Action {
   return {
     type: ACTION_TYPES.REDUX_CLINET_DISPATCH_TO_MASTER,
     action,
