@@ -91,6 +91,32 @@ export const RuleList = (props: Props) => {
 
     const [ruleList, setRuleList] = useState(() => readRules() || defaultRuleList);
 
+    useEffect(() => {
+        const enterHandler = () => {
+            saveRules(
+                ruleList.concat([
+                    {
+                        uuid: '[internal-debugger-on]',
+                        content: `/lightproxy=true/ weinre://*`,
+                        enabled: true,
+                        name: '[internal-debugger-on]',
+                    },
+                ]),
+            );
+        };
+
+        const exitHandler = () => {
+            saveRules(ruleList.filter(item => item.uuid !== '[internal-debugger-on]'));
+        };
+        CoreAPI.eventEmmitter.on('weinre-enter', enterHandler);
+        CoreAPI.eventEmmitter.on('weinre-exit', exitHandler);
+
+        return function() {
+            CoreAPI.eventEmmitter.off('weiren-enter', enterHandler);
+            CoreAPI.eventEmmitter.off('weiren-exit', exitHandler);
+        };
+    }, [ruleList]);
+
     const [selected, setSelected] = useState(0);
 
     const [renameText, setRenameText] = useState('');

@@ -7,6 +7,7 @@ import { Card, Option } from '../card';
 import { useThemeMode } from '../../../../hooks/use-theme-mode';
 import * as monaco from 'monaco-editor';
 import { useKeepAliveEffect } from 'react-keep-alive';
+import { remote } from 'electron';
 
 interface Props {
     content: string;
@@ -96,7 +97,10 @@ export const Editor = (props: Props) => {
 
     return (
         <div className="lightproxy-rule-editor-container">
-            <div className="lightproxy-editor-actionbar drag">
+            <div
+                onDoubleClick={() => remote.getCurrentWindow().maximize()}
+                className="lightproxy-editor-actionbar drag"
+            >
                 <span className="tip">{t('Type / to insert rule')}</span>
             </div>
 
