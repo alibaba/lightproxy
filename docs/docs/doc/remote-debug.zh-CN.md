@@ -1,7 +1,5 @@
 ---
-nav:
-  title: 远程调试
-  order: 3
+title: 远程调试
 order: 3
 ---
 

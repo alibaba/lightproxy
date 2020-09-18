@@ -1,7 +1,5 @@
 ---
-nav:
-  title: Remote debug
-  order: 3
+title: Remote debug
 order: 3
 ---
 
