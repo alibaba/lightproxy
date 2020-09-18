@@ -12,7 +12,7 @@ order: 3
 
 图为在 iOS 的微信 Webview 进行 Debug。
 
-[../imgs/remote-debug.png]
+![../imgs/remote-debug.png]
 
 ## 使用方式
 

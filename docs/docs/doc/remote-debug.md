@@ -12,7 +12,7 @@ However, in some scenarios, we do not have such conditions. LightProxy will use 
 
 The picture shows Debug in WeChat Webview of iOS.
 
-[../imgs/remote-debug.png]
+![../imgs/remote-debug.png]
 
 ## How to use
 
