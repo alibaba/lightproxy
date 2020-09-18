@@ -10,7 +10,7 @@ import treeKill from 'tree-kill';
 import ip from 'ip';
 import { checkUpdater } from './updater';
 import path from 'path';
-import { LIGHTPROXY_FILES_DIR } from './const';
+import { LIGHTPROXY_FILES_DIR, SYSTEM_IS_MACOS } from './const';
 import { app, nativeTheme, BrowserWindow } from 'electron';
 import http from 'http';
 
@@ -33,6 +33,10 @@ async function spawnModule(props: any) {
     const nodeModulePath = path.join(LIGHTPROXY_FILES_DIR, `/node/node_modules/`);
     const modulePath = encodeURIComponent(path.join(nodeModulePath, `${moduleId}/index.js`));
 
+    const nodeExe = SYSTEM_IS_MACOS
+        ? path.join(LIGHTPROXY_FILES_DIR, './node/node-mac')
+        : path.join(LIGHTPROXY_FILES_DIR, './node/node-win.exe');
+
     const nodeScript = `
 const cp = require('child_process');
 const originSpwan = cp.spawn;
@@ -51,7 +55,7 @@ cp.spawn = function(cmd, argv, options) {
 require(decodeURIComponent('${modulePath}'));`;
     const startProcess = () => {
         const child = spwan(
-            process.execPath,
+            nodeExe,
             [
                 '-e',
                 `const code = decodeURIComponent("${encodeURIComponent(nodeScript)}");console.log(code);eval(code);`,
@@ -71,7 +75,6 @@ require(decodeURIComponent('${modulePath}'));`;
                 },
             },
         );
-        logger.info('Spwaned process', process.execPath, child.pid);
 
         exitHook(() => {
             child?.kill();

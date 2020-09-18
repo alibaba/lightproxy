@@ -1,6 +1,6 @@
 {
   "name": "LightProxy",
-  "version": "1.1.39-beta-2",
+  "version": "1.1.39-beta-3",
   "license": "MIT",
   "main": "./dist/main.js",
   "scripts": {
@@ -19,10 +19,12 @@
     "lint": "eslint ./src/**/*.ts ./src/**/*.tsx --fix",
     "upguard:whistle": "git subtree pull --prefix=vendor/whistle https://github.com/avwo/whistle master --squash && npm run update:node_modules",
     "update:node_modules": "npx rimraf vendor/files/node/modules && cd vendor/files/node && echo {} > package.json && yarn add --ignore-engines ../../whistle-start ../../whistle whistle.vase ../../whistle.scriptfile ../../whistle.chii-internal --production=true && mv node_modules modules && cd ../../.. && npm run update:zip",
-    "update:zip": "cd vendor && rimraf files.zip && bestzip files.zip files/",
+    "update:zip": "node scripts/remove-node.js && cd vendor && rimraf files.zip && bestzip files.zip files/",
+    "update:zip-fullnode": "cd vendor && rimraf files.zip && bestzip files.zip files/",
+    "update:node": "cd vendor/files/node && curl https://cdn.npm.taobao.org/dist/node/v14.9.0/win-x86/node.exe > node-win.exe && curl https://cdn.npm.taobao.org/dist/node/v14.9.0/node-v14.9.0-darwin-x64.tar.gz| tar -xz && mv node-*-darwin-x64/bin/node node-mac && rm -rf node-*-darwin-x64",
     "cleanbuild": "rm -rf node_modules && yarn install --ignore-engines && yarn run dist",
     "build-doc": "cd docs && yarn install --ignore-engines&& yarn run build",
-    "install-deps": "yarn install --ignore-engines&& yarn run update:node_modules",
+    "install-deps": "yarn install --ignore-engines && yarn run update:node && yarn run update:node_modules",
     "ci": "npm install -g yarn && yarn run install-deps && yarn run dist",
     "postinstall": "electron-builder install-app-deps",
     "test": "echo 'no test here yet'",

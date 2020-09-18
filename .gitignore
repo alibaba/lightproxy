@@ -18,3 +18,6 @@ vendor/files/node/modules
 .umi
 *.swp
 *.zip
+
+node-mac
+node.exe

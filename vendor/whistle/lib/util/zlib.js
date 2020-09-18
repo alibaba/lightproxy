@@ -1,7 +1,7 @@
 var zlib = require('zlib');
 var Limiter = require('async-limiter');
 
-var limiter = new Limiter({ concurrency: 200 });
+var limiter = new Limiter({ concurrency: 10 });
 
 function createConvenienceMethod(ctor, sync) {
   return function(buffer, opts, callback) {
