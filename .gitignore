@@ -17,3 +17,4 @@ docs/.vuepress/dist
 vendor/files/node/modules
 .umi
 *.swp
+*.zip
