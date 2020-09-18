@@ -91,22 +91,34 @@ export const RuleList = (props: Props) => {
 
     const [ruleList, setRuleList] = useState(() => readRules() || defaultRuleList);
 
+    const saveWithLimit = useCallback(
+        throttle((rules: Rule[]) => {
+            saveRules(rules);
+        }, 1000),
+        [],
+    );
+
+    const ruleListRef = useRef(ruleList);
+    ruleListRef.current = ruleList;
+
     useEffect(() => {
         const enterHandler = () => {
-            saveRules(
-                ruleList.concat([
-                    {
-                        uuid: '[internal-debugger-on]',
-                        content: `/lightproxy=true/ weinre://*`,
-                        enabled: true,
-                        name: '[internal-debugger-on]',
-                    },
-                ]),
+            saveWithLimit(
+                ruleListRef.current
+                    .filter(item => item.uuid !== '[internal-debugger-on]')
+                    .concat([
+                        {
+                            uuid: '[internal-debugger-on]',
+                            content: `/lightproxy=true/ whistle.chii-internal://[lightproxy-debug]`,
+                            enabled: true,
+                            name: '[internal-debugger-on]',
+                        },
+                    ]),
             );
         };
 
         const exitHandler = () => {
-            saveRules(ruleList.filter(item => item.uuid !== '[internal-debugger-on]'));
+            saveRules(ruleListRef.current.filter(item => item.uuid !== '[internal-debugger-on]'));
         };
         CoreAPI.eventEmmitter.on('weinre-enter', enterHandler);
         CoreAPI.eventEmmitter.on('weinre-exit', exitHandler);
@@ -115,7 +127,7 @@ export const RuleList = (props: Props) => {
             CoreAPI.eventEmmitter.off('weiren-enter', enterHandler);
             CoreAPI.eventEmmitter.off('weiren-exit', exitHandler);
         };
-    }, [ruleList]);
+    }, []);
 
     const [selected, setSelected] = useState(0);
 
@@ -169,13 +181,6 @@ export const RuleList = (props: Props) => {
             });
         });
     };
-
-    const saveWithLimit = useCallback(
-        throttle((rules: Rule[]) => {
-            saveRules(rules);
-        }, 1000),
-        [],
-    );
 
     const onDragEnd = useMemo(() => {
         return (result: DropResult) => {

@@ -1,0 +1,38 @@
+
+``` whistle.chii-internal/inspect.html
+<script>
+    function escapeJs(str) {
+      if (!str || typeof str !== 'string') {
+        return '';
+      }
+      return str.replace(/["'\\\n\r\u2028\u2029]/g, function(char) {
+          switch (char) {
+              case '"':
+              case "'":
+              case '\\':
+                  return '\\' + char;
+
+              case '\n':
+                  return '\\n';
+
+              case '\r':
+                  return '\\r';
+              // Line separator
+
+              case '\u2028':
+                  return '\\u2028';
+              // Paragraph separator
+
+              case '\u2029':
+                  return '\\u2029';
+          }
+      });
+  };
+
+  window.ChiiTitle = escapeJs('${whistle.chii-internal}') || 'anonymous';
+  window.ChiiServerUrl = location.host + '/...whistle-path.5b6af7b9884e1165...///whistle.chii-internal';
+</script>
+<script src='/...whistle-path.5b6af7b9884e1165...///whistle.chii-internal/target.js'}'></script>
+```
+
+* htmlPrepend://`{whistle.chii-internal/inspect.html}` enable://safeHtml

@@ -37,20 +37,20 @@ export class Weinre extends Extension {
                 const iframeDocumentHead = document.querySelector('iframe')?.contentDocument?.querySelector('head');
                 if (iframeDocumentHead) {
                     const customStyle = document.createElement('style');
-                    customStyle.textContent = `#toolbar {
+                    customStyle.textContent = `.content-header {
                         background: #f5f5f5;
                         border: none;
                     }
-                    @media (prefers-color-scheme: dark) {
-                        #toolbar {
-                            background: #3b3b3d;
-                        }
-                        .toolbar-label {
-                            color: white;
-                        }
-                    }
+                    
                     `;
                     iframeDocumentHead.appendChild(customStyle);
+
+                    const container = document.querySelector('iframe')?.contentDocument?.querySelector('.description');
+                    if (container) {
+                        container.innerHTML = `<div>
+                            通过代理访问带有 lightproxy=true 参数的页面开始调试
+                        </div>`;
+                    }
                 }
             }
 
@@ -58,7 +58,7 @@ export class Weinre extends Extension {
                 <div className="lightproxy-network-panel no-drag">
                     {port ? (
                         <iframe
-                            src={`http://127.0.0.1:${port}/weinre/client/#*`}
+                            src={`http://127.0.0.1:${port}/plugin.chii-internal/`}
                             className="lightproxy-network-iframe"
                             onLoad={changeIframeStyle}
                         ></iframe>

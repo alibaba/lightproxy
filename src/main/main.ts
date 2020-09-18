@@ -20,6 +20,8 @@ import { checkUpdater } from './updater';
 import { hideOrQuit } from './platform';
 import { installCertAndHelper } from './install';
 
+import extract from 'extract-zip';
+
 import {
     WINDOW_DEFAULT_WIDTH,
     WINDOW_DEFAULT_HEIGHT,
@@ -41,6 +43,7 @@ import os from 'os';
 import fs from 'fs-extra';
 // @ts-ignore
 import logoIcon from '../../vendor/files/iconTemplate@2x.png';
+import { nanoid } from 'nanoid';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -101,6 +104,10 @@ const LIGHTPROXY_FILES_IN_ASAR_PATH = electronIsDev
     ? path.join(__dirname, '../../vendor/files/')
     : path.join(__dirname, './files/');
 
+const LIGHTPROXY_FILES_ZIP_IN_ASAR_PATH = electronIsDev
+    ? path.join(__dirname, '../../vendor/files.zip')
+    : path.join(__dirname, './files.zip');
+
 let splashWindow: BrowserWindow | null;
 
 async function initSplashScreen() {
@@ -140,7 +147,7 @@ async function initSplashScreen() {
     });
 }
 
-function initCopyFiles() {
+async function initCopyFiles() {
     try {
         if (!fs.existsSync(LIGHTPROXY_FILES_DIR)) {
             fs.mkdirpSync(LIGHTPROXY_FILES_DIR);
@@ -152,7 +159,12 @@ function initCopyFiles() {
         } else {
             console.log('copy files');
             fs.removeSync(LIGHTPROXY_FILES_DIR);
-            copyFolderRecursiveSync(LIGHTPROXY_FILES_IN_ASAR_PATH, LIGHTPROXY_HOME_PATH);
+
+            await extract(LIGHTPROXY_FILES_ZIP_IN_ASAR_PATH, {
+                dir: LIGHTPROXY_HOME_PATH,
+            });
+
+            // copyFolderRecursiveSync(LIGHTPROXY_FILES_IN_ASAR_PATH, LIGHTPROXY_HOME_PATH);
             // fs.chmodSync(LIGHTPROXY_NODEJS_PATH, '775');
             fs.moveSync(
                 path.join(LIGHTPROXY_FILES_DIR, '/node/modules'),
@@ -212,6 +224,10 @@ function createMainWindow() {
         window.webContents.openDevTools();
     }
 
+    const filter = {
+        urls: ['*://127.0.0.1:*/*'],
+    };
+
     if (isDevelopment) {
         window.loadURL(`http://localhost:2333`);
     } else {
@@ -224,11 +240,38 @@ function createMainWindow() {
         );
     }
 
+    // @ts-ignore
+    global.WHISTLE_USERNAME = nanoid(8);
+    // @ts-ignore
+    global.WHISTLE_PASSWORD = nanoid(8);
+
+    window.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+        // @ts-ignore
+        const base64encodedData = new Buffer(global.WHISTLE_USERNAME + ':' + global.WHISTLE_PASSWORD).toString(
+            'base64',
+        );
+        callback({
+            requestHeaders: {
+                ...details.requestHeaders,
+                Authorization: 'Basic ' + base64encodedData,
+            },
+            cancel: false,
+        });
+    });
+
     window.on('close', event => {
         if (!forceQuit) {
             hideOrQuit();
             event?.preventDefault();
         }
+    });
+
+    window.webContents.on('new-window', function(event, url) {
+        event.preventDefault();
+        new BrowserWindow({
+            width: 1300,
+            height: 800,
+        }).loadURL(url);
     });
 
     window.webContents.on('did-finish-load', () => {
@@ -370,7 +413,7 @@ app.on('ready', async () => {
     appReady = true;
     await initSplashScreen();
     initUpdate();
-    initCopyFiles();
+    await initCopyFiles();
     mainWindow = createMainWindow();
     setApplicationMenu();
     initIPC(mainWindow);

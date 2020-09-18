@@ -2,6 +2,7 @@
   "dependencies": {
     "whistle": "../../whistle",
     "whistle-start": "../../whistle-start",
+    "whistle.chii-internal": "../../whistle.chii-internal",
     "whistle.scriptfile": "../../whistle.scriptfile",
     "whistle.vase": "^1.3.1"
   }

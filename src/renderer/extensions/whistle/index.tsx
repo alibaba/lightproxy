@@ -70,8 +70,13 @@ export class WhistleExntension extends Extension {
     private mDevtoolPort: null | number = null;
     private mPid: null | number = null;
 
-    private mUserName = '';
-    private mPassword = '';
+    private get mUserName() {
+        return remote.getGlobal('WHISTLE_USERNAME');
+    }
+
+    private get mPassword() {
+        return remote.getGlobal('WHISTLE_PASSWORD');
+    }
     private mVisiableOnLan = false;
 
     async toggleSystemProxy() {
@@ -159,21 +164,6 @@ export class WhistleExntension extends Extension {
 
             await this.coreAPI.checkInstall();
 
-            const filter = {
-                urls: ['*://127.0.0.1:*/*'],
-            };
-
-            remote.getCurrentWebContents().session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-                const base64encodedData = new Buffer(this.mUserName + ':' + this.mPassword).toString('base64');
-                callback({
-                    requestHeaders: {
-                        ...details.requestHeaders,
-                        Authorization: 'Basic ' + base64encodedData,
-                    },
-                    cancel: false,
-                });
-            });
-
             await this.startWhistle();
         })();
 
@@ -216,9 +206,6 @@ export class WhistleExntension extends Extension {
             await this.coreAPI.treeKillProcess(this.mPid);
             this.mPid = null;
         }
-
-        this.mUserName = nanoid(8);
-        this.mPassword = nanoid(8);
 
         const settings = this.coreAPI.store.get('settings') || {};
         const defaultPort = get(settings, 'defaultPort', 12888);
@@ -269,88 +256,6 @@ export class WhistleExntension extends Extension {
             onlineStateRef.current = onlineState;
 
             const { t } = useTranslation();
-
-            const [hit, setHit] = useState(null as null | string);
-
-            const hideHit = throttle(() => {
-                setHit(null);
-            }, 3000);
-
-            const [delay, setDelay] = useState(0);
-            const [networkStatus, setNetworkStatus] = useState('INITAL' as 'NO_NETWORK' | 'INITAL' | 'NO_PROXY');
-
-            const networkStatusItems = {
-                INITAL: delay ? (
-                    <>
-                        {t('Network Delay')}: {'' + delay} ms
-                        <Icon
-                            style={{ marginRight: '10px', marginLeft: '5px' }}
-                            className="color-success"
-                            type="wifi"
-                        ></Icon>
-                    </>
-                ) : null,
-                NO_NETWORK: (
-                    <>
-                        {t('No Network')}
-                        <Icon
-                            style={{ marginRight: '10px', marginLeft: '5px' }}
-                            className="color-warn"
-                            type="disconnect"
-                        ></Icon>
-                    </>
-                ),
-                NO_PROXY: (
-                    <>
-                        {t('Proxy Invaild')}
-
-                        <Icon
-                            style={{ marginRight: '10px', marginLeft: '5px' }}
-                            className="color-warn"
-                            type="bulb"
-                        ></Icon>
-                    </>
-                ),
-            }[networkStatus];
-
-            useEffect(() => {
-                if (networkStatus === 'NO_NETWORK') {
-                    showNotification(t('Network disconnected'), t('Network disconnected'));
-                } else if (networkStatus === 'NO_PROXY') {
-                    this.startWhistle();
-                }
-            }, [networkStatus]);
-
-            useEffect(() => {
-                const timer = setInterval(async () => {
-                    if (portRef.current) {
-                        const networkDelay = CoreAPI.checkDelay();
-                        const proxyDelay = CoreAPI.checkDelay(portRef.current);
-                        try {
-                            const delay = await new Promise((resolve, reject) => {
-                                setTimeout(reject, 2000);
-                                proxyDelay.then(resolve);
-                            });
-                            if (delay) {
-                                setNetworkStatus('INITAL');
-                                setDelay(delay as number);
-                            }
-                        } catch (e) {
-                            // timeout
-                            const networkDelayMs = await Promise.race([networkDelay, Promise.resolve('TIMEOUT')]);
-                            if (networkDelayMs !== 'TIMEOUT') {
-                                setNetworkStatus('NO_PROXY');
-                                console.log('reconnect');
-                            } else {
-                                setNetworkStatus('NO_NETWORK');
-                            }
-                        }
-                    }
-                }, 1000 * 10);
-                return function() {
-                    clearInterval(timer);
-                };
-            });
 
             useEffect(() => {
                 remote.powerMonitor.on('resume', () => {
@@ -490,7 +395,6 @@ export class WhistleExntension extends Extension {
                 <>
                     <Dropdown overlay={menu}>
                         <div className="whistle-status-bar-item">
-                            {networkStatusItems}
                             {t('Proxy')}
                             {port ? `: [HTTP ${port}/SOCKS5 ${((port as unknown) as number) + 1}]` : null}{' '}
                             <Icon
