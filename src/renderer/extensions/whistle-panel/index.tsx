@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Extension } from '../../extension';
 import { getWhistlePort } from '../../utils';
+
+const whistleIframe = document.createElement('iframe');
+whistleIframe.style.display = 'none';
+document.body.appendChild(whistleIframe);
+
 export class WhistlePanel extends Extension {
     constructor() {
         super('network');
@@ -12,6 +17,10 @@ export class WhistlePanel extends Extension {
 
     panelTitle() {
         return 'Whistle';
+    }
+
+    keepAlive() {
+        return false;
     }
 
     panelComponent() {
@@ -34,17 +43,30 @@ export class WhistlePanel extends Extension {
                 }
             }
 
+            useEffect(() => {
+                if (port) {
+                    const src = `http://127.0.0.1:${port}/#network`;
+                    if (whistleIframe.src !== src) {
+                        whistleIframe.onload = changeIframeStyle;
+                        whistleIframe.classList.add('lightproxy-network-iframe');
+                        whistleIframe.style.display = 'block';
+                        whistleIframe.src = src;
+                    }
+                }
+            }, [port]);
+
+            useEffect(() => {
+                if (whistleIframe.src.indexOf('network') !== -1) {
+                    whistleIframe.style.display = 'block';
+                }
+                return function() {
+                    whistleIframe.style.display = 'none';
+                };
+            }, []);
+
             return (
                 <div className="lightproxy-network-panel no-drag">
-                    {port ? (
-                        <iframe
-                            src={`http://127.0.0.1:${port}/#network`}
-                            className="lightproxy-network-iframe"
-                            onLoad={changeIframeStyle}
-                        ></iframe>
-                    ) : (
-                        <div className="lightproxy-tip">代理未启动</div>
-                    )}
+                    {port ? <></> : <div className="lightproxy-tip">代理未启动</div>}
                 </div>
             );
         };

@@ -46,6 +46,7 @@ function init(extensions: Extension[]) {
         }
         return ret;
     }, []);
+    console.log(panels);
     return {
         panels,
         rightStatusItems,
