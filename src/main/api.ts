@@ -72,6 +72,7 @@ require(decodeURIComponent('${modulePath}'));`;
                     USER_DATA: app.getPath('appData'),
                     NODE_PATH: nodeModulePath,
                     ELECTRON_RUN_AS_NODE: 1,
+                    NODE_SKIP_PLATFORM_CHECK: 1,
                 },
             },
         );
