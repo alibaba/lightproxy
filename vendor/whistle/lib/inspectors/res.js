@@ -896,14 +896,14 @@ module.exports = function(req, res, next) {
                     headers['x-host-ip'] = req.hostIp || LOCALHOST;
                   }
                   const ruleRaw = req.rules && req.rules.rule && req.rules.rule.raw;
-                  _res.headers['__lightproxy-host-ip__'] = req.hostIp || LOCALHOST;
+                  headers['__lightproxy-host-ip__'] = req.hostIp || LOCALHOST;
 
                   const strwrap = (str) => str.replace(/[^\x00-\x7F]/g, '_');
 
-                  _res.headers['__lightproxy-rules__'] = strwrap(JSON.stringify(ruleRaw) || 'none');
-                  _res.headers['__lightproxy-real-url__'] = strwrap(req.realUrl);
+                  headers['__lightproxy-rules__'] = strwrap(JSON.stringify(ruleRaw) || 'none');
+                  headers['__lightproxy-real-url__'] = strwrap(req.realUrl || 'none');
 
-                  _res.headers['__lightproxy-help__'] = 'See https://github.com/alibaba/lightproxy';
+                  headers['__lightproxy-help__'] = 'See https://github.com/alibaba/lightproxy';
                   // clientReady.then(() => {
                   //   wsClient.send(
                   //     'whistle-hit'.padEnd(50, ' ') +
@@ -916,7 +916,7 @@ module.exports = function(req, res, next) {
                   //   );
                   // })
 
-                  util.setResponseFor(resRules, _res.headers, req, req.hostIp);
+                  util.setResponseFor(resRules, headers, req, req.hostIp);
                   pluginMgr.postStats(req, res);
                   if (!hasResBody && headers['content-length'] > 0 && !util.isHead(req)) {
                     delete headers['content-length'];
