@@ -6,6 +6,7 @@
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/alibaba/lightproxy)
 [![HitCount](http://hits.dwyl.com/alibaba/lightproxy.svg)](http://hits.dwyl.com/alibaba/lightproxy)
 
+
 <p align="center">
    <a href="https://lightproxy.org">
     <img src="./vendor/files/icon.png" height="150px"/>
@@ -47,7 +48,6 @@
 
 --- 
 
-
 ## Preview GIF
 <p align="center">
   <img src="https://i.loli.net/2020/05/05/uRZMpi8rPDyQF6I.gif"></img>
@@ -88,3 +88,6 @@ For new contributors you can try to fix a [🏅send-a-PR](https://github.com/ali
     <img src="https://contributors-img.web.app/image?repo=alibaba/lightproxy"></img>
   </a>
 </p>
+
+> ICBU 端架构团队招聘
+> ❤️ 如果你擅长端技术，热爱开源，追求极致的用户体验和开发者体验，欢迎发简历到 xcodebuild+lp@gmail.com
