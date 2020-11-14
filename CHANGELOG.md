@@ -1,3 +1,32 @@
+# v2.5.29
+1. feat: `enable://servername` 删除 https 请求的 sni
+2. feat: 支持 `w2 run -M prod` 方便 docker 部署
+3. refactor: 自动简称请求或响应内容是否支持gzip
+
+# v2.5.28
+1. feat: 新增 `lineProps://proxyHost|proxyTunnel` 只对当前行生效
+
+# v2.5.27
+1. feat: 以 `/...whistle-path.5b6af7b9884e1165...///` 路径开头的内部请求也支持 `enable://proxyTunnel`
+
+# v2.5.26
+1. style: JSONView 的右键菜单新增 `Collapse Parent`
+2. feat: 添加 `enable://proxyTunnel`，支持两层http代理 **请求 -> http 代理 -> http 代理**
+		``` txt
+    www.test.com proxy://10.0.0.1:5566 10.1.2.3:8080 enable://proxyHost|proxyTunnel
+		```
+		上述表示请求将通过 http 代理 `10.0.0.1:5566` 转发到上层 http 代理 `10.1.2.3:8080`
+
+# v2.5.25
+1. feat: 支持通过 `-M useMultipleRules` 启用多选，相当于在 Rules/Settings 勾选 `Use multiple rules`
+2. fix: 解决 `https2http-proxy` 部分请求无法正常转换问题，该协议主要是将请求自动转成http，并代理到指定 `http proxy`，功能同 `internal-proxy`，但 `internal-proxy` 无法[同时设置host](https://github.com/avwo/help/issues/5)
+
+# v2.5.24
+1. feat: 添加 [cipher](http://wproxy.org/whistle/rules/cipher.html) 支持自定义兜底加密算法
+
+# v2.5.23
+1. fix: 代理请求头 `Host` 错乱问题（不影响正常使用）
+
 # v2.5.22
 1. refactor: 更新 node-forge 解决安全问题
 2. fix: h2 请求转成 https 请求时，界面显示响应头大小问题
