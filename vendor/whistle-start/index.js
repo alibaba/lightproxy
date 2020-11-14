@@ -22,10 +22,10 @@ const start = options => {
 
 const pluginPaths = glob.sync("/usr/local/lib/node_modules/").concat(
     glob.sync(process.env.HOME + '/.nvm/versions/node/*/lib/node_modules/')
-).concat(
-    glob.sync(`${process.env.AppData}\npm\node_modules/`)
-).concat(
-    glob.sync(`${process.env.AppData}\npm\node_modules/`)
+).concat( 
+    glob.sync(`${process.env.AppData}\\npm\\node_modules`)
+).concat( 
+    glob.sync(`${process.env.AppData}\\npm\\node_modules`)
 ).concat(
     glob.sync(__dirname + '/node_modules')
 ).concat(
