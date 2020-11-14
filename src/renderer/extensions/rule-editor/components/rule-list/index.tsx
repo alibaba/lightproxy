@@ -285,6 +285,7 @@ export const RuleList = (props: Props) => {
             name: 'New Rule',
             enabled: true,
             uuid: uuidv4(),
+            rename: true,
             content: `# New Rules
 `,
         });
@@ -294,8 +295,6 @@ export const RuleList = (props: Props) => {
         switchRule(newList.length - 1);
 
         saveWithLimit(newList);
-
-        editorRef.current?.focus();
     };
 
     return (
@@ -387,6 +386,7 @@ export const RuleList = (props: Props) => {
                                                         }
                                                     }),
                                                 );
+                                                setSelected(index);
                                             };
 
                                             return (
