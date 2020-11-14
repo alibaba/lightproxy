@@ -185,11 +185,15 @@ function exportInterfaces(obj) {
 }
 
 process.on('uncaughtException', function(err){
-  if (!err || err.code !== 'ERR_IPC_CHANNEL_CLOSED') {
-   var stack = util.getErrorStack(err);
-   fs.writeFileSync(path.join(process.cwd(), config.name + '.log'), '\r\n' + stack + '\r\n', {flag: 'a'});
-   /*eslint no-console: "off"*/
-   console.error(stack);
+  var code = err && err.code;
+  if (code === 'EPIPE' || code === 'ERR_HTTP2_ERROR') {
+    return;
+  }
+  if (!err || code !== 'ERR_IPC_CHANNEL_CLOSED') {
+    var stack = util.getErrorStack(err);
+    fs.writeFileSync(path.join(process.cwd(), config.name + '.log'), '\r\n' + stack + '\r\n', {flag: 'a'});
+    /*eslint no-console: "off"*/
+    console.error(stack);
   }
   process.exit(1);
 });

@@ -262,14 +262,15 @@ function resolveWebsocket(socket, wss) {
                     var opts = {
                       rejectUnauthorized: config.rejectUnauthorized,
                       socket: proxySocket,
-                      servername: options.hostname,
                       ciphers: ciphers
                     };
+                    if (!socket.disable.servername) {
+                      opts.servername = options.hostname;
+                    }
                     util.setClientCert(opts, clientKey, clientCert, isPfx);
-                    proxySocket = tls.connect(opts);
-                    proxySocket.on('error', function(err) {
+                    var handleProxyError = function(err) {
                       if (connectProxy && !ciphers && util.isCiphersError(err)) {
-                        ciphers = util.TLSV2_CIPHERS;
+                        ciphers = util.getCipher(_rules);
                         connectProxy();
                       } else if (connectProxy && util.checkTlsError(err) && util.checkAuto2Http(socket, ip, proxyUrl)) {
                         wss = false;
@@ -283,12 +284,18 @@ function resolveWebsocket(socket, wss) {
                       } else {
                         execCallback(err);
                       }
-                    });
-                    reqSocket = proxySocket;
-                    proxySocket.on('secureConnect', function() {
-                      abortIfUnavailable(reqSocket);
-                      pipeData();
-                    });
+                    };
+                    try {
+                      proxySocket = tls.connect(opts);
+                      proxySocket.on('error', handleProxyError);
+                      reqSocket = proxySocket;
+                      proxySocket.on('secureConnect', function() {
+                        abortIfUnavailable(reqSocket);
+                        pipeData();
+                      });
+                    } catch (e) {
+                      handleProxyError(e);
+                    }
                     return;
                   }
                   reqSocket = proxySocket;
@@ -313,23 +320,17 @@ function resolveWebsocket(socket, wss) {
                     if (ua) {
                       proxyHeaders['user-agent'] = ua;
                     }
-                    if (isInternalProxy) {
-                      if (wss) {
-                        headers[config.HTTPS_FIELD] = 1;
-                        options.protocol = null;
-                        origProto = 'wss:';
-                        wss = false;
-                      }
-                      proxyHeaders['x-whistle-policy'] = 'intercept';
+                    if (wss && (isInternalProxy || isHttps2HttpProxy)) {
+                      headers[config.HTTPS_FIELD] = 1;
+                      options.protocol = null;
+                      origProto = 'wss:';
+                      wss = false;
                     }
                     if (!util.isLocalAddress(clientIp)) {
                       proxyHeaders[config.CLIENT_IP_HEAD] = clientIp;
                     }
                     if(isProxyPort) {
                       proxyHeaders[config.WEBUI_HEAD] = 1;
-                    }
-                    if (isHttps2HttpProxy) {
-                      wss = false;
                     }
                     util.checkIfAddInterceptPolicy(proxyHeaders, headers);
                     util.setClientId(proxyHeaders, socket.enable, socket.disable, clientIp, isInternalProxy);
@@ -347,6 +348,8 @@ function resolveWebsocket(socket, wss) {
                     if (socket._phost) {
                       resData.phost = socket._phost.host;
                     }
+                    proxyOpts.enableIntercept = true;
+                    proxyOpts.proxyTunnelPath = util.getProxyTunnelPath(socket, wss);
                     try {
                       var s = netMgr.connect(proxyOpts, handleProxy);
                       s.on('error', isXProxy ? function() {
@@ -393,9 +396,11 @@ function resolveWebsocket(socket, wss) {
         var opts = {
           rejectUnauthorized: config.rejectUnauthorized,
           host: ip,
-          port: port,
-          servername: util.parseHost(headers.host)[0] || options.hostname
+          port: port
         };
+        if (!socket.disable.servername) {
+          opts.servername = util.parseHost(headers.host)[0] || options.hostname;
+        }
         isWss && util.setClientCert(opts, clientKey, clientCert, isPfx);
         if (ciphers) {
           opts.ciphers = ciphers;
@@ -449,7 +454,7 @@ function resolveWebsocket(socket, wss) {
             return;
           }
           if (!ciphers && isWss && util.isCiphersError(err)) {
-            connectServer(hostIp, hostPort, util.TLSV2_CIPHERS);
+            connectServer(hostIp, hostPort, util.getCipher(_rules));
           } else {
             retryConnect();
           }
@@ -489,6 +494,7 @@ function resolveWebsocket(socket, wss) {
       }
     }
     reqSocket.write(socket.getBuffer(headers, options.path));
+    reqSocket.resume();
     delete headers[config.HTTPS_FIELD];
     var resDelay = util.getMatcherValue(_rules.resDelay);
     if (resDelay > 0) {
@@ -839,7 +845,7 @@ function addClientInfo(socket, chunk, statusLine, clientIp, clientPort) {
 }
 
 module.exports = function(socket, next, isWebPort) {
-  var reqSocket, reqDestroyed, resDestroyed, timer;
+  var reqSocket, reqDestroyed, resDestroyed;
   var tunnelHost = socket.tunnelHost;
   var headersStr, statusLine;
   function destroy(err) {
@@ -857,23 +863,13 @@ module.exports = function(socket, next, isWebPort) {
   function abortIfUnavailable(socket) {
     return socket.on('error', destroy);
   }
-
-  socket.on('data', request);
-  socket.on('end', request);
   var clientIp = socket.clientIp;
   var clientPort = socket.clientPort;
-  if (!isWebPort) {
-    timer = setTimeout(request, TIMEOUT);
-  }
-  function request(chunk) {
-    clearTimeout(timer);
+  util.readOneChunk(socket, function(chunk) {
     headersStr = chunk && chunk.toString();
     if (chunk && CONNECT_RE.test(headersStr)) {
       statusLine = RegExp['$&'];
       chunk = addClientInfo(socket, chunk, statusLine, clientIp, clientPort);
-      socket.pause();
-      socket.removeListener('data', request);
-      socket.removeListener('end', request);
       util.connect({
         port: config.port,
         host: LOCALHOST
@@ -889,8 +885,6 @@ module.exports = function(socket, next, isWebPort) {
       });
       return;
     }
-    socket.removeListener('data', request);
-    socket.removeListener('end', request);
     if (!chunk) {//没有数据
       return isWebPort ? socket.destroy() : next(chunk);
     }
@@ -915,7 +909,6 @@ module.exports = function(socket, next, isWebPort) {
       if (serverAgent.existsServer(key)) {
         useSNI = false;
       }
-      socket.pause();
       var checkTimeout = function() {
         authTimer = setTimeout(function() {
           if (reqSocket) {
@@ -973,7 +966,7 @@ module.exports = function(socket, next, isWebPort) {
         useNoSNIServer();
       }
     }
-  }
+  }, isWebPort ? 0 : TIMEOUT);
 };
 module.exports.setup = function(s, p) {
   server = s;

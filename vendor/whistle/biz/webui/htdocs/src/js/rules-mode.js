@@ -100,6 +100,10 @@ CodeMirror.defineMode('rules', function() {
     return /^(?:excludeFilter|filter):\/\//.test(str);
   }
 
+  function isLineProps(str) {
+    return /^lineProps:\/\//.test(str);
+  }
+
   function isPlugin(str) {
     return /^pipe:\/\//.test(str) || (/^(?:plugin|whistle)\.[a-z\d_\-]+:\/\//.test(str) && !notExistPlugin(str));
   }
@@ -110,6 +114,10 @@ CodeMirror.defineMode('rules', function() {
 
   function isDisable(str) {
     return /^disable:\/\//.test(str);
+  }
+
+  function isCipher(str) {
+    return /^cipher:\/\//.test(str);
   }
 
   function isIgnore(str) {
@@ -212,12 +220,16 @@ CodeMirror.defineMode('rules', function() {
             type = 'variable-2 js-headerReplace js-type';
           } else if (isFilter(str)) {
             type = 'negative js-filter js-type';
+          } else if (isLineProps(str)) {
+            type = 'negative js-line-props js-type';
           } else if (isIgnore(str)) {
             type = 'negative js-ignore js-type';
           } else if (isEnable(str)) {
             type = 'atom js-enable js-type';
           } else if (isDisable(str)) {
             type = 'negative js-disable js-type';
+          } else if (isCipher(str)) {
+            type = 'atom js-cipher js-type';
           } else if (isDelete(str)) {
             type = 'negative js-delete js-type';
           } else if (isProxy(str)) {

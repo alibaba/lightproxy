@@ -829,7 +829,7 @@ function setReqData(item) {
   item.date = item.date || util.toLocaleString(new Date(item.startTime));
   item.clientPort = req.port;
   item.serverPort = item.res.port;
-  item.contentEncoding = resHeaders['content-encoding'];
+  item.contentEncoding = (resHeaders['content-encoding'] || '') + (item.res.hasGzipError ? ' (Incorrect header)' : '');
   item.body = res.size == null ? defaultValue : res.size;
   var result = res.statusCode == null ? defaultValue : res.statusCode;
   item.result = /^[1-9]/.test(result) && parseInt(result, 10) || result;
@@ -950,7 +950,7 @@ function updateServerInfo(data) {
   }
   if (curServerInfo && curServerInfo.version == data.version && curServerInfo.rulesMode === data.rulesMode && curServerInfo.cmdName === data.cmdName &&
     curServerInfo.networkMode === data.networkMode && curServerInfo.pluginsMode === data.pluginsMode && curServerInfo.multiEnv === data.multiEnv &&
-    curServerInfo.baseDir == data.baseDir && curServerInfo.username == data.username &&
+    curServerInfo.baseDir == data.baseDir && curServerInfo.username == data.username && curServerInfo.nodeVersion == data.nodeVersion &&
     curServerInfo.port == data.port && curServerInfo.host == data.host &&
     curServerInfo.ipv4.sort().join() == data.ipv4.sort().join() &&
     curServerInfo.ipv6.sort().join() == data.ipv6.sort().join()) {

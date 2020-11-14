@@ -35,7 +35,7 @@ function getKey(options) {
   var proxyOpts = options._proxyOptions;
   var proxyType = '';
   if (proxyOpts) {
-    proxyType = [proxyOpts.proxyType, proxyOpts.proxyHost, proxyOpts.proxyPort, proxyOpts.headers.host].join(':');
+    proxyType = [proxyOpts.proxyType, proxyOpts.proxyHost, proxyOpts.proxyPort, proxyOpts.headers.host, proxyOpts.proxyTunnelPath || ''].join(':');
   }
   return [options.servername, options.host, options.port || '', proxyType, options.cacheKey || ''].join('/');
 }
@@ -118,7 +118,7 @@ function getProxySocket(options, callback, ciphers) {
       }, options), handleCallback);
       socket.on('error', function(e) {
         if (!ciphers && util.isCiphersError(e)) {
-          return getProxySocket(options, callback, util.TLSV2_CIPHERS);
+          return getProxySocket(options, callback, util.getCipher(options._rules));
         } else {
           handleCallback(e);
         }
@@ -152,7 +152,8 @@ function getSocket(options, callback) {
         port: options.port || 443,
         rejectUnauthorized: config.rejectUnauthorized,
         ALPNProtocols: SUPPORTED_PROTOS,
-        NPNProtocols: SUPPORTED_PROTOS
+        NPNProtocols: SUPPORTED_PROTOS,
+        _rules: options._rules
       }, options), handleCallback);
 }
 
@@ -305,6 +306,12 @@ exports.request = function(req, res, callback) {
   }
   pendingItem = [[req, res, callback]];
   pendingList[name] = pendingItem;
+  options._rules = req.rules;
+  var proxyOpts = options._proxyOptions;
+  if (proxyOpts) {
+    proxyOpts.enableIntercept = true;
+    proxyOpts.proxyTunnelPath = util.getProxyTunnelPath(req, true);
+  }
   getSocket(options, function(isH2, socket, err) {
     if (socket) {
       socket.secureConnecting = false; // fix: node bug

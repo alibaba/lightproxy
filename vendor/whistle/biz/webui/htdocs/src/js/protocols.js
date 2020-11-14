@@ -10,7 +10,7 @@ var PROTOCOLS = ['rule', 'style', 'pipe', 'plugin', 'host', 'xhost', 'proxy', 'x
   'reqBody', 'resBody', 'reqAppend', 'resAppend', 'headerReplace', 'reqReplace', 'resReplace',
   'htmlPrepend', 'htmlBody', 'htmlAppend', 'cssPrepend', 'cssBody',
   'cssAppend', 'jsPrepend', 'jsBody', 'jsAppend', 'reqWrite', 'resWrite',
-  'reqWriteRaw', 'resWriteRaw'
+  'reqWriteRaw', 'resWriteRaw', 'cipher'
 ];
 
 
@@ -26,6 +26,7 @@ var allRules = allInnerRules = allInnerRules.map(function (name) {
   return name + '://';
 });
 allRules.splice(allRules.indexOf('filter://'), 1, 'excludeFilter://', 'includeFilter://');
+allRules.push('lineProps://');
 var plugins = {};
 
 exports.setPlugins = function (pluginsState) {
@@ -79,6 +80,9 @@ exports.getHelpUrl = function (rule) {
   }
   if (rule === 'includeFilter' || rule === 'excludeFilter') {
     return ROOT_HELP_URL + 'filter.html';
+  }
+  if (rule === 'lineProps') {
+    return ROOT_HELP_URL + 'lineProps.html';
   }
   if (rule === 'reqRules') {
     return ROOT_HELP_URL + 'reqScript.html';

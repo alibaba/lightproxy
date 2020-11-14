@@ -150,20 +150,8 @@ function readFirstChunk(req, res, src, cb) {
     return cb();
   }
   res.prepareSrc(src, function(stream) {
-    var handler = function(chunk) {
-      stream.pause();
-      stream.removeListener('data', handler);
-      stream.removeListener('end', handler);
-      cb(chunk);
-    };
-    stream.on('data', handler);
-    stream.on('end', handler);
+    util.readOneChunk(stream, cb);
   });
-}
-
-function setProxyAgent(options, proxyOpts) {
-  proxyOpts.cacheKey = options.cacheKey;
-  options.agent = proxyOpts.isSocks ? config.getSocksAgent(proxyOpts) : config.getHttpsAgent(proxyOpts);
 }
 
 module.exports = function(req, res, next) {
@@ -176,6 +164,7 @@ module.exports = function(req, res, next) {
       options = options || req.options;
       req.realUrl = res.realUrl = options.isPlugin ? (req._realUrl || req.fullUrl) : options.href;
       var originPort = options.port;
+      var originHost = options.host;
       var now = Date.now();
       rules.getClientCert(req, function(key, cert, isPfx, cacheKey) {
         rules.getProxy(options.href, options.isPlugin ? null : req, function(err, hostIp, hostPort) {
@@ -190,7 +179,7 @@ module.exports = function(req, res, next) {
               isHttpsProxy = proxyRule.isHttps || proxyRule.isHttpsInternal;
               isInternalProxy = proxyRule.isInternal;
               if (isInternalProxy || proxyRule.isHttps2http) {
-                if (isInternalProxy && options.protocol === 'https:') {
+                if (options.protocol === 'https:') {
                   headers[config.HTTPS_FIELD] = 1;
                   origProto = options.protocol;
                   options.protocol = null;
@@ -342,10 +331,7 @@ module.exports = function(req, res, next) {
               options.method = req.method;
               options.rejectUnauthorized = config.rejectUnauthorized;
               if (!options.isPlugin && !req._customHost && (req.fullUrl !== req.realUrl || !headers.host)) {
-                headers.host = options.hostname;
-                if (options.port && options.port != (isHttps ? 443 : 80)) {
-                  headers.host += ':' + options.port;
-                }
+                headers.host = originHost;
               }
               if (req.disable.keepAlive) {
                 headers.connection = 'close';
@@ -359,7 +345,7 @@ module.exports = function(req, res, next) {
 
               delete options.hostname; //防止自动dns
               delete options.protocol;
-              if (isHttps) {
+              if (isHttps && !req.disable.servername) {
                 options.servername = util.parseHost(headers.host)[0];
               }
               var piped;
@@ -368,6 +354,12 @@ module.exports = function(req, res, next) {
               var retryXHost = 0;
               var resetCount = 0;
               var curClient, timer;
+              var setProxyAgent = function(options, proxyOpts) {
+                proxyOpts.cacheKey = options.cacheKey;
+                proxyOpts.proxyTunnelPath = util.getProxyTunnelPath(req, isHttps);
+                proxyOpts.enableIntercept = true;
+                options.agent = proxyOpts.isSocks ? config.getSocksAgent(proxyOpts) : config.getHttpsAgent(proxyOpts, options);
+              };
               var retry = function(err) {
                 clearTimeout(timer);
                 timer = null;
@@ -381,7 +373,7 @@ module.exports = function(req, res, next) {
                   return;
                 }
                 if (err && isHttps && !options.ciphers && util.isCiphersError(err)) {
-                  options.ciphers = util.TLSV2_CIPHERS;
+                  options.ciphers = util.getCipher(resRules);
                   return send();
                 }
                 if (retryCount >= maxRetryCount) {
@@ -509,6 +501,7 @@ module.exports = function(req, res, next) {
                       retryCount = maxRetryCount;
                       piped = true;
                       pipeClient(req, client);
+                      socket.resume();
                     }
                   });
                 } catch(e) {
@@ -588,6 +581,7 @@ module.exports = function(req, res, next) {
       return;
     }
     req._hasRespond = true;
+    res._srcResponse = _res;
     if (_res.realUrl) {
       req.realUrl = res.realUrl = _res.realUrl;
     }
