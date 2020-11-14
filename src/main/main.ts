@@ -47,6 +47,9 @@ import { nanoid } from 'nanoid';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
+// disable GPU for #219
+app.disableHardwareAcceleration();
+
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: BrowserWindow | null;
 
@@ -56,6 +59,20 @@ let appReady = false;
 
 app.commandLine.appendSwitch('--no-proxy-server');
 app.commandLine.appendSwitch('disable-site-isolation-trials');
+
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+    app.quit();
+} else {
+    app.on('second-instance', () => {
+        // 当运行第二个实例时,将会聚焦到myWindow这个窗口
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.focus();
+        }
+    });
+}
 
 function copyFileSync(source: string, target: string) {
     let targetFile = target;
@@ -208,6 +225,8 @@ function createMainWindow() {
         webPreferences: {
             nodeIntegration: true,
             webSecurity: false,
+            // electron >= 10
+            enableRemoteModule: true,
         },
         // https://github.com/alibaba/lightproxy/issues/22
         // disable frameless in Windows
