@@ -21,7 +21,7 @@ import {
     PROXY_CONF_HELPER_PATH,
     PROXY_CONF_HELPER_FILE_PATH,
 } from './const';
-import { dialog } from 'electron';
+import { clipboard, dialog } from 'electron';
 import treeKill from 'tree-kill';
 
 import logger from 'electron-log';
@@ -98,6 +98,8 @@ async function generateCert() {
     });
 }
 
+
+
 function alertAndQuit() {
     dialog.showErrorBox(
         'Grant Authorization Failed 授权失败',
@@ -116,14 +118,7 @@ Application will quit
 }
 
 export async function installCertAndHelper() {
-    dialog.showMessageBoxSync({
-        type: 'info',
-        message: `The certificate and proxy helper is not installed or has expired. You need to install. You may need to enter the password of the login user.
-
-未安装证书/代理helper或者已经过期，需要安装，可能会需要输入登录用户的密码。
-        `,
-    });
-
+    
     console.log('Install cert');
     const certs = (await generateCert()) as {
         key: string;
@@ -137,23 +132,38 @@ export async function installCertAndHelper() {
     await fs.writeFileAsync(path.join(dir, CERT_KEY_FILE_NAME), certs.key, 'utf-8');
     await fs.writeFileAsync(path.join(dir, CERT_FILE_NAME), certs.cert, 'utf-8');
 
+    const INSTALL_DONE_FILE = '/tmp/lightproxy-install-done';
     // 信任证书 & 安装 helper
     const installPromise = new Promise((resolve, reject) => {
         if (SYSTEM_IS_MACOS) {
-            sudo.exec(
-                `security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(
+            // macOS big sur do not allow trust cert in any auto way
+            // show box to guide user run command
+            const showGuide = () => {
+                const cmd = `echo "Please input local login password 请输入本地登录密码" && sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(
                     dir,
                     CERT_FILE_NAME,
-                )}" && cp "${PROXY_CONF_HELPER_FILE_PATH}" "${PROXY_CONF_HELPER_PATH}" && chown root:admin "${PROXY_CONF_HELPER_PATH}" && chmod a+rx+s "${PROXY_CONF_HELPER_PATH}"`,
-                sudoOptions,
-                (error, stdout) => {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve(stdout);
-                },
-            );
+                )}" && sudo cp "${PROXY_CONF_HELPER_FILE_PATH}" "${PROXY_CONF_HELPER_PATH}" && sudo chown root:admin "${PROXY_CONF_HELPER_PATH}" && sudo chmod a+rx+s "${PROXY_CONF_HELPER_PATH}" && touch ${INSTALL_DONE_FILE}
+                `;
+                clipboard.writeText(cmd);
+
+                dialog.showMessageBoxSync({
+                    type: 'info',
+                    message: `Paste command to your Terminal and run to install cert and helper
+                    （命令已复制到剪贴板）粘贴命令到终端并运行以安装并信任证书
+                    `,
+                });
+            };
+            showGuide();
+            while (!fs.existsSync(INSTALL_DONE_FILE)) {
+                showGuide();
+            }
         } else {
+            dialog.showMessageBoxSync({
+                type: 'info',
+                message: `The certificate and proxy helper is not installed or has expired. You need to install. You may need to enter the password of the login user.
+        未安装证书/代理helper或者已经过期，需要安装，可能会需要输入登录用户的密码。
+                `,
+            });
             fs.copyFileSync(PROXY_CONF_HELPER_FILE_PATH, PROXY_CONF_HELPER_PATH);
             const command = `certutil -enterprise -f -v -AddStore "Root" "${path.join(dir, CERT_FILE_NAME)}"`;
             console.log('run command', command);
