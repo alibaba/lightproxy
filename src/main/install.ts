@@ -98,8 +98,6 @@ async function generateCert() {
     });
 }
 
-
-
 function alertAndQuit() {
     dialog.showErrorBox(
         'Grant Authorization Failed 授权失败',
@@ -118,7 +116,6 @@ Application will quit
 }
 
 export async function installCertAndHelper() {
-    
     console.log('Install cert');
     const certs = (await generateCert()) as {
         key: string;
@@ -165,7 +162,10 @@ export async function installCertAndHelper() {
                 `,
             });
             fs.copyFileSync(PROXY_CONF_HELPER_FILE_PATH, PROXY_CONF_HELPER_PATH);
-            const command = `certutil -enterprise -f -v -AddStore "Root" "${path.join(dir, CERT_FILE_NAME)}"`;
+            const command = `certutil -enterprise -f -v -AddStore "Root" "${path.join(
+                dir,
+                CERT_FILE_NAME,
+            )}"  && sudo cp "${PROXY_CONF_HELPER_FILE_PATH}" "${PROXY_CONF_HELPER_PATH}" && sudo chown root:admin "${PROXY_CONF_HELPER_PATH}" && sudo chmod a+rx+s "${PROXY_CONF_HELPER_PATH}"`;
             console.log('run command', command);
             try {
                 const output = execSync(command, {
