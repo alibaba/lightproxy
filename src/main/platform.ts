@@ -126,7 +126,7 @@ export async function setSystemProxy(port: number) {
     }
     if (SYSTEM_IS_MACOS) {
         const output = execSync(
-            `'${PROXY_CONF_HELPER_PATH}' -m global -p ${port} -r ${port} -s 127.0.0.1 -x "*.lan, *.ali.com, *.hz.ali.com, *.symantacliveupdate.com, *.symantac.com"`,
+            `'${PROXY_CONF_HELPER_PATH}' -m global -p ${port} -r ${port} -s 127.0.0.1 -x "*.lan, *.ali.com, *.hz.ali.com, *.symantacliveupdate.com, *.symantac.com, irmaagent.effirst.com:8080"`,
         );
         logger.info('stdout', output.toString());
     } else {

@@ -18,6 +18,9 @@ const GLOBAL_VARS = [
   'module',
   'require',
 ];
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
 /* eslint-disable no-console */
 const TIMEOUT = 600;
 const RULE_VALUE_RE = /^([\w\-.]+)(?:\((.+)\))?.*$/;
