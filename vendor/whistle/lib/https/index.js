@@ -119,6 +119,7 @@ function resolveWebsocket(socket, wss) {
     }
     resData.statusCode = status;
     resData.body = body;
+    resData.ip = resData.ip || LOCALHOST;
     data.requestTime = data.dnsTime =Date.now();
     getResRules(socket, resData, function() {
       var rawData = statusMsg + '\r\n' + getRawHeaders(resHeaders) + '\r\n\r\n' + body;
@@ -581,6 +582,7 @@ function resolveWebsocket(socket, wss) {
       if (err) {
         return execCallback(err);
       }
+      reqSocket.pause();
       socket.statusCode = res.statusCode || '';
       socket.resHeaders = res.headers;
       var curResHeaders = reqSocket.headers = res.headers;
@@ -589,6 +591,8 @@ function resolveWebsocket(socket, wss) {
         socket.write(res.getBuffer(curResHeaders));
         if (res.statusCode == 101) {
           socketMgr.handleUpgrade(socket, reqSocket);
+        } else {
+          reqSocket.resume();
         }
         resData.body = res.body;
         resData.headers = curResHeaders;
@@ -890,6 +894,7 @@ module.exports = function(socket, next, isWebPort) {
     }
     if (HTTP_RE.test(headersStr)) {
       statusLine = RegExp['$&'];
+      socket.resume();
       server.emit('connection', socket);
       socket.emit('data', addClientInfo(socket, chunk, statusLine, clientIp, clientPort));
     } else if (chunk[0] != 22) {
