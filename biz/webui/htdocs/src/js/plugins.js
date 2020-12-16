@@ -121,7 +121,7 @@ var Home = React.createClass({
   },
   enableAllPlugins: function(e) {
     var data = this.props.data || {};
-    if (!data.disabledAllPlugins || !confirm('Do you want to enable all plugins?')) {
+    if (!data.disabledAllPlugins || !confirm('Do you want to turn on Plugins?')) {
       return;
     }
     events.trigger('disableAllPlugins', e);
@@ -313,8 +313,12 @@ var Tabs = React.createClass({
   },
   render: function() {
     var self = this;
-    var tabs = self.props.tabs || [];
+    var props = self.props;
+    var tabs = props.tabs || [];
     var activeName = 'Home';
+    var disabledPlugins = props.disabledPlugins || {};
+    var disabled = props.disabledAllPlugins;
+    var ndp = props.ndp;
     var active = self.props.active;
     if (active && active != activeName) {
       for (var i = 0, len = tabs.length; i < len; i++) {
@@ -331,10 +335,12 @@ var Tabs = React.createClass({
          <ul className="nav nav-tabs">
             <li className={'w-nav-home-tab' + (activeName == 'Home' ? ' active' : '')} data-name="Home"  onClick={self.props.onActive}><a draggable="false">Home</a></li>
             {tabs.map(function(tab) {
+              var disd = !ndp && (disabled || disabledPlugins[tab.name]);
               return <li className={activeName == tab.name ? ' active' : ''}>
-                  <a data-name={tab.name} title={tab.name}  onClick={self.props.onActive} draggable="false">
+                  <a data-name={tab.name} title={tab.name}  onClick={self.props.onActive} draggable="false" className={disd ? 'w-plugin-tab-disabled': undefined}>
+                    {disd ? <span className="glyphicon glyphicon-ban-circle"></span> : undefined}
                     {tab.name}
-                    <span data-name={tab.name} title="Close" onClick={self.onClose}>&times;</span>
+                    <span data-name={tab.name} title="Close" className="w-close-icon" onClick={self.onClose}>&times;</span>
                   </a>
                   </li>;
             })}
