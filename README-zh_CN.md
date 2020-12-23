@@ -34,7 +34,7 @@ whistle(读音 `[ˈwɪsəl]`，拼音 `[wēisǒu]` )是基于 Node 实现的跨�
 
 具体功能如下：
 
-![基本功能](https://raw.githubusercontent.com/avwo/whistleui/master/assets/whistle.png)
+![基本功能](https://raw.githubusercontent.com/avwo/whistle/master/docs/assets/whistle-en_US.png)
 
 whistle基本上覆盖了所有抓包调试代理可以实现的功能，且所有操作都可以通过类似配置hosts的方式实现。
 
@@ -217,21 +217,6 @@ w2 restart
 12. [界面功能](https://avwo.github.io/whistle/webui/)
 13. [协议列表](https://avwo.github.io/whistle/rules/)
 14. [用户反馈](https://avwo.github.io/whistle/feedback.html)
-
-# 团队招聘
-IMWeb 前端工程师
-
-* 负责在线教育产品的Web全栈架构设计和研发
-* 负责 IMWeb Team 的幵源项目建设和工具研发
-* 能够熟练运用 Html5 、CSS3、ES6 构建高性能的Web应用程序
-* 熟练使用至少一款主流的 JS 框架，并深入理解其设计原理
-* 掌握至少一门服务器端编程语言，了解 HTTP 等网络协议
-* 熟悉 Web 开发调试技巧，能够熟练运用调试工具，有前端构建和前端工程化的实践经验
-* 对 Web 标准化、OOP、MVVM、模块化开发、设计模式有深刻的理解
-* 能够主动发现问题，并通过良好的沟通能力和技术手段解决问题
-* [点击了解更多](https://mp.weixin.qq.com/s?__biz=MzI1ODE4NzE1Nw==&mid=2247487881&idx=2&sn=f412bd0678d41b624b6e4ae839af2e54&chksm=ea0d5b73dd7ad26594687825027181d287905f4d7fb5aeae3fc2330e02a67f277c1129bd9d45&mpshare=1&scene=1&srcid=&sharer_sharetime=1587886827448&sharer_shareid=c44de93072c85a9158dc52ca271584bb&rd2werd=1#wechat_redirect)
-
-> 可以加我微信(aven0596)内推。
 
 # License
 [MIT](https://github.com/avwo/whistle/blob/master/LICENSE)

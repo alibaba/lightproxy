@@ -1665,3 +1665,42 @@ exports.getMultiBody = function(fields) {
   };
 };
 
+function padding(num) {
+  return num < 10 ? '0' + num : num;
+}
+
+function paddingMS(ms) {
+  if (ms > 99) {
+    return ms;
+  }
+  if (ms > 9) {
+    return '0' + ms;
+  }
+  return '00' + ms;
+}
+
+function formatDate(date) {
+  date = date || new Date();
+  var result = [];
+  result.push(date.getFullYear());
+  result.push(padding(date.getMonth() + 1));
+  result.push(padding(date.getDate()));
+  result.push(padding(date.getHours()));
+  result.push(padding(date.getMinutes()));
+  result.push(padding(date.getSeconds()));
+  result.push(paddingMS(date.getMilliseconds()));
+  return result.join('');
+}
+
+exports.formatDate = formatDate;
+
+exports.formatTime = function(time) {
+  time = Math.floor(time / 1000);
+  var sec = padding(time % 60);
+  time = Math.floor(time / 60);
+  var min = padding(time % 60);
+  time = Math.floor(time / 60);
+  var hour = padding(time % 24);
+  var day = Math.floor(time / 24);
+  return (day ? padding(day) + ' ' : '') + hour + ':' + min + ':' + sec;
+};

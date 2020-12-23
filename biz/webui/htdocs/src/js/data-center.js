@@ -346,6 +346,15 @@ exports.getCustomCertsInfo = createCgiObj({
 }, GET_CONF).getCustomCertsInfo;
 
 exports.values = createCgiObj({
+  recycleList: {
+    type: 'get',
+    url: 'cgi-bin/values/recycle/list'
+  },
+  recycleView: {
+    type: 'get',
+    url: 'cgi-bin/values/recycle/view'
+  },
+  recycleRemove: 'cgi-bin/values/recycle/remove',
   moveTo: {
     mode: 'chain',
     url: 'cgi-bin/values/move-to'
@@ -369,6 +378,15 @@ exports.plugins = createCgiObj({
 
 exports.rules = createCgiObj({
   disableAllRules: 'cgi-bin/rules/disable-all-rules',
+  recycleList: {
+    type: 'get',
+    url: 'cgi-bin/rules/recycle/list'
+  },
+  recycleView: {
+    type: 'get',
+    url: 'cgi-bin/rules/recycle/view'
+  },
+  recycleRemove: 'cgi-bin/rules/recycle/remove',
   moveTo: {
     mode: 'chain',
     url: 'cgi-bin/rules/move-to'
@@ -954,6 +972,7 @@ function updateServerInfo(data) {
     curServerInfo.port == data.port && curServerInfo.host == data.host &&
     curServerInfo.ipv4.sort().join() == data.ipv4.sort().join() &&
     curServerInfo.ipv6.sort().join() == data.ipv6.sort().join()) {
+    curServerInfo = data;
     return;
   }
   curServerInfo = data;

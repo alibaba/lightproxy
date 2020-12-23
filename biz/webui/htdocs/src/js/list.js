@@ -12,6 +12,7 @@ var ContextMenu = require('./context-menu');
 var dataCenter = require('./data-center');
 var events = require('./events');
 var iframes = require('./iframes');
+var RecycleBinDialog = require('./recycle-bin');
 
 var rulesCtxMenuList = [
   { name: 'Copy' },
@@ -24,6 +25,7 @@ var rulesCtxMenuList = [
   { name: 'Delete' },
   { name: 'Export' },
   { name: 'Import' },
+  { name: 'Recycle Bin', action: 'RecycleBin' },
   {
     name: 'Others',
     action: 'Plugins',
@@ -49,6 +51,7 @@ var valuesCtxMenuList = [
   },
   { name: 'Export' },
   { name: 'Import' },
+  { name: 'Recycle Bin', action: 'RecycleBin' },
   {
     name: 'Others',
     action: 'Plugins',
@@ -296,16 +299,17 @@ var List = React.createClass({
     }
   },
   onClickContextMenu: function(action, e, parentAction, menuName) {
-    var name = this.props.name === 'rules' ? 'Rules' : 'Values';
+    var self = this;
+    var name = self.props.name === 'rules' ? 'Rules' : 'Values';
     switch(parentAction || action) {
     case 'Save':
-      events.trigger('save' + name, this.currentFocusItem);
+      events.trigger('save' + name, self.currentFocusItem);
       break;
     case 'Rename':
-      events.trigger('rename' + name, this.currentFocusItem);
+      events.trigger('rename' + name, self.currentFocusItem);
       break;
     case 'Delete':
-      events.trigger('delete' + name, this.currentFocusItem);
+      events.trigger('delete' + name, self.currentFocusItem);
       break;
     case 'Rule':
       events.trigger('createRules');
@@ -325,8 +329,24 @@ var List = React.createClass({
     case 'Import':
       events.trigger('import' + name, e);
       break;
+    case 'RecycleBin':
+      if (!self._pendingRecycle) {
+        self._pendingRecycle = true;
+        dataCenter[name.toLowerCase()].recycleList(function(data, xhr) {
+          self._pendingRecycle = false;
+          if (!data) {
+            util.showSystemError(xhr);
+            return;
+          }
+          if (!data.list.length) {
+            return message.info('Recycle bin is empty.');
+          }
+          self.refs.recycleBinDialog.show({ name: name, list: data.list });
+        });
+      }
+      break;
     case 'Validate':
-      var item = this.currentFocusItem;
+      var item = self.currentFocusItem;
       if (item) {
         if (JSON_RE.test(item.value)) {
           try {
@@ -341,19 +361,19 @@ var List = React.createClass({
       }
       break;
     case 'Format':
-      this.formatJson(this.currentFocusItem);
+      self.formatJson(self.currentFocusItem);
       break;
     case 'Help':
-      window.open('https://avwo.github.io/whistle/webui/' + (this.props.name || 'values') + '.html');
+      window.open('https://avwo.github.io/whistle/webui/' + (self.props.name || 'values') + '.html');
       break;
     case 'Plugins':
-      var modal = this.props.modal;
+      var modal = self.props.modal;
       iframes.fork(action, {
         port: dataCenter.getPort(),
-        type: this.props.name === 'rules' ? 'rules' : 'values',
+        type: self.props.name === 'rules' ? 'rules' : 'values',
         name: menuName,
         list: modal && modal.getList(),
-        activeItem: this.currentFocusItem,
+        activeItem: self.currentFocusItem,
         selectedItem: modal && modal.getActive()
       });
       break;
@@ -386,9 +406,9 @@ var List = React.createClass({
     var disabled = !name;
     var isDefault;
     var isRules = this.props.name == 'rules';
-    var pluginItem = isRules ? rulesCtxMenuList[7] : valuesCtxMenuList[8];
+    var pluginItem = isRules ? rulesCtxMenuList[8] : valuesCtxMenuList[9];
     util.addPluginMenus(pluginItem, dataCenter[isRules ? 'getRulesMenus' : 'getValuesMenus'](), isRules ? 7 : 8);
-    var height = (isRules ? 250 : 280) - (pluginItem.hide ? 30 : 0);
+    var height = (isRules ? 280 : 310) - (pluginItem.hide ? 30 : 0);
     pluginItem.maxHeight = height + 30;
     var data = util.getMenuPosition(e, 110, height);
     if (isRules) {
@@ -483,6 +503,7 @@ var List = React.createClass({
             </div>
             <FilterInput onChange={this.onFilterChange} />
             <ContextMenu onClick={this.onClickContextMenu} ref="contextMenu" />
+            <RecycleBinDialog ref="recycleBinDialog" />
           </div>
           <Editor {...self.props} onChange={self.onChange} readOnly={!activeItem}
             name={activeItem.name} value={activeItem.value}
