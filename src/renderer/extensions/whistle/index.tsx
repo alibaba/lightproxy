@@ -258,6 +258,7 @@ export class WhistleExntension extends Extension {
             const { t } = useTranslation();
 
             useEffect(() => {
+                logger.info('Register restart');
                 remote.powerMonitor.on('resume', () => {
                     logger.info('Restart whistle bacause resume');
                     this.startWhistle();
