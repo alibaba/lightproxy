@@ -33,6 +33,7 @@ function tunnelProxy(server, proxy) {
     var headers = req.headers;
     var tunnelUrl = req.fullUrl = util.setProtocol(TUNNEL_HOST_RE.test(req.url) ? req.url : headers.host, true);
     var options;
+    var socketErr;
     var parseUrl = function (_url, port) {
       _url = _url || tunnelUrl;
       options = req.options = url.parse(_url);
@@ -43,9 +44,15 @@ function tunnelProxy(server, proxy) {
       return options;
     };
     parseUrl();
-    reqSocket.on('error', util.noop);
     tunnelUrl = req.fullUrl = 'tunnel://' + options.host;
     proxy.emit('_request', tunnelUrl);
+    util.onSocketEnd(reqSocket, function(err) {
+      socketErr = err;
+      if (req.isLogRequests) {
+        --util.tunnelRequests;
+      }
+      reqSocket.destroy();
+    });
     var resSocket, responsed, reqEmitter, data, rulesMgr, originPort;
     var inspect, reqData, resData, res, rollBackTunnel, buf;
     req.isTunnel = true;
@@ -119,7 +126,7 @@ function tunnelProxy(server, proxy) {
         if (!handlePluginRules(_rulesMgr)) {
           return;
         }
-        if (isIntercept()) {
+        if (!reqSocket._hasError && isIntercept()) {
           reqSocket.rulesHeaders = req.rulesHeaders;
           reqSocket.tunnelHost = options.host;
           reqSocket.enable = req.enable;
@@ -146,6 +153,10 @@ function tunnelProxy(server, proxy) {
         handleTunnel();
         
         function handleTunnel() {
+          if (req.isLogRequests !== false) {
+            ++util.tunnelRequests;
+            req.isLogRequests = true;
+          }
           var reqRawHeaderNames = getRawHeaderNames(req.rawHeaders) || {};
           var enable = req.enable;
           inspect = util.isInspect(enable) || util.isCustomParser(req);
@@ -174,7 +185,13 @@ function tunnelProxy(server, proxy) {
             data.abort = emitError;
             proxy.emit('request', reqEmitter, data);
           }
+          if (reqSocket._hasError) {
+            return emitError(socketErr);
+          }
           util.parseRuleJson(_rules.reqHeaders, function(reqHeaders) {
+            if (reqSocket._hasError) {
+              return emitError(socketErr);
+            }
             var customXFF;
             if (reqHeaders) {
               reqHeaders = util.lowerCaseify(reqHeaders, reqRawHeaderNames);
@@ -223,6 +240,9 @@ function tunnelProxy(server, proxy) {
             }
   
             pluginMgr.loadPlugin(plugin, function(err, ports) {
+              if (reqSocket._hasError) {
+                return emitError(socketErr);
+              }
               if (err) {
                 return sendEstablished(500);
               }
@@ -408,6 +428,9 @@ function tunnelProxy(server, proxy) {
         }
 
         function handleConnect() {
+          if (reqSocket._hasError) {
+            return emitError(socketErr);
+          }
           if (retryConnect) {
             resSocket.removeListener('error', retryConnect);
             abortIfUnavailable(resSocket);
@@ -425,6 +448,9 @@ function tunnelProxy(server, proxy) {
           reqSocket.globalValue = req.globalValue;
           resSocket.statusCode = resData.statusCode;
           pluginMgr.resolvePipePlugin(reqSocket, function() {
+            if (reqSocket._hasError) {
+              return emitError(socketErr);
+            }
             data.pipe = reqSocket._pipeRule;
             if (reqSocket._pipePluginPorts) {
               reqSocket.inspectFrames = data.inspect = true;

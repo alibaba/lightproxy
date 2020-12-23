@@ -130,6 +130,10 @@ function getEncoder(obj, req) {
 }
 
 module.exports = function(req, res, next) {
+  if (req.isLogRequests !== false) {
+    ++util.httpRequests;
+    req.isLogRequests = true;
+  }
   req.reqId = util.getReqId();
   req.curUrl = req.fullUrl = util.getFullUrl(req);
   req._originEncoding = req.headers['content-encoding'];

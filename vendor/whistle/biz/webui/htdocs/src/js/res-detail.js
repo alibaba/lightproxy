@@ -121,7 +121,7 @@ var ResDetail = React.createClass({
         trailerStr = trailers ? util.objectToString(trailers, res.rawTrailerNames) : '';
         headersStr = ['HTTP/' + (modal.req.httpVersion || '1.1'), status, util.getStatusMessage(res)].join(' ')
         + '\r\n' + headersStr;
-        raw = headersStr + '\r\n\r\n' + body + '\r\n\r\n' + trailerStr;
+        raw = headersStr + '\r\n\r\n' + body;
         var type = util.getContentType(headers);
         isJson = type === 'JSON';
         if (type === 'IMG') {
@@ -135,8 +135,16 @@ var ResDetail = React.createClass({
       if (modal.isHttps) {
         tips = !body && { isHttps: true };
       } else if (headers && !body && modal.responseTime && !/^ws/.test(modal.url)) {
-        tips = { message: res.size < 5120 ? 'No response body data' : 'Respose data too large to show' };
+        if (res.size < 5120) {
+          tips = { message: 'No response body data' };
+        } else {
+          raw += '(Response data too large to show)';
+          tips = { message: 'Response data too large to show' };
+        }
         tips.url = modal.url;
+      }
+      if (trailerStr) {
+        raw += '\r\n\r\n' + trailerStr;
       }
     }
 

@@ -19,6 +19,7 @@ var loadService = require('./service');
 var initSocketMgr = require('./socket-mgr');
 var tunnelProxy = require('./tunnel');
 var upgradeProxy = require('./upgrade');
+var proc = require('./util/process');
 
 function handleClientError(err, socket) {
   if (!socket.writable) {
@@ -80,8 +81,9 @@ function proxy(callback) {
       callback.call(server, proxyEvents);
     }
   };
-  util.getBoundIp(function(host) {
+  util.getBoundIp(config.host, function(host) {
     util.checkPort(!config.INADDR_ANY && !host && config.port, function() {
+      config.host = host;
       server.listen(config.port, host, execCallback);
     });
   });
@@ -101,7 +103,7 @@ function proxy(callback) {
     tunnelProxy(optionServer, proxyEvents);
     upgradeProxy(optionServer);
     optionServer.on('clientError', handleClientError);
-    util.getBoundIp(function(host) {
+    util.getBoundIp(config[opts ? 'httpsHost' : 'httpHost'], function(host) {
       util.checkPort(!config.INADDR_ANY && !host && port, function() {
         optionServer.listen(port, host, execCallback);
       });
@@ -154,7 +156,7 @@ function proxy(callback) {
       client.end();
     });
     proxyEvents.socksServer = socksServer;
-    util.getBoundIp(function(host) {
+    util.getBoundIp(config.socksHost, function(host) {
       boundHost = host || '127.0.0.1';
       util.checkPort(!config.INADDR_ANY && !host && config.socksPort, function() {
         socksServer.listen(config.socksPort, host, execCallback);
@@ -181,6 +183,16 @@ function exportInterfaces(obj) {
   obj.setUIHost = config.setUIHost;
   obj.setPluginUIHost = config.setPluginUIHost;
   obj.socketMgr = initSocketMgr;
+  obj.getRuntimeInfo = function() {
+    return {
+      memUsage: proc.memUsage,
+      cpuPercent: proc.cpuPercent,
+      uptime: proc.uptime,
+      httpRequests: util.httpRequests,
+      wsRequests: util.wsRequests,
+      tunnelRequests: util.tunnelRequests
+    };
+  };
   return obj;
 }
 
