@@ -129,6 +129,8 @@ export async function installCertAndHelper() {
     await fs.writeFileAsync(path.join(dir, CERT_KEY_FILE_NAME), certs.key, 'utf-8');
     await fs.writeFileAsync(path.join(dir, CERT_FILE_NAME), certs.cert, 'utf-8');
 
+    const formatPath = (path: string) => '"' + path + '"';
+
     const INSTALL_DONE_FILE = '/tmp/lightproxy-install-done';
     // 信任证书 & 安装 helper
     const installPromise = new Promise((resolve, reject) => {
@@ -139,7 +141,11 @@ export async function installCertAndHelper() {
                 const cmd = `echo "Please input local login password 请输入本地登录密码" && sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(
                     dir,
                     CERT_FILE_NAME,
-                )}" && sudo cp "${PROXY_CONF_HELPER_FILE_PATH}" "${PROXY_CONF_HELPER_PATH}" && sudo chown root:admin "${PROXY_CONF_HELPER_PATH}" && sudo chmod a+rx+s "${PROXY_CONF_HELPER_PATH}" && touch ${INSTALL_DONE_FILE}
+                )}" && sudo cp ${formatPath(PROXY_CONF_HELPER_FILE_PATH)} ${formatPath(
+                    PROXY_CONF_HELPER_PATH,
+                )} && sudo chown root:admin ${formatPath(PROXY_CONF_HELPER_PATH)} && sudo chmod a+rx+s ${formatPath(
+                    PROXY_CONF_HELPER_PATH,
+                )} && touch ${INSTALL_DONE_FILE} && echo "安装完成"
                 `;
                 clipboard.writeText(cmd);
 
@@ -154,6 +160,7 @@ export async function installCertAndHelper() {
             while (!fs.existsSync(INSTALL_DONE_FILE)) {
                 showGuide();
             }
+            resolve(true);
         } else {
             dialog.showMessageBoxSync({
                 type: 'info',
@@ -177,7 +184,7 @@ export async function installCertAndHelper() {
             }
 
             // windows dose not need install helper
-            resolve();
+            resolve(true);
         }
     });
 
