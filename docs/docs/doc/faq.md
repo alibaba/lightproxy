@@ -35,15 +35,15 @@ If you are prompted with a certificate error, you can use Help => Install Certif
 Some applications that also use system proxies may preempt the LightProxy proxy. You can set LightProxy as the system proxy and pass
 
 ```html
-/xxx/ socks5://127.0.0.1:1080
+/xxx/ socks://127.0.0.1:1080
 ```
 
-In this way, pages that meet the matching conditions are specified to be forwarded through the proxy of `socks5://127.0.0.1:1080`.
+In this way, pages that meet the matching conditions are specified to be forwarded through the proxy of `socks://127.0.0.1:1080`.
 
 Or by
 
 ```html
-/.*/ socks5://127.0.0.1:1080
+/.*/ socks://127.0.0.1:1080
 ```
 
 Way to set up a front proxy.
