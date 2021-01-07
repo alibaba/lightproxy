@@ -77,4 +77,4 @@ LightProxy 是一款基于 `whistle` 的本地代理抓包软件
 
 微信讨论群见：[https://github.com/alibaba/lightproxy/issues/93](https://github.com/alibaba/lightproxy/issues/93)
 
-![image.png](../imgs/group-dingtalk.png)
+![image.png](https://img.alicdn.com/imgextra/i1/O1CN01EIvMyu1kA5BdSDbrC_!!6000000004642-0-tps-1125-1485.jpg_400x400)
