@@ -78,4 +78,4 @@ Feedback `issue` to [https://github.com/alibaba/lightproxy/issues](https://githu
 
 See WeChat discussion group: [https://github.com/alibaba/lightproxy/issues/93](https://github.com/alibaba/lightproxy/issues/93)
 
-![image.png](../imgs/group-dingtalk.png)
+![image.png](https://img.alicdn.com/imgextra/i1/O1CN01EIvMyu1kA5BdSDbrC_!!6000000004642-0-tps-1125-1485.jpg_400x400)
