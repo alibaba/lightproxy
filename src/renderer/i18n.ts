@@ -59,6 +59,8 @@ export const i18nResources = {
             'Exit App': '退出应用',
             'Default Port': '默认端口号',
             'Click to download cert': '点击下载证书',
+            'Click to copy cert link': '点击复制证书',
+            'Cert address has been copied to the pasteboard': '证书下载地址已复制到粘贴板',
             'System proxy changed': '系统代理被改变',
             'System proxy changed by other Program, re-enable proxy?': '系统代理被其他应用程序改变，是否重新启用？',
             'This rule is disabled, double click rule name to enable': '该规则已被禁用，双击规则名启用',

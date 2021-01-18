@@ -53,14 +53,20 @@ export class PhoneProxy extends Extension {
                 message.success(t('WIFI proxy address has been copied to the pasteboard'));
             }
 
+            function copyCertAddress() {
+                clipboard.writeText(`http://${address}:${port}/cgi-bin/rootca`);
+                message.success(t('Cert address has been copied to the pasteboard'));
+            }
+
             return (
                 <div className="lightproxy-phoneproxy-container">
                     <div className="lightproxy-phoneproxy-qrcode">
                         <QrCode size={256} value={`http://${address}:${port}/cgi-bin/rootca`}></QrCode>
                     </div>
                     <div className="title">
-                        <span>{t('Scan to install cert')}</span>
-                        <a href={`http://${address}:${port}/cgi-bin/rootca`}>{t('Click to download cert')}</a>
+                        <span className="margin10">{t('Scan to install cert')}</span>
+                        <a className="margin10"href={`http://${address}:${port}/cgi-bin/rootca`}>{t('Click to download cert')}</a>
+                        <span className="button" onClick={copyCertAddress}>{t('Click to copy cert link')}</span>
                     </div>
                     <div className="title" onClick={copyProxyAddress}>
                         <span>{t('Setting WIFI proxy to')}</span>
