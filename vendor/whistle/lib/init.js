@@ -5,30 +5,35 @@ var config = require('./config');
 var HTTPS_RE = /^https:/i;
 
 function addErrorEvents(req, res) {
+  var countdown = function() {
+    if (req.isLogRequests) {
+      req.isLogRequests = false;
+      --util.httpRequests;
+    }
+  };
   var clientReq;
   req.on('dest', function(_req) {
     clientReq = _req;
     if (!req.noReqBody) {
       clientReq.on('error', abort);
     }
-  }).on('error', abort).once('close', abort);
+  }).on('error', abort);
   res.on('src', function(_res) {
     if (clientReq && req.noReqBody) {
       clientReq.on('error', abort);
     }
     _res.on('error', abort);
-  }).on('error', abort);
+  }).on('error', abort)
+    .once('close', abort)
+      .once('finish', countdown);
 
   function abort(err) {
     if (clientReq === false) {
       return;
     }
-    if (req.isLogRequests) {
-      req.isLogRequests = false;
-      --util.httpRequests;
-    }
-    req.hasError = true;
-    clientReq = clientReq || req._clientReq;
+    countdown();
+    req._hasError = true;
+    clientReq = req._clientReq || clientReq;
     if (clientReq) {
       if (clientReq.abort) {
         clientReq.abort();

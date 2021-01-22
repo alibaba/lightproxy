@@ -263,6 +263,8 @@ function getRawType(type) {
   return typeof type === 'string' ? type.split(';')[0].trim().toLowerCase() : '';
 }
 
+exports.getRawType = getRawType;
+
 exports.getExtension = function(headers) {
   var suffix = getContentType(headers);
   var type;
