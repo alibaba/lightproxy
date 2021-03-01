@@ -19,9 +19,6 @@ exports.getServerInfo = function(req) {
   var info = {
     pid: PID,
     pInfo: proc,
-    http: util.httpRequests,
-    ws: util.wsRequests,
-    tunnel: util.tunnelRequests,
     version: config.version,
     cmdName: config.cmdName,
     hideLeftMenu: config.hideLeftMenu,

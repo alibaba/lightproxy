@@ -1,3 +1,18 @@
+# v2.6.7
+1. fix: https://github.com/avwo/whistle/issues/540
+
+# v2.6.6
+1. fix: 管理界面 CGI 路径可以随意拼接问题
+
+# v2.6.5
+1. fix: 部分 Node 版本可能卡死问题
+2. fix: [pipe](http://wproxy.org/whistle/rules/pipe.html) 可能导致数据丢失问题
+
+# v2.6.4
+1. fix: 编辑器高亮显示插件规则的一些问题
+2. feat: 本地文件替换的响应头头默认加入 `content-length` 字段，可以通过 `delete://resH.content-length` 禁用
+3. feat: 支持通过 CGI 或 API 获取当前处理的请求总数
+
 # v2.6.3
 1. style: 支持预览 SVG 文件
 2. feat: 支持通过 `process.on('pforkError', (info) => {})` 获取插件抛出的异常信息
