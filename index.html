@@ -46,12 +46,12 @@
         overflow-x: hidden;
       }
     </style>
-    <link rel="stylesheet" href="/umi.9e127424.css" />
+    <link rel="stylesheet" href="/umi.675eced1.css" />
     <script>
       window.routerBase = "/";
     </script>
     <script>
-      //! umi version: 3.3.7
+      //! umi version: 3.3.9
     </script>
     <script>
       if (
@@ -66,6 +66,17 @@
       lazySizesConfig.loadMode = 1;
     </script>
     <script src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.0/lazysizes.min.js"></script>
+    <script>
+      !(function () {
+        var e = localStorage.getItem("dumi:prefers-color"),
+          t = window.matchMedia("(prefers-color-scheme: dark)").matches,
+          r = ["light", "dark", "auto"];
+        document.documentElement.setAttribute(
+          "data-prefers-color",
+          e === r[2] ? (t ? r[1] : r[0]) : r.includes(e) ? e : r[0]
+        );
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
@@ -106,6 +117,6 @@
 
       gtag("config", "UA-154996514-3");
     </script>
-    <script src="/umi.ec5c1ae3.js"></script>
+    <script src="/umi.4ad8bd53.js"></script>
   </body>
 </html>
