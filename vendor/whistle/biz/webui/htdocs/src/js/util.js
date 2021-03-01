@@ -1095,7 +1095,7 @@ function initData(data, isReq) {
         delete data.text;
       }
     }
-    if (!data.base64) {
+    if (!data.base64 || data._hasError) {
       return;
     }
   }

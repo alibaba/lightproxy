@@ -642,6 +642,7 @@ var initWsReq = function(req, res) {
 };
 var initConnectReq = function(req, res) {
   var established;
+  initWsReq(req, res);
   req.sendEstablished = function(err, cb) {
     if (established) {
       return;
@@ -657,17 +658,24 @@ var initConnectReq = function(req, res) {
     var resCtn = [
       'HTTP/1.1 ' + (err ? 502 : 200) + ' ' + msg,
       'Content-Length: ' + length,
-      'Proxy-Agent: ' + pluginOpts.shortName,
-      '\r\n',
-      body
-    ].join('\r\n');
-    res.write(resCtn, function() {
-      if (!req._hasError && typeof cb === 'function') {
-        setTimeout(cb, 16);
+      'Proxy-Agent: ' + pluginOpts.shortName
+    ];
+    if (err || !cb || !req.headers['x-whistle-request-tunnel-ack']) {
+      resCtn.push('\r\n', body);
+      res.write(resCtn.join('\r\n'));
+      return cb && cb();
+    }
+    resCtn.push('x-whistle-allow-tunnel-ack: 1');
+    resCtn.push('\r\n', body);
+    res.once('data', function(chunk) {
+      if (!req._hasError) {
+        res.pause();
+        chunk.length > 1 && res.unshift(chunk.slice(1));
+        cb();
       }
     });
+    return res.write(resCtn.join('\r\n'));
   };
-  initWsReq(req, res);
 };
 
 var loadModule = function(filepath) {
@@ -692,10 +700,10 @@ function getHookName(req) {
 
 function handleError(socket, sender, receiver) {
   var emitError = function(err) {
-    if (socket._emitedError) {
+    if (socket._emittedError) {
       return;
     }
-    socket._emitedError = true;
+    socket._emittedError = true;
     socket.emit('error', err);
   };
   sender && sender.on('error', emitError);
@@ -837,6 +845,10 @@ function handleWsSignal(receiver, sender) {
   receiver.onclose = function(code, message, opts) {
     sender.close(code, message, opts.masked);
   };
+}
+
+function destroySocket() {
+  this.destroy();
 }
 
 module.exports = function(options, callback) {
@@ -1482,6 +1494,7 @@ module.exports = function(options, callback) {
             });
             socket.pipe(decoder);
             encoder.pipe(socket);
+            socket.on('end', destroySocket);
             httpServer.emit('request', decoder, encoder);
           });
         }
@@ -1576,6 +1589,9 @@ module.exports = function(options, callback) {
                     });
                     return;
                   }
+                  if (_res.headers['x-whistle-allow-tunnel-ack']) {
+                    svrSock.write('1');
+                  }
                   if (typeof cb === 'function') {
                     svrSock.headers = _res.headers;
                     svrSock.statusCode = 200;
@@ -1628,8 +1644,8 @@ module.exports = function(options, callback) {
         case PLUGIN_HOOKS.TUNNEL_RES_WRITE:
           if (tunnelResWrite) {
             initConnectReq(req, socket);
-            tunnelResRead && wrapTunnelReader(socket);
             req.sendEstablished(function() {
+              tunnelResRead && wrapTunnelReader(socket);
               tunnelResWrite.emit('connect', req, socket, head);
             });
           }

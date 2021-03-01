@@ -8,7 +8,9 @@ function addErrorEvents(req, res) {
   var countdown = function() {
     if (req.isLogRequests) {
       req.isLogRequests = false;
-      --util.httpRequests;
+      --util.proc.httpRequests;
+      req._hasClosed = true;
+      req.emit('_closed');
     }
   };
   var clientReq;
@@ -35,10 +37,10 @@ function addErrorEvents(req, res) {
     req._hasError = true;
     clientReq = req._clientReq || clientReq;
     if (clientReq) {
-      if (clientReq.abort) {
-        clientReq.abort();
-      } else if (clientReq.destroy) {
+      if (clientReq.destroy) {
         clientReq.destroy();
+      } else if (clientReq.abort) {
+        clientReq.abort();
       }
       clientReq = false;
     }

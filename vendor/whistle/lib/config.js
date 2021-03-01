@@ -29,8 +29,7 @@ var version = process.version.substring(1).split('.');
 var disableAgent = version[0] > 10;
 var uid = Date.now() + '-' + process.pid + '-' + Math.floor(Math.random() * 10000);
 var noop = function() {};
-var LOCAL_UI_HOST_LIST = ['local.whistlejs.com', 'l.wproxy.cn', '1.wproxy.cn',
-'local.wproxy.org', 'l.wproxy.org', '1.wproxy.org', 'rootca.pro'];
+var LOCAL_UI_HOST_LIST = ['local.whistlejs.com', 'local.wproxy.org', 'l.wproxy.org', 'l.wisl.pro', 'rootca.pro'];
 var variableProperties = ['encrypted', 'sockets', 'dataDirname', 'storage', 'baseDir', 'noGlobalPlugins', 'pluginsDataMap',
 'username', 'password', 'debugMode', 'localUIHost', 'extra', 'rules', 'values', 'dnsCache', 'allowDisableShadowRules'];
 
@@ -396,7 +395,8 @@ function connect(options, cb) {
   var timer = setTimeout(function() {
     if (req) {
       req.emit('error', new Error('Timeout'));
-      req.abort();
+      req.destroy();
+      req.socket && req.socket.destroy();
     }
   }, CONN_TIMEOUT);
   var req = httpModule.request(proxyOptions);
@@ -412,7 +412,7 @@ function connect(options, cb) {
       });
       return;
     }
-    if (headers['x-whistle-request-tunnel-ack'] && res.headers['x-whistle-allow-tunnel-ack']) {
+    if (res.headers['x-whistle-allow-tunnel-ack']) {
       socket.write('1');
     }
     cb(socket, res);
@@ -697,8 +697,6 @@ exports.extend = function(newConf) {
     }
     if (/^\d+$/.test(newConf.timeout)) {
       config.timeout = +newConf.timeout;
-    } else if (config.strict) {
-      config.timeout = 1000 * 60 * 6;
     }
 
     setGuestAuth(newConf);
