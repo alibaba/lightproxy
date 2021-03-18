@@ -170,12 +170,6 @@ export class WhistleExntension extends Extension {
         this.coreAPI.eventEmmitter.on('lightproxy-restart-proxy-with-lan', () => {
             this.mVisiableOnLan = true;
             this.startWhistle(true);
-
-            // 12 hour auto close
-            setTimeout(() => {
-                this.mVisiableOnLan = false;
-                this.startWhistle(false);
-            }, 3000 * 60 * 60);
         });
     }
 
