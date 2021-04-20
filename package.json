@@ -1,6 +1,6 @@
 {
   "name": "LightProxy",
-  "version": "1.1.42-beta-3",
+  "version": "1.1.42-beta-4",
   "license": "MIT",
   "main": "./dist/main.js",
   "scripts": {
@@ -155,7 +155,7 @@
         "github"
       ],
       "target": {
-        "arch": ["x64", "arm64"],
+        "arch": ["universal"],
         "target": "dmg"
       }
     },
