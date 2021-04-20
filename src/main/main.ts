@@ -224,6 +224,7 @@ function createMainWindow() {
         minHeight: WINDOW_MIN_HEIGHT,
         webPreferences: {
             nodeIntegration: true,
+            contextIsolation: false,
             webSecurity: false,
             // electron >= 10
             enableRemoteModule: true,

@@ -37,6 +37,9 @@ async function spawnModule(props: any) {
         ? path.join(LIGHTPROXY_FILES_DIR, './node/node-mac')
         : path.join(LIGHTPROXY_FILES_DIR, './node/node-win.exe');
 
+    // ARM 下直接用 electron run-as-node 启动 nodejs
+    const isARM = process.arch === 'arm64';
+
     const nodeScript = `
 const cp = require('child_process');
 const originSpwan = cp.spawn;
@@ -55,7 +58,7 @@ cp.spawn = function(cmd, argv, options) {
 require(decodeURIComponent('${modulePath}'));`;
     const startProcess = () => {
         const child = spwan(
-            nodeExe,
+            isARM ? process.execPath : nodeExe,
             [
                 '-e',
                 `const code = decodeURIComponent("${encodeURIComponent(nodeScript)}");console.log(code);eval(code);`,

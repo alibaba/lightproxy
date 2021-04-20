@@ -11,10 +11,10 @@
     "compile-renderer": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.renderer.prod.config.js",
     "compile": "yarn run lint && yarn run compile-main && yarn run compile-renderer",
     "build": "yarn clean:dist && yarn syncversion && yarn compile ",
-    "dist": "yarn run build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --win --x64 --publish never",
-    "dist:mac": "yarn run build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --x64",
-    "dist:win": "yarn run build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win --x64",
-    "dist-codesign": "yarn run build && electron-builder --mac --win --x64 --publish never",
+    "dist": "yarn run build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --publish never",
+    "dist:mac": "yarn run build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder",
+    "dist:win": "yarn run build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder",
+    "dist-codesign": "yarn run build && electron-builder --publish never",
     "pack": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "lint": "eslint ./src/**/*.ts ./src/**/*.tsx --fix",
     "upguard:whistle": "git subtree pull --prefix=vendor/whistle https://github.com/avwo/whistle master --squash && npm run update:node_modules",
@@ -119,7 +119,7 @@
     "copy-webpack-plugin": "^5.1.1",
     "cross-env": "^6.0.3",
     "css-loader": "^3.4.2",
-    "electron": ">=10.2.0",
+    "electron": "12.0.4",
     "electron-builder": "^22.2.0",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
@@ -153,7 +153,11 @@
       "icon": "./vendor/files/icon.icns",
       "publish": [
         "github"
-      ]
+      ],
+      "target": {
+        "arch": ["x64", "arm64"],
+        "target": "dmg"
+      }
     },
     "win": {
       "target": "nsis",
