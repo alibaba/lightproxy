@@ -56,7 +56,7 @@ async function buildTrayContextMenu() {
                 remote.clipboard.writeText(
                     `export https_proxy=${generateHTTPProxyUrl(port)}
 http_proxy=${generateHTTPProxyUrl(port)}
-all_proxy=${generateSocksProxyUrl(port)}
+all_proxy=${generateSocksProxyUrl(port + 1)}
 `
                         .split('\n')
                         .join(' '),
