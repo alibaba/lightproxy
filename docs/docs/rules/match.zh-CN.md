@@ -80,7 +80,7 @@ http://test.com/test/ (test)
 # 匹配所有请求
 /./ (test)
 
-# 匹配url里面包含摸个关键字的请求
+# 匹配url里面包含某个关键字的请求
 /keyword/ (test)
 
 # 通过正则匹配，同样的 $1~$9 捕获分组，$0 表示整个 URL
