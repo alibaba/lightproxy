@@ -69,7 +69,7 @@ LightProxy 是一款基于 `whistle` 的本地代理抓包软件
 
 ## 更多规则
 
-除了多行字符串语法外， `LightProxy` 语法就是 `whistle` 语法，可以直接参考 `whistle` 的规则文档：https://wproxy.org/whistle/principle.html](https://wproxy.org/whistle/principle.html)
+除了多行字符串语法外， `LightProxy` 语法就是 `whistle` 语法，可以直接参考 `whistle` 的规则文档：[https://wproxy.org/whistle/principle.html](https://wproxy.org/whistle/principle.html)
 
 ## 反馈
 
