@@ -70,7 +70,7 @@ You can see that the returned content is the `JSON` we wrote. The returned` head
 
 ## More rules
 
-In addition to the multi-line string syntax, `LightProxy` syntax is` whistle` syntax, you can directly refer to the `whistle` rules document: https://wproxy.org/whistle/principle.html](https://wproxy.org/whistle/principle.html)
+In addition to the multi-line string syntax, `LightProxy` syntax is` whistle` syntax, you can directly refer to the `whistle` rules document: [https://wproxy.org/whistle/principle.html](https://wproxy.org/whistle/principle.html)
 
 ## Feedback
 
