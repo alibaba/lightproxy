@@ -66,7 +66,7 @@ http://test.com:8000 (test)
 也可以匹配路径下全部的请求，例如
 
 ```
-test.com/test/ `(test)`
+test.com/test/ (test)
 
 # 同样可以限定协议
 http://test.com/test/ (test)

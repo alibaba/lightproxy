@@ -66,7 +66,7 @@ http://test.com:8000 (test)
 It can also match all requests under the path, for example
 
 ```
-test.com/test/`(test)`
+test.com/test/ (test)
 
 # The agreement can also be limited
 http://test.com/test/ (test)
